@@ -21,11 +21,12 @@
 #include "G4Threading.hh"
 #include "G4GenericPhysicsList.hh"
 #include "G4VModularPhysicsList.hh"
+#include "G4GDMLParser.hh"
 
 // us
 #include "CLI11.hpp"  // c++17 safe; https://github.com/CLIUtils/CLI11
-#include "QTActionInitialization.hh"
 #include "QTDetectorConstruction.hh"
+#include "QTActionInitialization.hh"
 
 int main(int argc, char** argv)
 {
@@ -35,9 +36,11 @@ int main(int argc, char** argv)
   int         seed     = 1234;
   std::string outputFileName("qtnm.root");
   std::string macroName;
+  std::string gdmlFileName("test.gdml");
   std::string physListName("QTNMPhysicsList");
 
   app.add_option("-m,--macro", macroName, "<Geant4 macro filename> Default: None");
+  app.add_option("-g,--gdml", gdmlFileName, "<Geant4 GDML filename> Default: test.gdml");
   app.add_option("-p,--physlist", physListName, "<Geant4 physics list macro> Default: QTNMPhysicsList");
   app.add_option("-s,--seed", seed, "<Geant4 random number seed + offset 1234> Default: 1234");
   app.add_option("-o,--outputFile", outputFileName,
@@ -74,8 +77,11 @@ int main(int argc, char** argv)
 
 
   // -- Set mandatory initialization classes
-  auto* detector = new QTDetectorConstruction;
-  runManager->SetUserInitialization(detector);
+  G4GDMLParser parser;
+  parser.SetOverlapCheck(true);
+  parser.Read(gdmlFileName); // check: std::string or c_str
+
+  runManager->SetUserInitialization(new QTDetectorConstruction(parser.GetWorldVolume()));
 
 
   // -- set user physics list
