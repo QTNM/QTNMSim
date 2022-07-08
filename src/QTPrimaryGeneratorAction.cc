@@ -29,6 +29,9 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 , fSterilemass(0.0)
 , fSterilemixing(0.0)
 {
+  static long seed = CLHEP::HepRandom::getTheSeed();
+  generator.seed(seed); // using std random
+
   G4int nofParticles = 1;
   fParticleGun       = new G4ParticleGun(nofParticles);
 
@@ -55,7 +58,7 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   // Check: Name requirement for GDML file AND axis assumption!
   // Check: G4Tubs assumption for atom cloud in GDML.
   //
-  static long seed = CLHEP::HepRandom::getTheSeed();
+  using pld_type = std::piecewise_linear_distribution<double>;
   auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
 
   if (fGunType) {
@@ -71,8 +74,6 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     fParticleGun->SetParticleEnergy(en * keV);
   }
   else {  // else implement tritium beta decay event generator
-    typedef std::piecewise_linear_distribution<double> pld_type;
-    std::default_random_engine generator(seed); // swap to using std random
 
     // distribution parameter
     int nw = 10000; // nw - number of bins

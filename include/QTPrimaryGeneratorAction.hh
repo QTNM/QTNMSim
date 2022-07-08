@@ -1,6 +1,10 @@
 #ifndef QTPrimaryGeneratorAction_h
 #define QTPrimaryGeneratorAction_h 1
 
+// std lib
+#include <random>
+
+// G4
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4GenericMessenger.hh"
 #include "Randomize.hh"
@@ -41,10 +45,8 @@ private:
   G4double            fSterilemass;
   G4double            fSterilemixing;
 
+  std::ranlux24       generator;
 };
-
-// std lib
-#include <random>
 
 // us
 #include "TBetaGenerator.hpp"
