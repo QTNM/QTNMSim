@@ -12,6 +12,7 @@
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Box.hh"
+#include "G4Tubs.hh"
 #include "G4RandomTools.hh"
 
 
@@ -23,6 +24,10 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 , fStdev(5.e-4)
 , fSpot(0.5)
 , fGunType(true)
+, fOrder(true)
+, fNumass(1.0e-4)
+, fSterilemass(0.0)
+, fSterilemixing(0.0)
 {
   G4int nofParticles = 1;
   fParticleGun       = new G4ParticleGun(nofParticles);
@@ -48,7 +53,9 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   // on DetectorConstruction class we get world volume 
   // from G4LogicalVolumeStore: assumes name is World_log!
   // Check: Name requirement for GDML file AND axis assumption!
+  // Check: G4Tubs assumption for atom cloud in GDML.
   //
+  static long seed = CLHEP::HepRandom::getTheSeed();
   auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
 
   if (fGunType) {
@@ -63,7 +70,27 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4double en = G4RandGauss::shoot(fMean, fStdev);
     fParticleGun->SetParticleEnergy(en * keV);
   }
-  // else implement tritium beta decay event generator
+  else {  // else implement tritium beta decay event generator
+    typedef std::piecewise_linear_distribution<double> pld_type;
+    std::default_random_engine generator(seed); // swap to using std random
+
+    // distribution parameter
+    int nw = 10000; // nw - number of bins
+    double lbound = 0.2; // lower energy bound [keV]
+    double ubound = TBeta::endAt(mnu, 1); // max energy
+    
+    // create distribution
+    pld_type ed(nw, lbound, ubound, betaGenerator(order, mnu, mN, eta));
+    
+    // random vertex location in cloud [mm]
+    G4Tubs* atomTubs = dynamic_cast<G4Tubs*>();
+    G4double atomZHalfLength = atomTubs->GetZHalfLength();
+    G4double atomRadius      = atomTubs->GetRadius();
+
+    // Beta decay random energy [keV]
+    G4double en = ed(generator); // this is with std random
+    fParticleGun->SetParticleEnergy(en * keV);
+  }
 
   fParticleGun->GeneratePrimaryVertex(event);
 }
@@ -101,4 +128,33 @@ void QTPrimaryGeneratorAction::DefineCommands()
   spotCmd.SetParameterName("s", true);
   spotCmd.SetRange("s>=0.");
   spotCmd.SetDefaultValue("0.5");
+
+  // order command
+  auto& orderCmd = fMessenger->DeclareProperty("energy", fOrder,
+					      "Boolean neutrino order choice: true=normal; false=inverted.");
+  orderCmd.SetParameterName("o", true);
+  orderCmd.SetDefaultValue("true");
+
+  // neutrino mass command
+  auto& numuCmd = fMessenger->DeclareProperty("numass", fNumass,
+                                               "Neutrino mass [keV].");
+  numuCmd.SetParameterName("m", true);
+  numuCmd.SetRange("m>=0.");
+  numuCmd.SetDefaultValue("1.0e-4");
+
+  // neutrino mass command
+  auto& numuCmd = fMessenger->DeclareProperty("mN", fSterilemass,
+                                               "Sterile neutrino mass [keV].");
+  numuCmd.SetParameterName("n", true);
+  numuCmd.SetRange("n>=0.");
+  numuCmd.SetDefaultValue("0.0");
+
+  // neutrino mass command
+  auto& numuCmd = fMessenger->DeclareProperty("eta", fSterilemixing,
+                                               "Sterile neutrino mixing (0.0-1.0).");
+  mixCmd.SetParameterName("x", true);
+  mixCmd.SetRange("x>=0.");
+  mixCmd.SetDefaultValue("0.0");
+
+
 }
