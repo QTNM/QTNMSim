@@ -55,14 +55,16 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   // In order to avoid dependence of PrimaryGeneratorAction
   // on DetectorConstruction class we get world volume 
   // from G4LogicalVolumeStore: assumes name is World_log!
+  // from G4LogicalVolumeStore: assumes source name is Source_log!
   // Check: Name requirement for GDML file AND axis assumption!
   // Check: G4Tubs assumption for atom cloud in GDML.
   //
   using pld_type = std::piecewise_linear_distribution<double>;
-  auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
+  auto worldLV  = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
+  auto sourceLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Source_log");
 
   if (fGunType) {
-    G4Box* worldBox = dynamic_cast<G4Box*>(worldLV->GetSolid());
+    G4Box* worldBox = dynamic_cast<G4Box*>(worldLV->GetSolid()); // assume a box
     G4double worldZHalfLength = worldBox->GetZHalfLength();
 
     // random spot location [mm]
@@ -78,15 +80,16 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     // distribution parameter
     int nw = 10000; // nw - number of bins
     double lbound = 0.2; // lower energy bound [keV]
-    double ubound = TBeta::endAt(mnu, 1); // max energy
+    double ubound = TBeta::endAt(fNumass, 1); // max energy
     
     // create distribution
-    pld_type ed(nw, lbound, ubound, betaGenerator(order, mnu, mN, eta));
+    pld_type ed(nw, lbound, ubound, betaGenerator(forder, fNumass, 
+						  fSterilemass, fSterilemixing));
     
     // random vertex location in cloud [mm]
-    G4Tubs* atomTubs = dynamic_cast<G4Tubs*>();
+    G4Tubs* atomTubs = dynamic_cast<G4Tubs*>(sourceLV->GetSolid()); // assume a cylinder
     G4double atomZHalfLength = atomTubs->GetZHalfLength();
-    G4double atomRadius      = atomTubs->GetRadius();
+    G4double atomRadius      = atomTubs->GetOuterRadius();
 
     // Beta decay random energy [keV]
     G4double en = ed(generator); // this is with std random
