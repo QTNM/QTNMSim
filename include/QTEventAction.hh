@@ -6,6 +6,8 @@
 #include "G4UserEventAction.hh"
 #include "globals.hh"
 
+#include <vector>
+
 /// Event action class
 ///
 
@@ -18,6 +20,9 @@ public:
   virtual void BeginOfEventAction(const G4Event* event);
   virtual void EndOfEventAction(const G4Event* event);
 
+  std::vector<G4double>& GetTimeVec()    { return tvec; }
+  std::vector<G4double>& GetVoltageVec() { return vvec; }
+
 private:
   // methods
   QTGasHitsCollection*     GetGasHitsCollection(G4int hcID,
@@ -26,6 +31,9 @@ private:
   // data members
   // hit data
   G4int                 fGID    = -1;
+
+  std::vector<G4double> tvec;
+  std::vector<G4double> vvec;
   
 };
 

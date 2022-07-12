@@ -50,7 +50,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   }
 
   // dummy storage
-  std::vector<double> tedep, tkine, px, py, pz, posx, posy, posz;
+  std::vector<double> tedep, ttime, tkine, px, py, pz, posx, posy, posz;
   std::vector<int> tid;
 
   // get analysis manager
@@ -66,6 +66,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
 
     int    id = (hh->GetTrackID());
     double e  = (hh->GetEdep())    / G4Analysis::GetUnitValue("keV");
+    double tt = (hh->GetTime())    / G4Analysis::GetUnitValue("ns");
     double k  = (hh->GetKine())    / G4Analysis::GetUnitValue("keV");
     double mx = (hh->GetPx()); // normalised momentum direction vector
     double my = (hh->GetPy());
@@ -76,6 +77,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
 
     tid.push_back(id);
     tedep.push_back(e);
+    ttime.push_back(tt);
     tkine.push_back(k);
     px.push_back(mx);
     py.push_back(my);
@@ -89,17 +91,18 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   G4int eventID = event->GetEventID();
   for (unsigned int i=0;i<tedep.size();i++)
   {
-    analysisManager->FillNtupleIColumn(0, eventID); // repeat all rows
-    analysisManager->FillNtupleIColumn(1, tid.at(i));
-    analysisManager->FillNtupleDColumn(2, tedep.at(i));
-    analysisManager->FillNtupleDColumn(3, tkine.at(i));
-    analysisManager->FillNtupleDColumn(4, px.at(i));
-    analysisManager->FillNtupleDColumn(5, py.at(i));
-    analysisManager->FillNtupleDColumn(6, pz.at(i));
-    analysisManager->FillNtupleDColumn(7, posx.at(i));
-    analysisManager->FillNtupleDColumn(8, posy.at(i));
-    analysisManager->FillNtupleDColumn(9, posz.at(i));
-    analysisManager->AddNtupleRow();
+    analysisManager->FillNtupleIColumn(0, 0, eventID); // repeat all rows
+    analysisManager->FillNtupleIColumn(0, 1, tid.at(i));
+    analysisManager->FillNtupleDColumn(0, 2, tedep.at(i));
+    analysisManager->FillNtupleDColumn(0, 3, ttime.at(i));
+    analysisManager->FillNtupleDColumn(0, 4, tkine.at(i));
+    analysisManager->FillNtupleDColumn(0, 5, px.at(i));
+    analysisManager->FillNtupleDColumn(0, 6, py.at(i));
+    analysisManager->FillNtupleDColumn(0, 7, pz.at(i));
+    analysisManager->FillNtupleDColumn(0, 8, posx.at(i));
+    analysisManager->FillNtupleDColumn(0, 9, posy.at(i));
+    analysisManager->FillNtupleDColumn(0, 10, posz.at(i));
+    analysisManager->AddNtupleRow(0);
   }
-
+  // next fill vectors from trajectory store, i.e. stored G4Steps
 }

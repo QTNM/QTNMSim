@@ -47,6 +47,7 @@ G4bool QTGasSD::ProcessHits(G4Step* aStep,
 
   newHit->SetTrackID(aStep->GetTrack()->GetTrackID());
   newHit->SetEdep(edep);
+  newHit->SetTime(aStep->GetTrack()->GetGlobalTime());
   newHit->SetKine(aStep->GetPostStepPoint()->GetKineticEnergy());
   newHit->SetPx(postmom.x());
   newHit->SetPy(postmom.y());

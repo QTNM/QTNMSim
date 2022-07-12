@@ -31,6 +31,7 @@ class QTGasHit : public G4VHit
     // Set methods
     void SetTrackID     (G4int id)     { fTrackID = id; };
     void SetEdep        (G4double de)  { fEdep = de; };
+    void SetTime        (G4double tt)  { fTime = tt; };
     void SetKine        (G4double ke)  { fKine = ke; };
     void SetPx          (G4double px)  { fPx = px; };
     void SetPy          (G4double py)  { fPy = py; };
@@ -42,6 +43,7 @@ class QTGasHit : public G4VHit
     // Get methods
     G4double GetTrackID() const     { return fTrackID; };
     G4double GetEdep()    const     { return fEdep; };
+    G4double GetTime()    const     { return fTime; };
     G4double GetKine()    const     { return fKine; };
     G4double GetPx()      const     { return fPx; };
     G4double GetPy()      const     { return fPy; };
@@ -54,6 +56,7 @@ class QTGasHit : public G4VHit
 
       G4int         fTrackID;
       G4double      fEdep;
+      G4double      fTime;
       G4double      fKine;
       G4double      fPx;
       G4double      fPy;

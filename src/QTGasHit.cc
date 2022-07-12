@@ -6,6 +6,7 @@ QTGasHit::QTGasHit()
  : G4VHit(),
    fTrackID(0),
    fEdep(0.),
+   fTime(0.),
    fKine(0.),
    fPx(0.),
    fPy(0.),
@@ -22,6 +23,7 @@ QTGasHit::QTGasHit(const QTGasHit& right)
 {
   fTrackID      = right.fTrackID;
   fEdep         = right.fEdep;
+  fTime         = right.fTime;
   fKine         = right.fKine;
   fPx           = right.fPx;
   fPy           = right.fPy;
@@ -35,6 +37,7 @@ const QTGasHit& QTGasHit::operator=(const QTGasHit& right)
 {
   fTrackID      = right.fTrackID;
   fEdep         = right.fEdep;
+  fTime         = right.fTime;
   fKine         = right.fKine;
   fPx           = right.fPx;
   fPy           = right.fPy;
