@@ -23,8 +23,8 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 , fMean(18.575)
 , fStdev(5.e-4)
 , fSpot(0.5)
-, fGunType(true)
-, fOrder(true)
+, fGunType(true) // calibration: true=electron gun
+, fOrder(true)   // neutrino hierarchie: true=normal
 , fNumass(1.0e-4)
 , fSterilemass(0.0)
 , fSterilemixing(0.0)
@@ -104,34 +104,34 @@ void QTPrimaryGeneratorAction::DefineCommands()
     new G4GenericMessenger(this, "/QT/generator/", "Primary generator control");
 
   // gun type command
-  auto& typeCmd = fMessenger->DeclareProperty("energy", fGunType,
+  auto& typeCmd = fMessenger->DeclareProperty("calibration", fGunType,
 					      "Boolean gun type choice: true=electron gun; false=TBetaDecay.");
   typeCmd.SetParameterName("t", true);
   typeCmd.SetDefaultValue("true");
 
   // energy command
-  auto& energyCmd = fMessenger->DeclareProperty("energy", fMean,
+  auto& energyCmd = fMessenger->DeclareProperty("gunEnergy", fMean,
                                                "Mean Gun energy [keV].");
   energyCmd.SetParameterName("d", true);
   energyCmd.SetRange("d>=1.");
   energyCmd.SetDefaultValue("18.575");
 
   // width command
-  auto& widthCmd = fMessenger->DeclareProperty("width", fStdev,
+  auto& widthCmd = fMessenger->DeclareProperty("gunWidth", fStdev,
                                                "Gun energy standard deviation [keV].");
   widthCmd.SetParameterName("w", true);
   widthCmd.SetRange("w>=0.");
   widthCmd.SetDefaultValue("5.e-4");
 
   // spot size command
-  auto& spotCmd = fMessenger->DeclareProperty("spot", fSpot,
+  auto& spotCmd = fMessenger->DeclareProperty("gunSpot", fSpot,
                                                "Gun spot diameter [mm].");
   spotCmd.SetParameterName("s", true);
   spotCmd.SetRange("s>=0.");
   spotCmd.SetDefaultValue("0.5");
 
   // order command
-  auto& orderCmd = fMessenger->DeclareProperty("energy", fOrder,
+  auto& orderCmd = fMessenger->DeclareProperty("order", fOrder,
 					      "Boolean neutrino order choice: true=normal; false=inverted.");
   orderCmd.SetParameterName("o", true);
   orderCmd.SetDefaultValue("true");
