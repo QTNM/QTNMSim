@@ -22,6 +22,7 @@
 #include "G4GenericPhysicsList.hh"
 #include "G4VModularPhysicsList.hh"
 #include "G4GDMLParser.hh"
+#include "G4LogicalVolume.hh"
 
 // us
 #include "CLI11.hpp"  // c++17 safe; https://github.com/CLIUtils/CLI11
@@ -76,13 +77,30 @@ int main(int argc, char** argv)
 #endif
 
 
-  // -- Set mandatory initialization classes
   G4GDMLParser parser;
   parser.SetOverlapCheck(true);
   parser.Read(gdmlFileName.data()); // const G4String&
 
-  runManager->SetUserInitialization(new QTDetectorConstruction(parser));
+  // retrieve antenna information
+  G4int countAntenna = 0;
+  std::vector<G4ThreeVector> positions;
+  const G4GDMLAuxMapType* auxmap = fParser.GetAuxMap();
+  for(G4GDMLAuxMapType::const_iterator iter=auxmap->begin();
+      iter!=auxmap->end(); iter++) 
+    {
+      G4LogicalVolume* lv = (*iter).first;
+      G4String nam = lv->GetName();
+      if (G4StrUtil::contains(nam, "Antenna")) {
+	countAntenna = lv->GetNoDaughters();
+	for (G4int i=0;i<countAntenna;++i) {
+	  G4ThreeVector pos = lv->GetDaughter(i)->GetTranslation();
+	  positions.push_back(pos);
+	}
+      }
+    }
 
+  // -- Set mandatory initialization classes
+  runManager->SetUserInitialization(new QTDetectorConstruction(parser));
 
   // -- set user physics list
   // Physics list factory
@@ -98,7 +116,7 @@ int main(int argc, char** argv)
 
 
   // -- Set user action initialization class.
-  auto* actions = new QTActionInitialization(outputFileName);
+  auto* actions = new QTActionInitialization(outputFileName, countAntenna);
   runManager->SetUserInitialization(actions);
 
 
