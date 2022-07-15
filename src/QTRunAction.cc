@@ -6,10 +6,13 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 
-EGRunAction::EGRunAction(QTEventAction* eventAction, G4String name)
+#include <string>
+
+EGRunAction::EGRunAction(QTEventAction* eventAction, G4String name, G4int na)
 : G4UserRunAction()
 , fEventAction(eventAction)
 , fout(std::move(name))
+, nAntenna(na)
 {
   // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -38,10 +41,14 @@ EGRunAction::EGRunAction(QTEventAction* eventAction, G4String name)
 
   // Creating ntuple 1 with vector entries
   //
+  G4String tvecname = "TimeVec";
+  G4String vvecname = "VoltageVec";
   analysisManager->CreateNtuple("Signal", "Time-series");
   analysisManager->CreateNtupleIColumn("EventID");
-  analysisManager->CreateNtupleTColumn("TimeVec", fEventAction->GetTimeVec());
-  analysisManager->CreateNtupleTColumn("VoltageVec", fEventAction->GetVoltageVec());
+  for (G4int i=0;i<nAntenna;++i) {
+    analysisManager->CreateNtupleTColumn(tvecname + std::to_string(i), fEventAction->GetTimeVec());
+    analysisManager->CreateNtupleTColumn(vvecname + std::to_string(i), fEventAction->GetVoltageVec());
+  }
   analysisManager->FinishNtuple();
 }
 

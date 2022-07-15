@@ -11,6 +11,12 @@
 #include "G4AnalysisManager.hh"
 
 
+QTEventAction::QTEventAction(G4int na)
+  : G4UserEventAction()
+  , nAntenna(na)
+{}
+
+
 QTGasHitsCollection* 
 QTEventAction::GetGasHitsCollection(G4int hcID,
                                     const G4Event* event) const
@@ -105,4 +111,28 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->AddNtupleRow(0);
   }
   // next fill vectors from trajectory store, i.e. stored G4Steps
+
+  G4TrajectoryContainer* trajectoryContainer = event->GetTrajectoryContainer();
+  G4int                  n_trajectories =
+    (trajectoryContainer == nullptr) ? 0 : trajectoryContainer->entries();
+  
+  if(n_trajectories > 0) {
+    for(G4int i = 0; i < n_trajectories; i++)
+      {
+	QTTrajectory* trj = (QTTrajectory*) ((*(event->GetTrajectoryContainer()))[i]);
+	for (auto entry : trj->getVT()) {  // std::pair<double,double>
+	  // just for one antenna here, not n yet
+	  tvec.push_back(entry.first);
+	  vvec.push_back(entry.second);
+	}
+      }
+  }
+  
+  // fill the ntuple, n antenna data
+  analysisManager->FillNtupleIColumn(1, 0, eventID); // repeat all rows
+  for (G4int i=0;i<nAntenna;++i) {
+    analysisManager->FillNtupleTColumn(1, 1+2*i, tvec);
+    analysisManager->FillNtupleTColumn(1, 2+2*i, vvec);
+  }    
+  analysisManager->AddNtupleRow(1);
 }

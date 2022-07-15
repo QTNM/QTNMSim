@@ -116,7 +116,7 @@ int main(int argc, char** argv)
 
 
   // -- Set user action initialization class.
-  auto* actions = new QTActionInitialization(outputFileName, countAntenna);
+  auto* actions = new QTActionInitialization(outputFileName, countAntenna, positions);
   runManager->SetUserInitialization(actions);
 
 

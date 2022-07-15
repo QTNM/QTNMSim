@@ -14,7 +14,7 @@
 class QTEventAction : public G4UserEventAction
 {
 public:
-  QTEventAction()          = default;
+  QTEventAction(G4int);
   virtual ~QTEventAction() = default;
 
   virtual void BeginOfEventAction(const G4Event* event);
@@ -31,6 +31,7 @@ private:
   // data members
   // hit data
   G4int                 fGID    = -1;
+  G4int                 nAntenna;
 
   std::vector<G4double> tvec;
   std::vector<G4double> vvec;

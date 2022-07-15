@@ -12,14 +12,12 @@
 #include "globals.hh"
 #include <stdlib.h>
 #include <vector>
-
+#include <utility>
 
 class QTTrajectory : public G4VTrajectory
 {
 public:
-  using QTTrajectoryPointContainer = std::vector<G4VTrajectoryPoint*>;
-
-  QTTrajectory(const G4Track* aTrack);
+  QTTrajectory(const G4Track* aTrack, std::vector<G4ThreeVector>& pos);
   virtual ~QTTrajectory();
 
   virtual void ShowTrajectory(std::ostream& os = G4cout) const;
@@ -31,31 +29,14 @@ public:
   inline void  operator delete(void*);
   inline int   operator==(const QTTrajectory& right) const { return (this == &right); }
 
-  // required from base class
-  virtual G4double      GetCharge() const { return 0.0; };
-  virtual G4ThreeVector GetInitialMomentum() const { return G4ThreeVector(); }
-
-  // required for ntuple storage
-  virtual G4int               GetTrackID() const { return fTrackID; }
-  virtual G4int               GetParentID() const { return fParentID; }
-  virtual G4String            GetParticleName() const { return fParticleName; }
-  virtual G4String            GetVertexName() const { return fVertexName; }
-  virtual G4int               GetPDGEncoding() const { return fPDGEncoding; }
-  virtual G4ThreeVector       GetVertex() const { return fVertexPosition; }
-  virtual int                 GetPointEntries() const { return fPositionRecord->size(); }
-  virtual G4VTrajectoryPoint* GetPoint(G4int i) const { return (*fPositionRecord)[i]; }
-
-  G4ParticleDefinition* GetParticleDefinition() const { return fParticleDefinition; }
+  // access; MISSING n antenna storage, not just one
+  std::vector<std::pair<double,double>> getVT() {return fVT;};
 
 private:
-  QTTrajectoryPointContainer*   fPositionRecord;
-  G4int                         fTrackID;
-  G4int                         fParentID;
-  G4ParticleDefinition*         fParticleDefinition;
-  G4String                      fParticleName;
-  G4String                      fVertexName;
-  G4int                         fPDGEncoding;
-  G4ThreeVector                 fVertexPosition;
+  std::pair<double,double> convertToVT(G4ThreeVector p);
+
+  std::vector<std::pair<double,double>> fVT;    // Cyclotron radiation
+  std::vector<G4ThreeVector>&   fPositions;     // from geometry
 };
 
 extern G4ThreadLocal G4Allocator<QTTrajectory>* myTrajectoryAllocator;
