@@ -29,8 +29,7 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 , fSterilemass(0.0)
 , fSterilemixing(0.0)
 {
-  static long seed = CLHEP::HepRandom::getTheSeed();
-  generator.seed(seed); // using std random
+  generator.seed(rd()); // using random seed
 
   G4int nofParticles = 1;
   fParticleGun       = new G4ParticleGun(nofParticles);

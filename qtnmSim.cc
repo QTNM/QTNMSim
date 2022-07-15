@@ -79,7 +79,7 @@ int main(int argc, char** argv)
   // -- Set mandatory initialization classes
   G4GDMLParser parser;
   parser.SetOverlapCheck(true);
-  parser.Read(gdmlFileName); // check: std::string or c_str
+  parser.Read(gdmlFileName.data()); // const G4String&
 
   runManager->SetUserInitialization(new QTDetectorConstruction(parser.GetWorldVolume()));
 

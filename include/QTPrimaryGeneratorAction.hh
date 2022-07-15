@@ -46,6 +46,7 @@ private:
   G4double            fSterilemixing;
 
   std::ranlux24       generator;
+  std::random_device  rd; // for random seeds
 };
 
 // us
