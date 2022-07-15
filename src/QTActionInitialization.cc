@@ -2,7 +2,6 @@
 #include "QTEventAction.hh"
 #include "QTPrimaryGeneratorAction.hh"
 #include "QTRunAction.hh"
-#include "QTStackingAction.hh"
 #include "QATrackingAction.hh"
 
 
@@ -26,6 +25,5 @@ void QTActionInitialization::Build() const
   auto event = new QTEventAction;
   SetUserAction(event);
   SetUserAction(new QTRunAction(event, foutname));
-  SetUserAction(new QTStackingAction);
   SetUserAction(new QTTrackingAction);
 }

@@ -81,7 +81,7 @@ int main(int argc, char** argv)
   parser.SetOverlapCheck(true);
   parser.Read(gdmlFileName.data()); // const G4String&
 
-  runManager->SetUserInitialization(new QTDetectorConstruction(parser.GetWorldVolume()));
+  runManager->SetUserInitialization(new QTDetectorConstruction(parser));
 
 
   // -- set user physics list

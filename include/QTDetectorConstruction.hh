@@ -9,30 +9,27 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "G4Cache.hh"
+#include "G4GDMLParser.hh"
 
 /// Detector construction allowing to use the geometry read from the GDML file
 class EGGasSD;
-class G4VPhysicalVolume;
 
 class QTDetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
   
-  QTDetectorConstruction(G4VPhysicalVolume *setWorld = 0)
-  {   
-    fWorld = setWorld;
-  }
+  QTDetectorConstruction(const G4GMDLParser&);
   
-  virtual G4VPhysicalVolume* Construct()
-  {
-    return fWorld;
-  }
+  virtual G4VPhysicalVolume* Construct();
+
   virtual void               ConstructSDandField();
   
-  
+  // access for questions
+  const G4GDMLParser&        GetParserRef() {return fparser;}
+
 private:
   
-  G4VPhysicalVolume *fWorld;
-  G4Cache<QTGasSD*>  fSD = nullptr;
+  const G4GDMLParser& fparser;
+  G4Cache<QTGasSD*>   fSD = nullptr;
 };
 #endif
