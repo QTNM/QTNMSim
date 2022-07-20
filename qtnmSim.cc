@@ -83,18 +83,22 @@ int main(int argc, char** argv)
 
   // retrieve antenna information
   G4int countAntenna = 0;
-  std::vector<G4ThreeVector> positions;
+  std::vector<double> angles;
   const G4GDMLAuxMapType* auxmap = fParser.GetAuxMap();
   for(G4GDMLAuxMapType::const_iterator iter=auxmap->begin();
       iter!=auxmap->end(); iter++) 
     {
       G4LogicalVolume* lv = (*iter).first;
       G4String nam = lv->GetName();
-      if (G4StrUtil::contains(nam, "Antenna")) {
-	countAntenna = lv->GetNoDaughters();
-	for (G4int i=0;i<countAntenna;++i) {
-	  G4ThreeVector pos = lv->GetDaughter(i)->GetTranslation();
-	  positions.push_back(pos);
+      // in name of logical volume, even for CAD input, assume 'Antenna'
+      // since that should receive a list of auxiliaries.
+      if (G4StrUtil::contains(nam, "Antenna")) { 
+	for (auto entry : (*iter).second) { // G4GDMLAuxStructType in std::vector
+	  if (entry.type=="angle") { // assume radians
+	    std::string theta = entry.value;
+	    angles.push_back(std::stod(theta)); // convert string to double
+	    countAntenna++;
+	  }
 	}
       }
     }
@@ -116,7 +120,7 @@ int main(int argc, char** argv)
 
 
   // -- Set user action initialization class.
-  auto* actions = new QTActionInitialization(outputFileName, countAntenna, positions);
+  auto* actions = new QTActionInitialization(outputFileName, countAntenna, angles);
   runManager->SetUserInitialization(actions);
 
 
