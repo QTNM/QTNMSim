@@ -4,16 +4,16 @@
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
 
-QTTrackingAction::QTTrackingAction(std::vector<G4ThreeVector>& pos)
+QTTrackingAction::QTTrackingAction(std::vector<G4double>& ang)
   : G4UserTrackingAction()
-  , positions(pos)
+  , angles(ang)
 {}
 
 
 void QTTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 {
   // Create trajectory for track
-  fpTrackingManager->SetTrajectory(new QTTrajectory(aTrack, positions));
+  fpTrackingManager->SetTrajectory(new QTTrajectory(aTrack, angles));
 }
 
 void QTTrackingAction::PostUserTrackingAction(const G4Track* aTrack)

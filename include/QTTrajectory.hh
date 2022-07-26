@@ -1,12 +1,11 @@
 #ifndef QTTrajectory_h
 #define QTTrajectory_h 1
 
+#include "trkdefs.hh"
 #include "G4Allocator.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4Step.hh"
 #include "G4ThreeVector.hh"
 #include "G4Track.hh"
-#include "G4TrajectoryPoint.hh"
 #include "G4VTrajectory.hh"
 #include "G4ios.hh"
 #include "globals.hh"
@@ -17,7 +16,7 @@
 class QTTrajectory : public G4VTrajectory
 {
 public:
-  QTTrajectory(const G4Track* aTrack, std::vector<G4ThreeVector>& pos);
+  QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang);
   virtual ~QTTrajectory();
 
   virtual void ShowTrajectory(std::ostream& os = G4cout) const;
@@ -35,24 +34,24 @@ public:
 private:
   std::pair<double,double> convertToVT(G4ThreeVector p);
 
-  std::vector<std::pair<double,double>> fVT;    // Cyclotron radiation
-  std::vector<G4ThreeVector>&   fPositions;     // from geometry
+  std::vector<std::pair<double,double>> fVT;     // Cyclotron radiation
+  std::vector<G4double>&                fAngles; // from geometry
 };
 
-extern G4ThreadLocal G4Allocator<QTTrajectory>* myTrajectoryAllocator;
+extern G4TRACKING_DLL G4Allocator<QTTrajectory>*& myTrajectoryAllocator();
 
 inline void* QTTrajectory::operator new(size_t)
 {
-  if(myTrajectoryAllocator == nullptr)
+  if(myTrajectoryAllocator() == nullptr)
   {
-    myTrajectoryAllocator = new G4Allocator<QTTrajectory>;
+    myTrajectoryAllocator() = new G4Allocator<QTTrajectory>;
   }
-  return (void*) myTrajectoryAllocator->MallocSingle();
+  return (void*) myTrajectoryAllocator()->MallocSingle();
 }
 
 inline void QTTrajectory::operator delete(void* aTrajectory)
 {
-  myTrajectoryAllocator->FreeSingle((QTTrajectory*) aTrajectory);
+  myTrajectoryAllocator()->FreeSingle((QTTrajectory*) aTrajectory);
 }
 
 #endif

@@ -1,12 +1,15 @@
-#include "G4UnitsTable.hh"
-
 #include "QTTrajectory.hh"
 
-G4ThreadLocal G4Allocator<QTTrajectory>* myTrajectoryAllocator = nullptr;
+G4Allocator<QTTrajectory>*& myTrajectoryAllocator()
+{
+  G4ThreadLocalStatic G4Allocator<QTTrajctory>* _instance = nullptr;
+  return _instance;
+}
 
-QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4ThreeVector>& pos)
+
+QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 : G4VTrajectory()
-, fPositions(pos)
+, fAngles(ang)
 {
   if (!fVT.empty())
     fVT.clear();
@@ -24,7 +27,7 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   fVT.push_back(convertToVT(aStep->GetPostStepPoint()->GetPosition()));
 }
 
-std::pair<double,double> QTTrajectory::convertToVT(G4ThreeVector)
+std::pair<double,double> QTTrajectory::convertToVT(G4ThreeVector sourcepos)
 {
   // insert field at antenna calculation
   // return pair of time, voltage
