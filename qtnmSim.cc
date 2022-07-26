@@ -82,7 +82,6 @@ int main(int argc, char** argv)
   parser.Read(gdmlFileName.data()); // const G4String&
 
   // retrieve antenna information
-  G4int countAntenna = 0;
   std::vector<double> angles;
   const G4GDMLAuxMapType* auxmap = fParser.GetAuxMap();
   for(G4GDMLAuxMapType::const_iterator iter=auxmap->begin();
@@ -97,7 +96,6 @@ int main(int argc, char** argv)
 	  if (entry.type=="angle") { // assume radians
 	    std::string theta = entry.value;
 	    angles.push_back(std::stod(theta)); // convert string to double
-	    countAntenna++;
 	  }
 	}
       }
@@ -120,7 +118,7 @@ int main(int argc, char** argv)
 
 
   // -- Set user action initialization class.
-  auto* actions = new QTActionInitialization(outputFileName, countAntenna, angles);
+  auto* actions = new QTActionInitialization(outputFileName, angles);
   runManager->SetUserInitialization(actions);
 
 

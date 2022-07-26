@@ -5,18 +5,18 @@
 #include "QATrackingAction.hh"
 
 
-QTActionInitialization::QTActionInitialization(G4String name, G4int na, std::vector<G4ThreeVector> pos)
+QTActionInitialization::QTActionInitialization(G4String name, std::vector<G4double> ang)
 : G4VUserActionInitialization()
 , foutname(std::move(name))
-, nAntenna(na)
-, positions(pos)
+, nAntenna((int)ang.size())
+, angles(std::move(ang))
 {}
 
 QTActionInitialization::~QTActionInitialization() = default;
 
 void QTActionInitialization::BuildForMaster() const
 {
-  auto event = new QTEventAction;
+  auto event = new QTEventAction(nAntenna);
   SetUserAction(new QTRunAction(event, foutname, nAntenna));
 }
 
@@ -27,5 +27,5 @@ void QTActionInitialization::Build() const
   auto event = new QTEventAction(nAntenna);
   SetUserAction(event);
   SetUserAction(new QTRunAction(event, foutname, nAntenna));
-  SetUserAction(new QTTrackingAction(positions);
+  SetUserAction(new QTTrackingAction(angles);
 }
