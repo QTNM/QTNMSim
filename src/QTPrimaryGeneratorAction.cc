@@ -1,6 +1,8 @@
 // us
 #include "QTPrimaryGeneratorAction.hh"
 
+#include <cmath>
+
 // geant
 #include "G4Event.hh"
 #include "G4ThreeVector.hh"
@@ -14,6 +16,7 @@
 #include "G4Box.hh"
 #include "G4Tubs.hh"
 #include "G4RandomTools.hh"
+#include "G4RandomDirection.hh"
 
 
 QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
@@ -38,7 +41,6 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 
   // default electron particle kinematics
   fParticleGun->SetParticleDefinition(particleTable->FindParticle("e-"));
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.)); // z-axis
 
   DefineCommands();
 }
@@ -69,6 +71,7 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     // random spot location [mm]
     G4TwoVector loc = G4RandomPointInEllipse(fSpot/2.0, fSpot/2.0); // circle
     fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()*mm, loc.y()*mm, -worldZHalfLength + 1.*cm));
+    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.0, 0.0, 1.0)); // z-direction
     
     // Gaussian random energy [keV]
     G4double en = G4RandGauss::shoot(fMean, fStdev);
@@ -89,6 +92,11 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4Tubs* atomTubs = dynamic_cast<G4Tubs*>(sourceLV->GetSolid()); // assume a cylinder
     G4double atomZHalfLength = atomTubs->GetZHalfLength();
     G4double atomRadius      = atomTubs->GetOuterRadius();
+    G4double phi             = CLHEP::twopi() * G4UniformRand();
+    G4double rad             = G4UniformRand() * atomRadius;
+    G4double zpos            = -atomZHalfLength + 2.0*atomZHalfLength*G4UniformRand(); 
+    fParticleGun->SetParticlePosition(G4ThreeVector(rad*std::cos(phi)*mm, rad*std::sin(phi)*mm, zpos*mm));
+    fParticleGun->SetParticleMomentumDirection(G4RandomDirection()); // 4 pi solid angle
 
     // Beta decay random energy [keV]
     G4double en = ed(generator); // this is with std random
