@@ -11,20 +11,27 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 : G4VTrajectory()
 , fAngles(ang)
 {
-  if (!fVT.empty())
-    fVT.clear();
-  fVT.push_back(convertToVT(aTrack->GetPosition()));
+  // for all antenna, first entry
+  for (VTcontainer vtcon : fVT) {
+    vtcon.clear();
+    vtcon.push_back(convertToVT(aTrack->GetPosition()));
+  }
 }
 
 QTTrajectory::~QTTrajectory()
 {
-  fVT.clear();
+  // for all antenna
+  for (VTcontainer vtcon : fVT) {
+    vtcon.clear();
+  }
 }
 
 void QTTrajectory::AppendStep(const G4Step* aStep)
 {
-  // just for one antenna, not n
-  fVT.push_back(convertToVT(aStep->GetPostStepPoint()->GetPosition()));
+  // for all antenna
+  for (VTcontainer vtcon : fVT) {
+    vtcon.push_back(convertToVT(aStep->GetPostStepPoint()->GetPosition()));
+  }
 }
 
 std::pair<double,double> QTTrajectory::convertToVT(G4ThreeVector sourcepos)

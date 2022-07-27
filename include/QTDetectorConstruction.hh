@@ -12,7 +12,7 @@
 #include "G4GDMLParser.hh"
 
 /// Detector construction allowing to use the geometry read from the GDML file
-class EGGasSD;
+class QTGasSD;
 
 class QTDetectorConstruction : public G4VUserDetectorConstruction
 {

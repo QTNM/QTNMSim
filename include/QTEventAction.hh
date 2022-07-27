@@ -20,8 +20,8 @@ public:
   virtual void BeginOfEventAction(const G4Event* event);
   virtual void EndOfEventAction(const G4Event* event);
 
-  std::vector<G4double>& GetTimeVec()    { return tvec; }
-  std::vector<G4double>& GetVoltageVec() { return vvec; }
+  std::vector<G4double>& GetTimeVec(G4int i)    { return tvec[i]; }
+  std::vector<G4double>& GetVoltageVec(G4int i) { return vvec[i]; }
 
 private:
   // methods
@@ -33,8 +33,8 @@ private:
   G4int                 fGID    = -1;
   G4int                 nAntenna;
 
-  std::vector<G4double> tvec;
-  std::vector<G4double> vvec;
+  std::array<std::vector<G4double>, nAntenna> tvec;
+  std::array<std::vector<G4double>, nAntenna> vvec;
   
 };
 

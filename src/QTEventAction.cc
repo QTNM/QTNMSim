@@ -1,4 +1,5 @@
 #include "QTEventAction.hh"
+#include "QTTrajectory.hh"
 #include "QTGasSD.hh"
 
 #include <vector>
@@ -117,22 +118,22 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     (trajectoryContainer == nullptr) ? 0 : trajectoryContainer->entries();
   
   if(n_trajectories > 0) {
-    for(G4int i = 0; i < n_trajectories; i++)
-      {
-	QTTrajectory* trj = (QTTrajectory*) ((*(event->GetTrajectoryContainer()))[i]);
-	for (auto entry : trj->getVT()) {  // std::pair<double,double>
-	  // just for one antenna here, not n yet
-	  tvec.push_back(entry.first);
-	  vvec.push_back(entry.second);
+    for(G4int i = 0; i < n_trajectories; i++) {
+      QTTrajectory* trj = (QTTrajectory*) ((*(event->GetTrajectoryContainer()))[i]);
+      for (G4int i=0;i<nAntenna;++i) {    // std::vector<pair<>>
+	for (auto entry : trj->getVT(i)) {  // std::pair<double,double>
+	  tvec[i].push_back(entry.first);
+	  vvec[i].push_back(entry.second);
 	}
       }
+    }
   }
   
   // fill the ntuple, n antenna data
   analysisManager->FillNtupleIColumn(1, 0, eventID); // repeat all rows
   for (G4int i=0;i<nAntenna;++i) {
-    analysisManager->FillNtupleTColumn(1, 1+2*i, tvec);
-    analysisManager->FillNtupleTColumn(1, 2+2*i, vvec);
+    analysisManager->FillNtupleTColumn(1, 1+2*i, tvec[i]);
+    analysisManager->FillNtupleTColumn(1, 2+2*i, vvec[i]);
   }    
   analysisManager->AddNtupleRow(1);
 }

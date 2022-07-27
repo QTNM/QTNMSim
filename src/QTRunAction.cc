@@ -46,8 +46,8 @@ EGRunAction::EGRunAction(QTEventAction* eventAction, G4String name, G4int na)
   analysisManager->CreateNtuple("Signal", "Time-series");
   analysisManager->CreateNtupleIColumn("EventID");
   for (G4int i=0;i<nAntenna;++i) {
-    analysisManager->CreateNtupleTColumn(tvecname + std::to_string(i), fEventAction->GetTimeVec());
-    analysisManager->CreateNtupleTColumn(vvecname + std::to_string(i), fEventAction->GetVoltageVec());
+    analysisManager->CreateNtupleTColumn(tvecname + std::to_string(i), fEventAction->GetTimeVec(i));
+    analysisManager->CreateNtupleTColumn(vvecname + std::to_string(i), fEventAction->GetVoltageVec(i));
   }
   analysisManager->FinishNtuple();
 }
