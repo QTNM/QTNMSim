@@ -15,7 +15,21 @@
 QTEventAction::QTEventAction(G4int na)
   : G4UserEventAction()
   , nAntenna(na)
-{}
+{
+  tvec = new std::vector<G4double> [nAntenna];
+  vvec = new std::vector<G4double> [nAntenna];
+}
+
+
+QTEventAction::~QTEventAction()
+{
+  for (unsigned int i=0;i<nAntenna;++i) {
+    tvec[i]->clear();
+    vvec[i]->clear();
+  }
+  delete [] tvec;
+  delete [] vvec;
+}
 
 
 QTGasHitsCollection* 
@@ -72,9 +86,9 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     auto hh = (*GasHC)[i];
 
     int    id = (hh->GetTrackID());
-    double e  = (hh->GetEdep())    / G4Analysis::GetUnitValue("keV");
-    double tt = (hh->GetTime())    / G4Analysis::GetUnitValue("ns");
-    double k  = (hh->GetKine())    / G4Analysis::GetUnitValue("keV");
+    double e  = (hh->GetEdep()) / G4Analysis::GetUnitValue("keV");
+    double tt = (hh->GetTime()) / G4Analysis::GetUnitValue("ns");
+    double k  = (hh->GetKine()) / G4Analysis::GetUnitValue("keV");
     double mx = (hh->GetPx()); // normalised momentum direction vector
     double my = (hh->GetPy());
     double mz = (hh->GetPz());
@@ -120,20 +134,34 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   if(n_trajectories > 0) {
     for(G4int i = 0; i < n_trajectories; i++) {
       QTTrajectory* trj = (QTTrajectory*) ((*(event->GetTrajectoryContainer()))[i]);
-      for (G4int i=0;i<nAntenna;++i) {    // std::vector<pair<>>
-	for (auto entry : trj->getVT(i)) {  // std::pair<double,double>
-	  tvec[i].push_back(entry.first);
-	  vvec[i].push_back(entry.second);
+      
+      for (G4int j=0;j<nAntenna;++j) {    // std::vector<pair<>>
+	for (auto entry : trj->getVT(j)) {  // std::pair<double,double>
+	  tvec[j]->push_back(entry.first);
+	  vvec[j]->push_back(entry.second);
 	}
+      }
+        
+      // fill the ntuple, n antenna data for each trajectory
+      analysisManager->FillNtupleIColumn(1, 0, eventID); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 1, trj->GetVEnergy()/ G4Analysis::GetUnitValue("keV"));
+      analysisManager->FillNtupleDColumn(1, 2, (trj->GetVMomDir()).x()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 3, (trj->GetVMomDir()).y()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 4, (trj->GetVMomDir()).z()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 5, (trj->GetVPosition()).x()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 6, (trj->GetVPosition()).y()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 7, (trj->GetVPosition()).z()); // repeat all rows
+      for (G4int j=0;j<nAntenna;++j) {
+	analysisManager->FillNtupleTColumn(1, 8+2*j, tvec[j]);
+	analysisManager->FillNtupleTColumn(1, 9+2*j, vvec[j]);
+      }    
+      analysisManager->AddNtupleRow(1);
+
+      // clear antenna signals
+      for (G4int j=0;j<nAntenna;++j) { // std::vector<pair<>>
+	tvec[j]->clear();
+	vvec[j]->clear();
       }
     }
   }
-  
-  // fill the ntuple, n antenna data
-  analysisManager->FillNtupleIColumn(1, 0, eventID); // repeat all rows
-  for (G4int i=0;i<nAntenna;++i) {
-    analysisManager->FillNtupleTColumn(1, 1+2*i, tvec[i]);
-    analysisManager->FillNtupleTColumn(1, 2+2*i, vvec[i]);
-  }    
-  analysisManager->AddNtupleRow(1);
 }

@@ -45,6 +45,13 @@ EGRunAction::EGRunAction(QTEventAction* eventAction, G4String name, G4int na)
   G4String vvecname = "VoltageVec";
   analysisManager->CreateNtuple("Signal", "Time-series");
   analysisManager->CreateNtupleIColumn("EventID");
+  analysisManager->CreateNtupleDColumn("VKine");
+  analysisManager->CreateNtupleDColumn("Vmomx");
+  analysisManager->CreateNtupleDColumn("Vmomy");
+  analysisManager->CreateNtupleDColumn("Vmomz");
+  analysisManager->CreateNtupleDColumn("Vposx");
+  analysisManager->CreateNtupleDColumn("Vposy");
+  analysisManager->CreateNtupleDColumn("Vposz");
   for (G4int i=0;i<nAntenna;++i) {
     analysisManager->CreateNtupleTColumn(tvecname + std::to_string(i), fEventAction->GetTimeVec(i));
     analysisManager->CreateNtupleTColumn(vvecname + std::to_string(i), fEventAction->GetVoltageVec(i));

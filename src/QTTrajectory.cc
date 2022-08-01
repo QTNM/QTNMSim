@@ -10,27 +10,32 @@ G4Allocator<QTTrajectory>*& myTrajectoryAllocator()
 QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 : G4VTrajectory()
 , fAngles(ang)
+, vpos(aTrack->GetVertexPosition())
+, vmom(aTrack->GetVertexMomentumDirection())
+, venergy(aTrack->GetVertexKineticEnergy())
 {
+  fVT = new VTcontainer [fAngles.size()]; // instantiate array
+
   // for all antenna, first entry
-  for (VTcontainer vtcon : fVT) {
-    vtcon.clear();
-    vtcon.push_back(convertToVT(aTrack->GetPosition()));
+  for (unsigned int i=0;i<fAngles.size();++i) {
+    fVT[i]->push_back(convertToVT(aTrack->GetPosition()));
   }
 }
 
 QTTrajectory::~QTTrajectory()
 {
   // for all antenna
-  for (VTcontainer vtcon : fVT) {
-    vtcon.clear();
+  for (unsigned int i=0;i<fAngles.size();++i) {
+    fVT->clear();
   }
+  delete [] fVT;
 }
 
 void QTTrajectory::AppendStep(const G4Step* aStep)
 {
   // for all antenna
-  for (VTcontainer vtcon : fVT) {
-    vtcon.push_back(convertToVT(aStep->GetPostStepPoint()->GetPosition()));
+  for (unsigned int i=0;i<fAngles.size();++i) {
+    fVT->push_back(convertToVT(aStep->GetPostStepPoint()->GetPosition()));
   }
 }
 

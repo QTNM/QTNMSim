@@ -13,7 +13,6 @@
 // std
 #include <stdlib.h>
 #include <vector>
-#include <array>
 #include <utility>
 
 class QTTrajectory : public G4VTrajectory
@@ -33,14 +32,20 @@ public:
   inline void  operator delete(void*);
   inline int   operator==(const QTTrajectory& right) const { return (this == &right); }
 
-  // access; MISSING n antenna storage, not just one
-  VTcontainer  getVT(G4int iAntenna) {return fVT.at(iAntenna);};
+  // access
+  VTcontainer   getVT(G4int iAntenna) {return fVT[iAntenna];};
+  G4ThreeVector getVPosition() {return vpos;}
+  G4ThreeVector getVMomDir()   {return vmom;}
+  G4double      getVEnergy()   {return venergy;}
 
 private:
   std::pair<double,double> convertToVT(G4ThreeVector p);
 
-  std::vector<G4double>&                  fAngles; // from geometry
-  std::array<VTcontainer, fAngles.size()> fVT;     // Cyclotron radiation
+  G4double               venergy; // vertex kinetic energy
+  G4ThreeVector          vpos;    // Vertex position vector
+  G4ThreeVector          vmom;    // Vertex momentum vector
+  std::vector<G4double>& fAngles; // from geometry
+  VTcontainer*           fVT;     // array, Cyclotron radiation
 };
 
 extern G4TRACKING_DLL G4Allocator<QTTrajectory>*& myTrajectoryAllocator();
