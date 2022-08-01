@@ -65,11 +65,6 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   //
   auto GasHC     = GetGasHitsCollection(fGID, event);
 
-  if(GasHC->entries() <= 0)
-  {
-    return;  // no action on no hit
-  }
-
   // dummy storage
   std::vector<double> tedep, ttime, tkine, px, py, pz, posx, posy, posz;
   std::vector<int> tid;
