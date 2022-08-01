@@ -26,7 +26,7 @@ QTTrajectory::~QTTrajectory()
 {
   // for all antenna
   for (unsigned int i=0;i<fAngles.size();++i) {
-    fVT->clear();
+    fVT[i]->clear();
   }
   delete [] fVT;
 }
@@ -35,7 +35,7 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
 {
   // for all antenna
   for (unsigned int i=0;i<fAngles.size();++i) {
-    fVT->push_back(convertToVT(aStep->GetPostStepPoint()->GetPosition()));
+    fVT[i]->push_back(convertToVT(aStep->GetPostStepPoint()->GetPosition()));
   }
 }
 
