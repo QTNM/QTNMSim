@@ -39,7 +39,11 @@ public:
   G4double      getVEnergy()   {return venergy;}
 
 private:
-  std::pair<double,double> convertToVT(G4ThreeVector p);
+  std::pair<double,double> convertToVT(unsigned int which);
+  G4double               gltime;  // global time
+  G4ThreeVector          pos;     // trajectory position
+  G4ThreeVector          vel;     // trajectory velocity
+  G4ThreeVector          acc;     // trajectory acceleration
 
   G4double               venergy; // vertex kinetic energy
   G4ThreeVector          vpos;    // Vertex position vector
