@@ -3,6 +3,8 @@
 
 #include "trkdefs.hh"
 #include "G4Allocator.hh"
+#include "G4FieldManager.hh"
+#include "G4TransportationManager.hh"
 #include "G4Step.hh"
 #include "G4ThreeVector.hh"
 #include "G4Track.hh"
@@ -41,6 +43,8 @@ public:
 private:
   std::pair<double,double> convertToVT(unsigned int which);
   G4double               gltime;  // global time
+  G4double               fAntennaRad; // antenna radial distance from origin
+  G4ThreeVector          fAntennaNormal; // trajectory position
   G4ThreeVector          pos;     // trajectory position
   G4ThreeVector          vel;     // trajectory velocity
   G4ThreeVector          acc;     // trajectory acceleration
@@ -50,6 +54,8 @@ private:
   G4ThreeVector          vmom;    // Vertex momentum vector
   std::vector<G4double>& fAngles; // from geometry
   VTcontainer*           fVT;     // array, Cyclotron radiation
+  G4FieldManager*        pfieldManager; // singleton for info
+
 };
 
 extern G4TRACKING_DLL G4Allocator<QTTrajectory>*& myTrajectoryAllocator();
