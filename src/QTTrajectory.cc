@@ -48,8 +48,9 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
 {
   // take care of units [time] [distance]
   gltime = aStep->getTrack()->GetGlobalTime();
-  pos = aStep->GetPostStepPoint()->GetPosition(); // returns const reference
-  vel = aStep->GetPostStepPoint()->GetMomentumDirection() * aStep->GetPostStepPoint()->GetVelocity();
+  pos  = aStep->GetPostStepPoint()->GetPosition(); // returns const reference
+  // only source beta=v/c enters radiation formulae
+  beta = aStep->GetPostStepPoint()->GetMomentumDirection() * aStep->GetPostStepPoint()->GetBeta();
 
   // for all antenna
   for (unsigned int i=0;i<fAngles.size();++i) {
@@ -68,9 +69,10 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   // need frequency and acceleration
   // both known at every point by EqnOfMotion - store and offer for access.
   // means no repeat calculation.
-  // like needs: dynamic_cast<QT_LD_EqnRHS*>GetEquationOfMotion()->acc()
+  // likely needs: dynamic_cast<QT_LD_EqnRHS*>GetEquationOfMotion()->acc()
   // since method for acceleration access does not exist by default. Make ourselves.
-  fAntennaNormal.setRThetaPhi(1.0, CLHEP::halfpi, fAngles[which]/360.0 * CLHEP::twopi);
+  fAntennaPos.setRThetaPhi(fAntennaRad, CLHEP::halfpi, fAngles[which]/360.0 * CLHEP::twopi);
+  fAntennaNormal = (-fAntennaPos).unit(); // inward direction; to origin
 
   // ask RHS object, acceleration as const reference
   acc = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->acc();
