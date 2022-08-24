@@ -76,9 +76,21 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
 
   // ask RHS object, acceleration as const reference
   acc = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->acc();
-  G4double omega = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->GetOmega();
 
+  // collect required values
+  G4double omega = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->GetOmega().mag();
+  G4double wvlg  = CLHEP::c_light / (omega / CLHEP::twopi);
+  G4double fac   = CLHEP::electron_charge / (4.0*CLHEP::pi*CLHEP::epsilon0*CLHEP::c_light);
+  G4double dist  = (fAntennaPos - pos).mag();
+  G4ThreeVector Runit = (fAntennaPos - pos).unit();
+  G4double dummy = 1.0 - Runit.dot(beta);
+  fac /= dummy*dummy*dummy;
 
+  G4ThreeVector relFarEField = fac*(Runit.cross((Runit-beta).cross(acc/CLHEP::c_light))) / dist;
+  G4ThreeVector relNearEField = fac*((1.0-beta.mag2())*(Runit-beta)) / (dist*dist);
+  // assume half wave dipole eff length as wvlg/pi
+  G4double voltage = wvlg/CLHEP::pi * (relFarEField+relNearEField).dot(fAntennaNormal);
+  return std::make_pair(gltime, voltage);
 }
 
 void QTTrajectory::ShowTrajectory(std::ostream& os) const
