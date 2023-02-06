@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 
   // retrieve antenna information
   std::vector<double> angles;
-  const G4GDMLAuxMapType* auxmap = fParser.GetAuxMap();
+  const G4GDMLAuxMapType* auxmap = parser.GetAuxMap();
   for(G4GDMLAuxMapType::const_iterator iter=auxmap->begin();
       iter!=auxmap->end(); iter++)
     {

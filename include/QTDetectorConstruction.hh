@@ -18,7 +18,7 @@ class QTDetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
   
-  QTDetectorConstruction(const G4GMDLParser&);
+  QTDetectorConstruction(const G4GDMLParser&);
   
   virtual G4VPhysicalVolume* Construct();
 
