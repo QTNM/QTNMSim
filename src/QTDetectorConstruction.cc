@@ -7,7 +7,7 @@
 #include "QTMagneticFieldSetup.hh"
 
 
-QTDetectorConstruction::QTDetectorConstruction(const G4GMDLParser& p)
+QTDetectorConstruction::QTDetectorConstruction(const G4GDMLParser& p)
   : G4VUserDetectorConstruction(),
     fparser(p)
 {
@@ -26,7 +26,7 @@ void QTDetectorConstruction::ConstructSDandField()
   
   // Only need to construct the (per-thread) SD once
   if(!fSD.Get()) {
-    const G4GDMLAuxMapType* auxmap = fParser.GetAuxMap();
+    const G4GDMLAuxMapType* auxmap = fparser.GetAuxMap();
     for(G4GDMLAuxMapType::const_iterator iter=auxmap->begin();
 	iter!=auxmap->end(); iter++) 
       {
