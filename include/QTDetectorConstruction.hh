@@ -13,6 +13,7 @@
 
 /// Detector construction allowing to use the geometry read from the GDML file
 class QTGasSD;
+class QTMagneticFieldSetup;
 
 class QTDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -31,5 +32,6 @@ private:
   
   const G4GDMLParser& fparser;
   G4Cache<QTGasSD*>   fSD = nullptr;
+  G4Cache<QTMagneticFieldSetup*>  fEmFieldSetup = nullptr;
 };
 #endif
