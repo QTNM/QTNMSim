@@ -4,6 +4,8 @@
 #include "QTGasSD.hh"
 #include "G4VPhysicalVolume.hh"
 
+#include "BIMagneticFieldSetup.hh"
+
 
 QTDetectorConstruction::QTDetectorConstruction(const G4GMDLParser& p)
   : G4VUserDetectorConstruction(),
@@ -47,6 +49,14 @@ void QTDetectorConstruction::ConstructSDandField()
 	  }
 	}
       }
+  }
+
+  // Construct the field creator - this will register the field it creates
+
+  if (!fEmFieldSetup.Get()) {
+    QTMagneticFieldSetup* fieldSetup = new QTMagneticFieldSetup();
+    G4AutoDelete::Register(fieldSetup); //Kernel will delete the messenger
+    fEmFieldSetup.Put(fieldSetup);
   }
   
 }

@@ -74,11 +74,11 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   fAntennaPos.setRThetaPhi(fAntennaRad, CLHEP::halfpi, fAngles[which]/360.0 * CLHEP::twopi);
   fAntennaNormal = (-fAntennaPos).unit(); // inward direction; to origin
 
-  // ask RHS object, acceleration as const reference
-  acc = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->acc();
-
   // collect required values
-  G4double omega = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->GetOmega().mag();
+  G4ThreeVector Bfield = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->GetCachedFieldValue();
+  G4double omega = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->CalcOmegaGivenB(Bfield).mag();
+  acc = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->CalcAccGivenB(Bfield);
+
   G4double wvlg  = CLHEP::c_light / (omega / CLHEP::twopi);
   G4double fac   = CLHEP::electron_charge / (4.0*CLHEP::pi*CLHEP::epsilon0*CLHEP::c_light);
   G4double dist  = (fAntennaPos - pos).mag();
