@@ -4,7 +4,7 @@
 #include "QTGasSD.hh"
 #include "G4VPhysicalVolume.hh"
 
-#include "BIMagneticFieldSetup.hh"
+#include "QTMagneticFieldSetup.hh"
 
 
 QTDetectorConstruction::QTDetectorConstruction(const G4GMDLParser& p)
