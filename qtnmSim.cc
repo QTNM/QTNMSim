@@ -23,6 +23,7 @@
 #include "G4VModularPhysicsList.hh"
 #include "G4GDMLParser.hh"
 #include "G4LogicalVolume.hh"
+#include "G4StepLimiterPhysics.hh"
 
 // us
 #include "CLI11.hpp"  // c++17 safe; https://github.com/CLIUtils/CLI11
@@ -85,13 +86,13 @@ int main(int argc, char** argv)
   std::vector<double> angles;
   const G4GDMLAuxMapType* auxmap = fParser.GetAuxMap();
   for(G4GDMLAuxMapType::const_iterator iter=auxmap->begin();
-      iter!=auxmap->end(); iter++) 
+      iter!=auxmap->end(); iter++)
     {
       G4LogicalVolume* lv = (*iter).first;
       G4String nam = lv->GetName();
       // in name of logical volume, even for CAD input, assume 'Antenna'
       // since that should receive a list of auxiliaries.
-      if (G4StrUtil::contains(nam, "Antenna")) { 
+      if (G4StrUtil::contains(nam, "Antenna")) {
 	for (auto entry : (*iter).second) { // G4GDMLAuxStructType in std::vector
 	  if (entry.type=="angle") { // assume radians
 	    std::string theta = entry.value;
@@ -113,6 +114,9 @@ int main(int argc, char** argv)
   myConstructors->push_back(physListName.data());
   physList = new G4GenericPhysicsList(myConstructors);
 
+  // Register Step limiter
+  physList->RegisterPhysics(new G4StepLimiterPhysics());
+
   // finish physics list
   runManager->SetUserInitialization(physList);
 
@@ -125,7 +129,7 @@ int main(int argc, char** argv)
   // Batch mode only - no visualisation
   G4String command = "/control/execute ";
   UImanager->ApplyCommand(command + macroName);
-  
+
   delete runManager;
   return 0;
 }
