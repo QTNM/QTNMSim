@@ -3,6 +3,7 @@
 #include "G4SDManager.hh"
 #include "QTGasSD.hh"
 #include "G4VPhysicalVolume.hh"
+#include "G4AutoDelete.hh"
 
 #include "QTMagneticFieldSetup.hh"
 
