@@ -3,6 +3,9 @@
 
 #include "G4VUserActionInitialization.hh"
 
+#include "G4Types.hh"
+#include "G4String.hh"
+
 # include <vector>
 /// Action initialization class.
 
