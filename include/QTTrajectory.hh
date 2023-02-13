@@ -1,7 +1,7 @@
 #ifndef QTTrajectory_h
 #define QTTrajectory_h 1
 
-#include "trkdefs.hh"
+#include "trkgdefs.hh"
 #include "G4Allocator.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
