@@ -20,6 +20,7 @@
 class QTTrajectory : public G4VTrajectory
 {
   using VTcontainer = std::vector<std::pair<double,double>>;
+  using G4TrajectoryPointContainer = std::vector<G4VTrajectoryPoint*>;
 
 public:
   QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang);
@@ -40,6 +41,24 @@ public:
   G4ThreeVector getVMomDir()   {return vmom;}
   G4double      getVEnergy()   {return venergy;}
 
+  inline G4int GetTrackID() const
+    { return fTrackID; }
+  inline G4int GetParentID() const
+    { return fParentID; }
+  inline G4String GetParticleName() const
+    { return ParticleName; }
+  inline G4double GetCharge() const
+    { return PDGCharge; }
+  inline G4int GetPDGEncoding() const
+    { return PDGEncoding; }
+  inline G4ThreeVector GetInitialMomentum() const
+    { return initialMomentum; }
+
+  virtual G4int GetPointEntries() const
+    { return G4int(positionRecord->size()); }
+  virtual G4VTrajectoryPoint* GetPoint(G4int i) const
+    { return (*positionRecord)[i]; }
+
 private:
   std::pair<double,double> convertToVT(unsigned int which);
   G4double               gltime;  // global time
@@ -57,6 +76,13 @@ private:
   VTcontainer*           fVT;     // array, Cyclotron radiation
   G4FieldManager*        pfieldManager; // singleton for info
 
+  G4TrajectoryPointContainer* positionRecord = nullptr;
+  G4int                       fTrackID = 0;
+  G4int                       fParentID = 0;
+  G4int                       PDGEncoding = 0;
+  G4double                    PDGCharge = 0.0;
+  G4String                    ParticleName = "";
+  G4ThreeVector               initialMomentum;
 };
 
 extern G4TRACKING_DLL G4Allocator<QTTrajectory>*& myTrajectoryAllocator();

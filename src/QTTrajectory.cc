@@ -21,7 +21,20 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 , venergy(aTrack->GetVertexKineticEnergy())
 , pos(aTrack->GetPosition())
 , gltime(aTrack->GetGlobalTime())
+, ParticleName(fpParticleDefinition->GetParticleName())
+, PDGCharge(fpParticleDefinition->GetPDGCharge())
+, PDGEncoding(fpParticleDefinition->GetPDGEncoding())
+, fTrackID(aTrack->GetTrackID())
+, fParentID(aTrack->GetParentID())
+, initialMomentum(aTrack->GetMomentum())
 {
+  // TODO - REVIEW ME
+  positionRecord = new G4TrajectoryPointContainer();
+
+  // Following is for the first trajectory point
+  positionRecord->push_back(new G4TrajectoryPoint(aTrack->GetPosition()));
+  // END TODO
+
   fVT = new VTcontainer [fAngles.size()]; // instantiate array
   
   // set up information retrieval from singleton
