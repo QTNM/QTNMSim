@@ -1,5 +1,5 @@
 #include "QTRunAction.hh"
-#include "g4root.hh"
+
 
 #include "G4Run.hh"
 #include "G4RunManager.hh"

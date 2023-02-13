@@ -3,6 +3,7 @@
 
 #include "QTEventAction.hh"
 
+#include "G4RootAnalysisManager.hh"
 #include "G4UserRunAction.hh"
 #include "globals.hh"
 
@@ -13,6 +14,8 @@ class G4Run;
 
 class QTRunAction : public G4UserRunAction
 {
+  using G4AnalysisManager = G4RootAnalysisManager;
+
 public:
   QTRunAction(QTEventAction* eventAction, G4String name, G4int na);
   virtual ~QTRunAction();
