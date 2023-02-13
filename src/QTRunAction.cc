@@ -1,4 +1,4 @@
-#include "EGRunAction.hh"
+#include "QTRunAction.hh"
 #include "g4root.hh"
 
 #include "G4Run.hh"
@@ -8,7 +8,7 @@
 
 #include <string>
 
-EGRunAction::EGRunAction(QTEventAction* eventAction, G4String name, G4int na)
+QTRunAction::QTRunAction(QTEventAction* eventAction, G4String name, G4int na)
 : G4UserRunAction()
 , fEventAction(eventAction)
 , fout(std::move(name))
@@ -18,7 +18,6 @@ EGRunAction::EGRunAction(QTEventAction* eventAction, G4String name, G4int na)
   auto analysisManager = G4AnalysisManager::Instance();
 
   // Create directories
-  analysisManager->SetDefaultFileType("root");
   analysisManager->SetVerboseLevel(1);
   analysisManager->SetNtupleMerging(true);
   analysisManager->SetNtupleDirectoryName("ntuple");
@@ -53,15 +52,15 @@ EGRunAction::EGRunAction(QTEventAction* eventAction, G4String name, G4int na)
   analysisManager->CreateNtupleDColumn("Vposy");
   analysisManager->CreateNtupleDColumn("Vposz");
   for (G4int i=0;i<nAntenna;++i) {
-    analysisManager->CreateNtupleTColumn(tvecname + std::to_string(i), fEventAction->GetTimeVec(i));
-    analysisManager->CreateNtupleTColumn(vvecname + std::to_string(i), fEventAction->GetVoltageVec(i));
+    analysisManager->CreateNtupleDColumn(tvecname + std::to_string(i));
+    analysisManager->CreateNtupleDColumn(vvecname + std::to_string(i));
   }
   analysisManager->FinishNtuple();
 }
 
-EGRunAction::~EGRunAction() { delete G4AnalysisManager::Instance(); }
+QTRunAction::~QTRunAction() { delete G4AnalysisManager::Instance(); }
 
-void EGRunAction::BeginOfRunAction(const G4Run* /*run*/)
+void QTRunAction::BeginOfRunAction(const G4Run* /*run*/)
 {
   // Get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -71,7 +70,7 @@ void EGRunAction::BeginOfRunAction(const G4Run* /*run*/)
   analysisManager->OpenFile(fout);
 }
 
-void EGRunAction::EndOfRunAction(const G4Run* /*run*/)
+void QTRunAction::EndOfRunAction(const G4Run* /*run*/)
 {
   // Get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
