@@ -2,13 +2,13 @@
 #define BorisStepperRadiation_HH
 
 #include "BorisStepper.hh"
-#include "BIEquationOfMotion.hh"
+#include "QTEquationOfMotion.hh"
 
 class BorisStepperRadiation : public BorisStepper
 {
 public:
 
-  BorisStepperRadiation(BIEquationOfMotion* EqnOfMot);
+  BorisStepperRadiation(QTEquationOfMotion* EqnOfMot);
   ~BorisStepperRadiation();
 
   void RadiationReaction(G4ThreeVector initVelocity,
@@ -16,7 +16,7 @@ public:
 
 private:
 
-  BIEquationOfMotion* fPtrBIEqOfMot;
+  QTEquationOfMotion* fPtrQTEqOfMot;
 
 };
 

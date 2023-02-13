@@ -1,8 +1,8 @@
 #include "BorisStepperRadiation.hh"
 
-BorisStepperRadiation::BorisStepperRadiation(BIEquationOfMotion* EqnOfMot)
+BorisStepperRadiation::BorisStepperRadiation(QTEquationOfMotion* EqnOfMot)
   : BorisStepper(EqnOfMot),
-    fPtrBIEqOfMot(EqnOfMot)
+    fPtrQTEqOfMot(EqnOfMot)
 {
 };
 
