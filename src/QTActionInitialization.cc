@@ -27,5 +27,5 @@ void QTActionInitialization::Build() const
   auto event = new QTEventAction(nAntenna);
   SetUserAction(event);
   SetUserAction(new QTRunAction(event, foutname, nAntenna));
-  SetUserAction(new QTTrackingAction(angles);
+  SetUserAction(new QTTrackingAction(angles));
 }
