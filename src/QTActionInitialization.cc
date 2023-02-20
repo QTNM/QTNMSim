@@ -2,7 +2,7 @@
 #include "QTEventAction.hh"
 #include "QTPrimaryGeneratorAction.hh"
 #include "QTRunAction.hh"
-#include "QATrackingAction.hh"
+#include "QTTrackingAction.hh"
 
 
 QTActionInitialization::QTActionInitialization(G4String name, std::vector<G4double> ang)
