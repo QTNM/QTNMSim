@@ -146,10 +146,8 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       analysisManager->FillNtupleDColumn(1, 5, (trj->getVPosition()).x()); // repeat all rows
       analysisManager->FillNtupleDColumn(1, 6, (trj->getVPosition()).y()); // repeat all rows
       analysisManager->FillNtupleDColumn(1, 7, (trj->getVPosition()).z()); // repeat all rows
-      for (G4int j=0;j<nAntenna;++j) {
-	analysisManager->FillNtupleTColumn(1, 8+2*j, tvec[j]);
-	analysisManager->FillNtupleTColumn(1, 9+2*j, vvec[j]);
-      }    
+      // Note no need to call FillNtupleDColumn for vector types
+      // Filled automatically on call to AddNtupleRow
       analysisManager->AddNtupleRow(1);
 
       // clear antenna signals
