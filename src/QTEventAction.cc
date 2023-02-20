@@ -24,8 +24,8 @@ QTEventAction::QTEventAction(G4int na)
 QTEventAction::~QTEventAction()
 {
   for (unsigned int i=0;i<nAntenna;++i) {
-    tvec[i]->clear();
-    vvec[i]->clear();
+    tvec[i].clear();
+    vvec[i].clear();
   }
   delete [] tvec;
   delete [] vvec;
@@ -132,20 +132,20 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       
       for (G4int j=0;j<nAntenna;++j) {    // std::vector<pair<>>
 	for (auto entry : trj->getVT(j)) {  // std::pair<double,double>
-	  tvec[j]->push_back(entry.first);
-	  vvec[j]->push_back(entry.second);
+	  tvec[j].push_back(entry.first);
+	  vvec[j].push_back(entry.second);
 	}
       }
         
       // fill the ntuple, n antenna data for each trajectory
       analysisManager->FillNtupleIColumn(1, 0, eventID); // repeat all rows
-      analysisManager->FillNtupleDColumn(1, 1, trj->GetVEnergy()/ G4Analysis::GetUnitValue("keV"));
-      analysisManager->FillNtupleDColumn(1, 2, (trj->GetVMomDir()).x()); // repeat all rows
-      analysisManager->FillNtupleDColumn(1, 3, (trj->GetVMomDir()).y()); // repeat all rows
-      analysisManager->FillNtupleDColumn(1, 4, (trj->GetVMomDir()).z()); // repeat all rows
-      analysisManager->FillNtupleDColumn(1, 5, (trj->GetVPosition()).x()); // repeat all rows
-      analysisManager->FillNtupleDColumn(1, 6, (trj->GetVPosition()).y()); // repeat all rows
-      analysisManager->FillNtupleDColumn(1, 7, (trj->GetVPosition()).z()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 1, trj->getVEnergy()/ G4Analysis::GetUnitValue("keV"));
+      analysisManager->FillNtupleDColumn(1, 2, (trj->getVMomDir()).x()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 3, (trj->getVMomDir()).y()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 4, (trj->getVMomDir()).z()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 5, (trj->getVPosition()).x()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 6, (trj->getVPosition()).y()); // repeat all rows
+      analysisManager->FillNtupleDColumn(1, 7, (trj->getVPosition()).z()); // repeat all rows
       for (G4int j=0;j<nAntenna;++j) {
 	analysisManager->FillNtupleTColumn(1, 8+2*j, tvec[j]);
 	analysisManager->FillNtupleTColumn(1, 9+2*j, vvec[j]);
@@ -154,8 +154,8 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
 
       // clear antenna signals
       for (G4int j=0;j<nAntenna;++j) { // std::vector<pair<>>
-	tvec[j]->clear();
-	vvec[j]->clear();
+	tvec[j].clear();
+	vvec[j].clear();
       }
     }
   }
