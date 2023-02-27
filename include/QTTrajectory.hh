@@ -65,9 +65,9 @@ private:
   G4double               fAntennaRad; // antenna radial distance from origin
   G4ThreeVector          fAntennaNormal; // antenna normal towards origin
   G4ThreeVector          fAntennaPos;    // antenna position
-  G4ThreeVector&         pos;     // trajectory position
-  G4ThreeVector&         beta;    // trajectory velocity
-  G4ThreeVector&         acc;     // trajectory acceleration
+  G4ThreeVector          pos;     // trajectory position
+  G4ThreeVector          beta;    // trajectory velocity
+  G4ThreeVector          acc;     // trajectory acceleration
 
   G4double               venergy; // vertex kinetic energy
   G4ThreeVector          vpos;    // Vertex position vector
