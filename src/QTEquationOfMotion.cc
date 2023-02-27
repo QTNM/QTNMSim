@@ -19,3 +19,18 @@ void QTEquationOfMotion::SetChargeMomentumMass(G4double particleCharge,
   fCof_val = particleCharge*eplus*c_light ; //  B must be in Tesla
   fMass = mass;
 }
+
+G4ThreeVector QTEquationOfMotion::GetCachedFieldValue()
+{
+  return G4ThreeVector(0.,0.,0.);
+}
+
+G4ThreeVector QTEquationOfMotion::CalcOmegaGivenB(G4ThreeVector Bfield)
+{
+  return G4ThreeVector(0.,0.,0.);
+}
+
+G4ThreeVector QTEquationOfMotion::CalcAccGivenB(G4ThreeVector BField)
+{
+  return G4ThreeVector(0.,0.,0.);
+}

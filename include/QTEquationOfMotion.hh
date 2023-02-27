@@ -2,6 +2,7 @@
 #define QTEquationOfMotion_HH
 
 #include "G4Mag_EqRhs.hh"
+#include "G4ThreeVector.hh"
 
 class QTEquationOfMotion : public G4Mag_EqRhs
 {
@@ -13,6 +14,10 @@ public:
   void SetChargeMomentumMass(G4double particleCharge,
 			     G4double MomentumXc,
 			     G4double mass);
+
+  G4ThreeVector GetCachedFieldValue();
+  G4ThreeVector CalcOmegaGivenB(G4ThreeVector);
+  G4ThreeVector CalcAccGivenB(G4ThreeVector);
 
 private:
   G4double fCof_val;
