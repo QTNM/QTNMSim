@@ -90,7 +90,13 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
 
   // collect required values
   QTEquationOfMotion* eqn = dynamic_cast<QTEquationOfMotion*>(pfieldManager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion());
-  G4ThreeVector Bfield = eqn->GetCachedFieldValue();
+  // TODO - this would be better done using the actual field object
+  G4double pos_[3];
+  pos_[0] = pos[0];pos_[1] = pos[1];pos_[2] = pos[2];
+  G4double B[3];
+  eqn->GetFieldValue(pos_, B);
+  G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] );
+  // END TODO
   G4double omega = eqn->CalcOmegaGivenB(Bfield).mag();
   acc = eqn->CalcAccGivenB(Bfield);
 
