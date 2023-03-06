@@ -33,7 +33,8 @@ G4ThreeVector QTEquationOfMotion::CalcOmegaGivenB(G4ThreeVector Bfield, G4ThreeV
   return fCharge * Bfield / fMass / gamma_rel;
 }
 
-G4ThreeVector QTEquationOfMotion::CalcAccGivenB(G4ThreeVector BField)
+G4ThreeVector QTEquationOfMotion::CalcAccGivenB(G4ThreeVector BField, G4ThreeVector mom)
 {
-  return G4ThreeVector(0.,0.,0.);
+  G4ThreeVector omega = CalcOmegaGivenB(BField, mom);
+  return mom.cross(omega);
 }

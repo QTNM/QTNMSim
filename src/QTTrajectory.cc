@@ -99,7 +99,7 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] );
   // END TODO
   G4double omega = eqn->CalcOmegaGivenB(Bfield, mom).mag();
-  acc = eqn->CalcAccGivenB(Bfield);
+  acc = eqn->CalcAccGivenB(Bfield, mom);
 
   G4double wvlg  = CLHEP::c_light / (omega / CLHEP::twopi);
   G4double fac   = CLHEP::electron_charge / (4.0*CLHEP::pi*CLHEP::epsilon0*CLHEP::c_light);
