@@ -16,12 +16,13 @@ public:
 			     G4double mass);
 
   G4ThreeVector GetCachedFieldValue();
-  G4ThreeVector CalcOmegaGivenB(G4ThreeVector);
+  G4ThreeVector CalcOmegaGivenB(G4ThreeVector, G4ThreeVector);
   G4ThreeVector CalcAccGivenB(G4ThreeVector);
 
 private:
   G4double fCof_val;
   G4double fMass;
+  G4double fCharge;
 };
 
 #endif

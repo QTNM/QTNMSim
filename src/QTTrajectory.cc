@@ -63,6 +63,7 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   // take care of units [time] [distance]
   gltime = aStep->GetTrack()->GetGlobalTime();
   pos  = aStep->GetPostStepPoint()->GetPosition(); // returns const reference
+  mom  = aStep->GetPostStepPoint()->GetMomentum();
   // only source beta=v/c enters radiation formulae
   beta = aStep->GetPostStepPoint()->GetMomentumDirection() * aStep->GetPostStepPoint()->GetBeta();
 
@@ -97,7 +98,7 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   eqn->GetFieldValue(pos_, B);
   G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] );
   // END TODO
-  G4double omega = eqn->CalcOmegaGivenB(Bfield).mag();
+  G4double omega = eqn->CalcOmegaGivenB(Bfield, mom).mag();
   acc = eqn->CalcAccGivenB(Bfield);
 
   G4double wvlg  = CLHEP::c_light / (omega / CLHEP::twopi);
