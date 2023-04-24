@@ -53,7 +53,7 @@ namespace TBeta
   }
   
   // Lanczos approximation - needs testing!
-  std::complex<double> Gamma(std::complex<double> z) {
+  inline std::complex<double> Gamma(std::complex<double> z) {
     double g = 7;
     static const double p[9] = {0.99999999999980993, 676.5203681218851, -1259.1392167224028,
 				771.32342877765313, -176.61502916214059, 12.507343278686905,
