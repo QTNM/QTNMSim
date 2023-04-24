@@ -10,7 +10,7 @@
 
 namespace TBeta
 {
-  static constexpr double pi        = std::acos(-1.0);    // Pi
+  static constexpr double pi        = 3.141592653589793238462643383279502884;    // Pi
   static constexpr double twopi     = 2.0 * pi;           // 2 Pi
   static constexpr double me        = 510.99895;          // electron mass [keV]
   static constexpr double gA        = 1.2646;             // nucleon axial coupling
