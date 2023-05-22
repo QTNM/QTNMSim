@@ -45,10 +45,6 @@
 #include "G4MagIntegratorDriver.hh"
 #include "G4ChordFinder.hh"
 
-#include "G4ExplicitEuler.hh"
-#include "G4ImplicitEuler.hh"
-#include "G4ClassicalRK4.hh"
-#include "G4ExactHelixStepper.hh"
 #include "BorisStepper.hh"
 
 #include "G4PhysicalConstants.hh"
@@ -67,7 +63,7 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
    fElFieldValue(),
    fStepper(0),
    fIntgrDriver(0),
-   fStepperType(2),    // ClassicalRK4 -- the default stepper
+   fStepperType(0),    // Boris Stepper, no radiation -- the default stepper
    fFieldMessenger(nullptr)   
 {
   G4ThreeVector fieldVector( 0.0, 0.0, 1.0 * tesla );
@@ -91,7 +87,7 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
     fElFieldValue(),
     fStepper(0),
     fIntgrDriver(0),
-    fStepperType(2),    // ClassicalRK4 -- the default stepper
+    fStepperType(0),    // Boris Stepper, no radiation -- the default stepper
     fFieldMessenger(nullptr)
 {
   fEMfield = new G4UniformMagField(fieldVector);
@@ -179,28 +175,12 @@ void QTMagneticFieldSetup::CreateStepper()
   switch ( fStepperType )
   {
     case 0:
-      fStepper = new G4ExplicitEuler( fEquation, nvar );
-      G4cout<<"G4ExplicitEuler is calledS"<<G4endl;
-      break;
-    case 1:
-      fStepper = new G4ImplicitEuler( fEquation, nvar );
-      G4cout<<"G4ImplicitEuler is called"<<G4endl;
-      break;
-    case 2:
-      fStepper = new G4ClassicalRK4( fEquation, nvar );
-      G4cout<<"G4ClassicalRK4 is called"<<G4endl;
-      break;
-    case 3:
-      fStepper = new G4ExactHelixStepper( fEquation );
-      G4cout<<"G4ExactHelixStepper is called"<<G4endl;
-      break;
-    case 4:
       fStepper = new BorisStepper( fEquation );
       G4cout<<"BorisStepper is called"<<G4endl;
       break;
     default:
-      fStepper = new G4ClassicalRK4( fEquation, nvar );
-      G4cout<<"G4ClassicalRK4 (default) is called"<<G4endl;
+      fStepper = new BorisStepper( fEquation );
+      G4cout<<"BorisStepper is called"<<G4endl;
       break;
   }
 
