@@ -1,10 +1,10 @@
 #ifndef QTEquationOfMotion_HH
 #define QTEquationOfMotion_HH
 
-#include "G4Mag_EqRhs.hh"
+#include "G4Mag_UsualEqRhs.hh"
 #include "G4ThreeVector.hh"
 
-class QTEquationOfMotion : public G4Mag_EqRhs
+class QTEquationOfMotion : public G4Mag_UsualEqRhs
 {
 public:
 

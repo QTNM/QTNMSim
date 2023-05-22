@@ -4,7 +4,7 @@
 #include "G4SystemOfUnits.hh"
 
 QTEquationOfMotion::QTEquationOfMotion(G4MagneticField *magField)
-  : G4Mag_EqRhs(magField)
+  : G4Mag_UsualEqRhs(magField)
 {
 }
 
