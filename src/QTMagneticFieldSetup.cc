@@ -40,7 +40,7 @@
 #include "G4UniformMagField.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
-#include "G4Mag_UsualEqRhs.hh"
+#include "QTEquationOfMotion.hh"
 #include "G4MagIntegratorStepper.hh"
 #include "G4MagIntegratorDriver.hh"
 #include "G4ChordFinder.hh"
@@ -68,7 +68,7 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
 {
   G4ThreeVector fieldVector( 0.0, 0.0, 1.0 * tesla );
   fEMfield = new G4UniformMagField(fieldVector);
-  fEquation = new G4Mag_UsualEqRhs(fEMfield);
+  fEquation = new QTEquationOfMotion(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
 
@@ -91,7 +91,7 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
     fFieldMessenger(nullptr)
 {
   fEMfield = new G4UniformMagField(fieldVector);
-  fEquation = new G4Mag_UsualEqRhs(fEMfield);
+  fEquation = new QTEquationOfMotion(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
   UpdateIntegrator();
