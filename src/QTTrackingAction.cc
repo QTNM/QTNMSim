@@ -4,7 +4,7 @@
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
 
-QTTrackingAction::QTTrackingAction(std::vector<G4double>& ang)
+QTTrackingAction::QTTrackingAction(std::vector<G4double> ang)
   : G4UserTrackingAction()
   , angles(ang)
 {}

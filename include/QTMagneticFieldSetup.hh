@@ -40,7 +40,7 @@
 
 class G4FieldManager;
 class G4ChordFinder;
-class G4Mag_EqRhs;
+class QTEquationOfMotion;
 class G4MagIntegratorStepper;
 class G4MagInt_Driver;
 class QTFieldMessenger;
@@ -92,7 +92,7 @@ private:
 
   G4ChordFinder*          fChordFinder;
 
-  G4Mag_EqRhs*            fEquation;
+  QTEquationOfMotion*     fEquation;
 
   G4MagneticField*        fEMfield;
  

@@ -54,7 +54,7 @@ QTPrimaryGeneratorAction::~QTPrimaryGeneratorAction()
 void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
   // In order to avoid dependence of PrimaryGeneratorAction
-  // on DetectorConstruction class we get world volume 
+  // on DetectorConstruction class we get world volume
   // from G4LogicalVolumeStore: assumes name is World_log!
   // from G4LogicalVolumeStore: assumes source name is Source_log!
   // Check: Name requirement for GDML file AND axis assumption!
@@ -72,7 +72,7 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4TwoVector loc = G4RandomPointInEllipse(fSpot/2.0, fSpot/2.0); // circle
     fParticleGun->SetParticlePosition(G4ThreeVector(loc.x()*mm, loc.y()*mm, -worldZHalfLength + 1.*cm));
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.0, 0.0, 1.0)); // z-direction
-    
+
     // Gaussian random energy [keV]
     G4double en = G4RandGauss::shoot(fMean, fStdev);
     fParticleGun->SetParticleEnergy(en * keV);
@@ -83,18 +83,18 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     int nw = 10000; // nw - number of bins
     double lbound = 0.2; // lower energy bound [keV]
     double ubound = TBeta::endAt(fNumass, 1); // max energy
-    
+
     // create distribution
-    pld_type ed(nw, lbound, ubound, betaGenerator(forder, fNumass, 
+    pld_type ed(nw, lbound, ubound, betaGenerator(fOrder, fNumass,
 						  fSterilemass, fSterilemixing));
-    
+
     // random vertex location in cloud [mm]
     G4Tubs* atomTubs = dynamic_cast<G4Tubs*>(sourceLV->GetSolid()); // assume a cylinder
     G4double atomZHalfLength = atomTubs->GetZHalfLength();
     G4double atomRadius      = atomTubs->GetOuterRadius();
-    G4double phi             = CLHEP::twopi() * G4UniformRand();
+    G4double phi             = CLHEP::twopi * G4UniformRand();
     G4double rad             = G4UniformRand() * atomRadius;
-    G4double zpos            = -atomZHalfLength + 2.0*atomZHalfLength*G4UniformRand(); 
+    G4double zpos            = -atomZHalfLength + 2.0*atomZHalfLength*G4UniformRand();
     fParticleGun->SetParticlePosition(G4ThreeVector(rad*std::cos(phi)*mm, rad*std::sin(phi)*mm, zpos*mm));
     fParticleGun->SetParticleMomentumDirection(G4RandomDirection()); // 4 pi solid angle
 
@@ -147,21 +147,21 @@ void QTPrimaryGeneratorAction::DefineCommands()
   orderCmd.SetDefaultValue("true");
 
   // neutrino mass command
-  auto& numuCmd = fMessenger->DeclareProperty("numass", fNumass,
+  auto& numuCmd1 = fMessenger->DeclareProperty("numass", fNumass,
                                                "Neutrino mass [keV].");
-  numuCmd.SetParameterName("m", true);
-  numuCmd.SetRange("m>=0.");
-  numuCmd.SetDefaultValue("1.0e-4");
+  numuCmd1.SetParameterName("m", true);
+  numuCmd1.SetRange("m>=0.");
+  numuCmd1.SetDefaultValue("1.0e-4");
 
   // neutrino mass command
-  auto& numuCmd = fMessenger->DeclareProperty("mN", fSterilemass,
+  auto& numuCmd2 = fMessenger->DeclareProperty("mN", fSterilemass,
                                                "Sterile neutrino mass [keV].");
-  numuCmd.SetParameterName("n", true);
-  numuCmd.SetRange("n>=0.");
-  numuCmd.SetDefaultValue("0.0");
+  numuCmd2.SetParameterName("n", true);
+  numuCmd2.SetRange("n>=0.");
+  numuCmd2.SetDefaultValue("0.0");
 
   // neutrino mass command
-  auto& numuCmd = fMessenger->DeclareProperty("eta", fSterilemixing,
+  auto& mixCmd = fMessenger->DeclareProperty("eta", fSterilemixing,
                                                "Sterile neutrino mixing (0.0-1.0).");
   mixCmd.SetParameterName("x", true);
   mixCmd.SetRange("x>=0.");

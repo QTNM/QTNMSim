@@ -1,14 +1,15 @@
 #include "QTTrajectory.hh"
-#include "QT_LD_EqnRHS.hh"  // proposed eqn of motion right hand side object
+#include "QTEquationOfMotion.hh"
 
 #include "G4LogicalVolumeStore.hh"
 #include "G4Tubs.hh"
 #include "G4PhysicalConstants.hh"
-
+#include "G4TrajectoryPoint.hh"
+#include "G4ChordFinder.hh"
 
 G4Allocator<QTTrajectory>*& myTrajectoryAllocator()
 {
-  G4ThreadLocalStatic G4Allocator<QTTrajctory>* _instance = nullptr;
+  G4ThreadLocalStatic G4Allocator<QTTrajectory>* _instance = nullptr;
   return _instance;
 }
 
@@ -21,9 +22,9 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 , venergy(aTrack->GetVertexKineticEnergy())
 , pos(aTrack->GetPosition())
 , gltime(aTrack->GetGlobalTime())
-, ParticleName(fpParticleDefinition->GetParticleName())
-, PDGCharge(fpParticleDefinition->GetPDGCharge())
-, PDGEncoding(fpParticleDefinition->GetPDGEncoding())
+, ParticleName(aTrack->GetDefinition()->GetParticleName())
+, PDGCharge(aTrack->GetDefinition()->GetPDGCharge())
+, PDGEncoding(aTrack->GetDefinition()->GetPDGEncoding())
 , fTrackID(aTrack->GetTrackID())
 , fParentID(aTrack->GetParentID())
 , initialMomentum(aTrack->GetMomentum())
@@ -38,13 +39,13 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
   fVT = new VTcontainer [fAngles.size()]; // instantiate array
   
   // set up information retrieval from singleton
-  pfieldmanager = G4TransportationManager::GetTransportationManager()->GetFieldManager();
-  fAntennaRad   = G4LogicalVolumeStore::GetInstance()->GetVolume("AntennaLV")->
-    dynamic_cast<G4Tubs*>GetSolid()->GetInnerRadius();
+  pfieldManager = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+  G4Tubs*  Tubs = dynamic_cast<G4Tubs*>(G4LogicalVolumeStore::GetInstance()->GetVolume("AntennaLV")->GetSolid());
+  fAntennaRad   = Tubs->GetInnerRadius();
   
   // for all antenna, first entry, set zero at start
   for (unsigned int i=0;i<fAngles.size();++i) {
-    fVT[i]->push_back(std::make_pair(gltime,0.0));
+    fVT[i].push_back(std::make_pair(gltime,0.0));
   }
 }
 
@@ -52,7 +53,7 @@ QTTrajectory::~QTTrajectory()
 {
   // for all antenna
   for (unsigned int i=0;i<fAngles.size();++i) {
-    fVT[i]->clear();
+    fVT[i].clear();
   }
   delete [] fVT;
 }
@@ -60,14 +61,15 @@ QTTrajectory::~QTTrajectory()
 void QTTrajectory::AppendStep(const G4Step* aStep)
 {
   // take care of units [time] [distance]
-  gltime = aStep->getTrack()->GetGlobalTime();
+  gltime = aStep->GetTrack()->GetGlobalTime();
   pos  = aStep->GetPostStepPoint()->GetPosition(); // returns const reference
+  mom  = aStep->GetPostStepPoint()->GetMomentum();
   // only source beta=v/c enters radiation formulae
   beta = aStep->GetPostStepPoint()->GetMomentumDirection() * aStep->GetPostStepPoint()->GetBeta();
 
   // for all antenna
   for (unsigned int i=0;i<fAngles.size();++i) {
-    fVT[i]->push_back(convertToVT(i));
+    fVT[i].push_back(convertToVT(i));
   }
 }
 
@@ -88,9 +90,16 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   fAntennaNormal = (-fAntennaPos).unit(); // inward direction; to origin
 
   // collect required values
-  G4ThreeVector Bfield = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->GetCachedFieldValue();
-  G4double omega = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->CalcOmegaGivenB(Bfield).mag();
-  acc = pfieldmanager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion()->CalcAccGivenB(Bfield);
+  QTEquationOfMotion* eqn = dynamic_cast<QTEquationOfMotion*>(pfieldManager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion());
+  // TODO - this would be better done using the actual field object
+  G4double pos_[3];
+  pos_[0] = pos[0];pos_[1] = pos[1];pos_[2] = pos[2];
+  G4double B[3];
+  eqn->GetFieldValue(pos_, B);
+  G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] );
+  // END TODO
+  G4double omega = eqn->CalcOmegaGivenB(Bfield, mom).mag();
+  acc = eqn->CalcAccGivenB(Bfield, mom);
 
   G4double wvlg  = CLHEP::c_light / (omega / CLHEP::twopi);
   G4double fac   = CLHEP::electron_charge / (4.0*CLHEP::pi*CLHEP::epsilon0*CLHEP::c_light);

@@ -50,7 +50,7 @@ private:
 };
 
 // us
-#include "TBetaGenerator.hpp"
+#include "TBetaGenerator.hh"
 
 // build generation functor
 // operator calls eactly one 
