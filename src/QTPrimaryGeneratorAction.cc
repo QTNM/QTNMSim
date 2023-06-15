@@ -27,6 +27,7 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 , fStdev(5.e-4)
 , fSpot(0.5)
 , fGunType(true) // calibration: true=electron gun
+, fTestElectron(false)  // 90 degree electron for testing, override other guns
 , fOrder(true)   // neutrino hierarchie: true=normal
 , fNumass(1.0e-4)
 , fSterilemass(0.0)
@@ -64,7 +65,13 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   auto worldLV  = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
   auto sourceLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Source_log");
 
-  if (fGunType) {
+  if (fTestElectron) { // a 90 degree emission electron for testing, default: false
+    fParticleGun->SetParticlePosition(G4ThreeVector(0.0, 0.0, 0.0)); // origin
+    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.0, 0.0, 0.0)); // x-direction
+    fParticleGun->SetParticleEnergy(fMean * keV); // defaults to 18.575 keV
+  }
+
+  else if (fGunType) { // electron gun
     G4Box* worldBox = dynamic_cast<G4Box*>(worldLV->GetSolid()); // assume a box
     G4double worldZHalfLength = worldBox->GetZHalfLength();
 
@@ -112,6 +119,12 @@ void QTPrimaryGeneratorAction::DefineCommands()
   // Define /QT/generator command directory using generic messenger class
   fMessenger =
     new G4GenericMessenger(this, "/QT/generator/", "Primary generator control");
+
+  // gun type command
+  auto& testCmd = fMessenger->DeclareProperty("test", fTestElectron,
+					      "Boolean gun testing choice: true=electron at 90 degrees; false=other generator.");
+  testCmd.SetParameterName("tt", true);
+  testCmd.SetDefaultValue("false");
 
   // gun type command
   auto& typeCmd = fMessenger->DeclareProperty("calibration", fGunType,

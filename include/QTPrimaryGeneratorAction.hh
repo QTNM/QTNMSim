@@ -34,6 +34,7 @@ private:
   G4ParticleGun*      fParticleGun;
   G4GenericMessenger* fMessenger;
 
+  G4bool              fTestElectron;
   G4bool              fGunType;
   // electron gun parameter
   G4double            fMean;
