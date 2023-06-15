@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 
   G4GDMLParser parser;
   parser.SetOverlapCheck(true);
-  parser.Read(gdmlFileName.data()); // const G4String&
+  parser.Read(gdmlFileName); // const G4String&
 
   // retrieve antenna information
   std::vector<double> angles;
