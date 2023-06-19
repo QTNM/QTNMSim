@@ -32,7 +32,7 @@ G4VPhysicalVolume* QTDetectorConstruction::Construct()
 {
   fMaxTimeLimit = new G4UserLimits(DBL_MAX,DBL_MAX,fMaxTime,0.,0.); // max time limit
   
-  auto* worldLV = fparser.GetVolume("World");
+  auto* worldLV = fparser.GetVolume("worldLV");
   worldLV->SetUserLimits(fMaxTimeLimit); // apply limit to world volume
 
   return fparser.GetWorldVolume();

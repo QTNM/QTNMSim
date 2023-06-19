@@ -56,14 +56,14 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
   // In order to avoid dependence of PrimaryGeneratorAction
   // on DetectorConstruction class we get world volume
-  // from G4LogicalVolumeStore: assumes name is World_log!
-  // from G4LogicalVolumeStore: assumes source name is Source_log!
+  // from G4LogicalVolumeStore: assumes name is worldLV!
+  // from G4LogicalVolumeStore: assumes source name is Gas_log!
   // Check: Name requirement for GDML file AND axis assumption!
   // Check: G4Tubs assumption for atom cloud in GDML.
   //
   using pld_type = std::piecewise_linear_distribution<double>;
-  auto worldLV  = G4LogicalVolumeStore::GetInstance()->GetVolume("World_log");
-  auto sourceLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Source_log");
+  auto worldLV  = G4LogicalVolumeStore::GetInstance()->GetVolume("worldLV");
+  auto sourceLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Gas_log");
 
   if (fTestElectron) { // a 90 degree emission electron for testing, default: false
     fParticleGun->SetParticlePosition(G4ThreeVector(0.0, 0.0, 0.0)); // origin
