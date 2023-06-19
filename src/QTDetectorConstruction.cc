@@ -1,22 +1,40 @@
 #include "QTDetectorConstruction.hh"
 
+#include "G4UserLimits.hh"
 #include "G4SDManager.hh"
 #include "QTGasSD.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4AutoDelete.hh"
+#include "globals.hh"
 
 #include "QTMagneticFieldSetup.hh"
 
 
 QTDetectorConstruction::QTDetectorConstruction(const G4GDMLParser& p)
   : G4VUserDetectorConstruction(),
+    fMaxTimeLimit(nullptr),
+    fMessenger(nullptr),
+    fMaxTime(100.0*CLHEP::ns),     // default max time 100 ns
     fparser(p)
 {
+  DefineCommands();
+}
+
+
+QTDetectorConstruction::~QTDetectorConstruction()
+{
+  delete fMessenger;
+  delete fMaxTimeLimit;
 }
 
 
 G4VPhysicalVolume* QTDetectorConstruction::Construct()
 {
+  fMaxTimeLimit = new G4UserLimits(DBL_MAX,DBL_MAX,fMaxTime,0.,0.); // max time limit
+  
+  auto* worldLV = fparser.GetVolume("World");
+  worldLV->SetUserLimits(fMaxTimeLimit); // apply limit to world volume
+
   return fparser.GetWorldVolume();
 }
 
@@ -62,3 +80,16 @@ void QTDetectorConstruction::ConstructSDandField()
   
 }
 
+void QTDetectorConstruction::DefineCommands()
+{
+  // Define /QT/transport command directory using generic messenger class
+  fMessenger =
+    new G4GenericMessenger(this, "/QT/transport/", "transport control");
+
+  // gun type command
+  auto& timeCmd = fMessenger->DeclarePropertyWithUnit("maxtime", "ns", fMaxTime,
+					      "Set maximum electron transport time in [ns].");
+  timeCmd.SetParameterName("time", true);
+  timeCmd.SetDefaultValue("100 ns");
+
+}

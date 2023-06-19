@@ -10,16 +10,21 @@
 #include "G4VUserDetectorConstruction.hh"
 #include "G4Cache.hh"
 #include "G4GDMLParser.hh"
+#include "G4GenericMessenger.hh"
+
 
 /// Detector construction allowing to use the geometry read from the GDML file
 class QTGasSD;
 class QTMagneticFieldSetup;
+// add a user limit to world = maximum time limit for transport
+class G4UserLimits;
 
 class QTDetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
   
   QTDetectorConstruction(const G4GDMLParser&);
+  virtual ~QTDetectorConstruction();
   
   virtual G4VPhysicalVolume* Construct();
 
@@ -29,9 +34,16 @@ public:
   const G4GDMLParser&        GetParserRef() {return fparser;}
 
 private:
+
+  void DefineCommands();
   
+  G4UserLimits*       fMaxTimeLimit = nullptr; // max time limit
+  G4GenericMessenger* fMessenger = nullptr;
+  G4double            fMaxTime;
+
   const G4GDMLParser& fparser;
   G4Cache<QTGasSD*>   fSD = nullptr;
   G4Cache<QTMagneticFieldSetup*>  fEmFieldSetup = nullptr;
+
 };
 #endif
