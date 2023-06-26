@@ -13,6 +13,7 @@ QTTrackingAction::QTTrackingAction(std::vector<G4double> ang)
 void QTTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 {
   // Create trajectory for track
+  fpTrackingManager->SetStoreTrajectory(true);
   fpTrackingManager->SetTrajectory(new QTTrajectory(aTrack, angles));
 }
 

@@ -60,13 +60,13 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
    fChordFinder(0),
    fEquation(0),
    fEMfield(0),
-   fElFieldValue(),
    fStepper(0),
    fIntgrDriver(0),
    fStepperType(0),    // Boris Stepper, no radiation -- the default stepper
    fFieldMessenger(nullptr)   
 {
-  G4ThreeVector fieldVector( 0.0, 0.0, 1.0 * tesla );
+  G4ThreeVector fieldVector( 0.0, 0.0, 1.0 * CLHEP::tesla);
+
   fEMfield = new G4UniformMagField(fieldVector);
   fEquation = new QTEquationOfMotion(fEMfield);
 
@@ -84,13 +84,13 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
     fChordFinder(0),
     fEquation(0),
     fEMfield(0),
-    fElFieldValue(),
     fStepper(0),
     fIntgrDriver(0),
     fStepperType(0),    // Boris Stepper, no radiation -- the default stepper
     fFieldMessenger(nullptr)
 {
   fEMfield = new G4UniformMagField(fieldVector);
+
   fEquation = new QTEquationOfMotion(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();

@@ -67,7 +67,6 @@ public:
 
   void SetFieldValue(G4ThreeVector fieldVector);
   void SetFieldZValue(G4double      fieldValue);
-  G4ThreeVector GetConstantFieldValue();
    // Set/Get Field strength in Geant4 units
 
   void UpdateIntegrator();
@@ -96,8 +95,6 @@ private:
 
   G4MagneticField*        fEMfield;
  
-  G4ThreeVector           fElFieldValue;
-
   G4MagIntegratorStepper* fStepper;
   G4MagInt_Driver*        fIntgrDriver;
 

@@ -12,13 +12,13 @@ QTEquationOfMotion::~QTEquationOfMotion()
 {
 }
 
-void QTEquationOfMotion::SetChargeMomentumMass(G4double particleCharge,
+void QTEquationOfMotion::SetChargeMomentumMass(G4ChargeState particleCharge,
 					       G4double MomentumXc,
 					       G4double mass)
 {
-  fCof_val = particleCharge*eplus*c_light ; //  B must be in Tesla
+  fCof_val = particleCharge.GetCharge()*eplus*c_light ; //  B must be in Tesla
   fMass = mass;
-  fCharge = particleCharge;
+  fCharge = particleCharge.GetCharge();
 }
 
 G4ThreeVector QTEquationOfMotion::GetCachedFieldValue()
@@ -30,6 +30,11 @@ G4ThreeVector QTEquationOfMotion::CalcOmegaGivenB(G4ThreeVector Bfield, G4ThreeV
 {
   G4double u_sq = mom.mag() / fMass;
   G4double gamma_rel = std::sqrt(1 + u_sq * u_sq / c_light / c_light);
+  G4cout << "Omega inputs: usq " << u_sq 
+	 << ", received mom " << mom.x() << ", " << mom.y() << ", " << mom.z() 
+	 << ", gamma " << gamma_rel 
+	 << ", charge " << fCharge 
+	 << ", mass " << fMass << G4endl;
   return fCharge * Bfield / fMass / gamma_rel;
 }
 

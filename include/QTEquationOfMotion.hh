@@ -3,6 +3,7 @@
 
 #include "G4Mag_UsualEqRhs.hh"
 #include "G4ThreeVector.hh"
+#include "G4ChargeState.hh"
 
 class QTEquationOfMotion : public G4Mag_UsualEqRhs
 {
@@ -11,7 +12,7 @@ public:
   QTEquationOfMotion(G4MagneticField *magField);
   ~QTEquationOfMotion();
 
-  void SetChargeMomentumMass(G4double particleCharge,
+  void SetChargeMomentumMass(G4ChargeState particleCharge,
 			     G4double MomentumXc,
 			     G4double mass);
 

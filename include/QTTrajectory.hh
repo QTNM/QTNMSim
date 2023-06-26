@@ -12,6 +12,9 @@
 #include "G4ios.hh"
 #include "globals.hh"
 
+// us
+#include "QTEquationOfMotion.hh"
+
 // std
 #include <stdlib.h>
 #include <vector>
@@ -76,6 +79,7 @@ private:
   std::vector<G4double>& fAngles; // from geometry
   VTcontainer*           fVT;     // array, Cyclotron radiation
   G4FieldManager*        pfieldManager; // singleton for info
+  QTEquationOfMotion*    pEqn;    // info on particle
 
   G4TrajectoryPointContainer* positionRecord = nullptr;
   G4int                       fTrackID = 0;
