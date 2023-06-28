@@ -6,6 +6,8 @@
 #include "G4TrajectoryPoint.hh"
 #include "G4ChordFinder.hh"
 #include "G4ChargeState.hh"
+#include "BorisStepper.hh"
+
 
 G4Allocator<QTTrajectory>*& myTrajectoryAllocator()
 {
@@ -75,6 +77,10 @@ QTTrajectory::~QTTrajectory()
 
 void QTTrajectory::AppendStep(const G4Step* aStep)
 {
+  // stop trajectory outside volumes of interest
+  if (!(aStep->GetTrack()->GetMaterial()->GetName()=="G4_Galactic" ||
+	aStep->GetTrack()->GetMaterial()->GetName()=="matT")) return;
+
   // take care of units [time] [distance]
   gltime = aStep->GetTrack()->GetGlobalTime();
   pos  = aStep->GetPostStepPoint()->GetPosition(); // returns const reference
@@ -85,6 +91,9 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   // 	 << pos.x()/CLHEP::mm << ", " << pos.y()/CLHEP::mm << ", " << pos.z()/CLHEP::mm << G4endl;
   // G4cout << "PRINT>>> beta= " << beta.x() << ", " << beta.y() << ", " << beta.z() << G4endl;
   // G4cout << "PRINT>>> momentum= " << mom.x() << ", " << mom.y() << ", " << mom.z() << G4endl;
+  // helix radius?
+  G4double hr = dynamic_cast<BorisStepper*>(pfieldManager->GetChordFinder()->GetIntegrationDriver()->GetStepper())->DistChord();
+  G4cout << "PRINT>>> distance chord = " << hr/CLHEP::mm << G4endl;
 
   // for all antenna
   for (unsigned int i=0;i<fAngles.size();++i) {
@@ -125,11 +134,11 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   // 	 << Bfield.z()/CLHEP::tesla << G4endl;
   // END TODO
   G4double omega = pEqn->CalcOmegaGivenB(Bfield, mom).mag();
-  G4cout << "Omega magn. = " << omega << G4endl;
+  //  G4cout << "Omega magn. = " << omega << G4endl;
   acc = pEqn->CalcAccGivenB(Bfield, mom);
-  G4cout << "acceleration= (" << acc.x() 
-	 << ", " << acc.y() << ", " 
-	 << acc.z() << ")" << G4endl;
+  // G4cout << "acceleration= (" << acc.x() 
+  // 	 << ", " << acc.y() << ", " 
+  // 	 << acc.z() << ")" << G4endl;
 
   G4double wvlg  = CLHEP::c_light / (omega / CLHEP::twopi);
   G4double fac   = CLHEP::electron_charge / (4.0*CLHEP::pi*CLHEP::epsilon0*CLHEP::c_light);

@@ -89,6 +89,11 @@ BorisStepper::Stepper( const G4double yInput[],
   yOut[4] = velocityVal * endTangent.y();
   yOut[5] = velocityVal * endTangent.z();
 
+  G4cout << "PRINT>>> STEPPER end pos " << yOut[0]/CLHEP::mm << ", " 
+	 << yOut[1]/CLHEP::mm << ", " << yOut[2]/CLHEP::mm << G4endl;
+  G4cout << "PRINT>>> STEPPER end beta " << yOut[3] << ", " 
+	 << yOut[2] << ", " << yOut[5] << G4endl;
+
   // Store and/or calculate parameters for chord distance - Needs doing
 
   // G4double ptan=velocityVal*B_v_P;
