@@ -6,7 +6,8 @@
 #include "G4TrajectoryPoint.hh"
 #include "G4ChordFinder.hh"
 #include "G4ChargeState.hh"
-#include "BorisStepper.hh"
+#include "G4PropagatorInField.hh"
+#include "G4UserLimits.hh"
 
 
 G4Allocator<QTTrajectory>*& myTrajectoryAllocator()
@@ -41,6 +42,10 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
   // set up information retrieval from singleton
   pfieldManager = G4TransportationManager::GetTransportationManager()->GetFieldManager();
   pEqn = dynamic_cast<QTEquationOfMotion*>(pfieldManager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion());
+
+  // avoid large first step
+  G4double maxStep = G4LogicalVolumeStore::GetInstance()->GetVolume("worldLV")->GetUserLimits()->GetMaxAllowedStep(*aTrack);
+    G4TransportationManager::GetTransportationManager()->GetPropagatorInField()->SetLargestAcceptableStep(maxStep-1*CLHEP::micrometer); // just below the user limit by 1 mum.
 
   // set up charge info on particle at start of trajectory
   G4ChargeState chargeState(aTrack->GetDynamicParticle()->GetCharge(),0.,0.,0.,0.);
@@ -91,9 +96,6 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   // 	 << pos.x()/CLHEP::mm << ", " << pos.y()/CLHEP::mm << ", " << pos.z()/CLHEP::mm << G4endl;
   // G4cout << "PRINT>>> beta= " << beta.x() << ", " << beta.y() << ", " << beta.z() << G4endl;
   // G4cout << "PRINT>>> momentum= " << mom.x() << ", " << mom.y() << ", " << mom.z() << G4endl;
-  // helix radius?
-  G4double hr = dynamic_cast<BorisStepper*>(pfieldManager->GetChordFinder()->GetIntegrationDriver()->GetStepper())->DistChord();
-  G4cout << "PRINT>>> distance chord = " << hr/CLHEP::mm << G4endl;
 
   // for all antenna
   for (unsigned int i=0;i<fAngles.size();++i) {
@@ -134,11 +136,11 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   // 	 << Bfield.z()/CLHEP::tesla << G4endl;
   // END TODO
   G4double omega = pEqn->CalcOmegaGivenB(Bfield, mom).mag();
-  //  G4cout << "Omega magn. = " << omega << G4endl;
+  G4cout << "Omega magn. = " << omega << G4endl;
   acc = pEqn->CalcAccGivenB(Bfield, mom);
-  // G4cout << "acceleration= (" << acc.x() 
-  // 	 << ", " << acc.y() << ", " 
-  // 	 << acc.z() << ")" << G4endl;
+  G4cout << "acceleration= (" << acc.x() 
+  	 << ", " << acc.y() << ", " 
+  	 << acc.z() << ")" << G4endl;
 
   G4double wvlg  = CLHEP::c_light / (omega / CLHEP::twopi);
   G4double fac   = CLHEP::electron_charge / (4.0*CLHEP::pi*CLHEP::epsilon0*CLHEP::c_light);

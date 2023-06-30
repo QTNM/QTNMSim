@@ -30,12 +30,12 @@ G4ThreeVector QTEquationOfMotion::CalcOmegaGivenB(G4ThreeVector Bfield, G4ThreeV
 {
   G4double u_sq = mom.mag() / fMass;
   G4double gamma_rel = std::sqrt(1 + u_sq * u_sq / c_light / c_light);
-  G4cout << "Omega inputs: usq " << u_sq 
-	 << ", received mom " << mom.x() << ", " << mom.y() << ", " << mom.z() 
-	 << ", gamma " << gamma_rel 
-	 << ", charge " << fCharge 
-	 << ", mass " << fMass << G4endl;
-  return fCharge * Bfield / fMass / gamma_rel;
+  // G4cout << "Omega inputs: usq " << u_sq 
+  // 	 << ", received mom " << mom.x() << ", " << mom.y() << ", " << mom.z() 
+  // 	 << ", gamma " << gamma_rel 
+  // 	 << ", charge " << fCharge 
+  // 	 << ", mass " << fMass << G4endl;
+  return fCharge*e_SI * Bfield / (fMass/kg) / gamma_rel;
 }
 
 G4ThreeVector QTEquationOfMotion::CalcAccGivenB(G4ThreeVector BField, G4ThreeVector mom)

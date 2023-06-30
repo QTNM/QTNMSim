@@ -10,7 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # include(CTest)
 
 # Dependencies
-find_package(Geant4 11.0 REQUIRED gdml)
+find_package(Geant4 11.1 REQUIRED gdml)
 
 # Build
 add_executable(qtnmSim

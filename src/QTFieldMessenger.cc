@@ -109,7 +109,8 @@ void QTFieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   if( command == fStepperCmd )
     fElFieldSetup->SetStepperType(fStepperCmd->GetNewIntValue(newValue));
   if( command == fUpdateCmd )
-    fElFieldSetup->UpdateIntegrator();
+    fElFieldSetup->UpdateAll();
+  //    fElFieldSetup->UpdateIntegrator();
   if( command == fBFieldZCmd )
     fElFieldSetup->SetFieldZValue(fBFieldZCmd->GetNewDoubleValue(newValue));
   if( command == fBFieldCmd )

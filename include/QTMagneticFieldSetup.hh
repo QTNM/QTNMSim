@@ -43,6 +43,8 @@ class G4ChordFinder;
 class QTEquationOfMotion;
 class G4MagIntegratorStepper;
 class G4MagInt_Driver;
+class G4BorisScheme;
+class G4BorisDriver;
 class QTFieldMessenger;
 
 /// A class for control of the Magnetic Field of the detector.
@@ -69,6 +71,9 @@ public:
   void SetFieldZValue(G4double      fieldValue);
    // Set/Get Field strength in Geant4 units
 
+  void UpdateAll();
+  // allow messenger commands to update values
+
   void UpdateIntegrator();
    // Prepare all the classes required for tracking - from stepper 
    //    to Chord-Finder
@@ -79,6 +84,9 @@ protected:
   // Find the global Field Manager
 
   G4FieldManager*         GetGlobalFieldManager();
+
+  void SetUpBorisDriver();
+   // Prepare all the classes required for tracking
 
   void CreateStepper();
    // Implementation method - should not be exposed
@@ -97,6 +105,8 @@ private:
  
   G4MagIntegratorStepper* fStepper;
   G4MagInt_Driver*        fIntgrDriver;
+  G4BorisScheme*          fBStepper;
+  G4BorisDriver*          fBDriver;
 
   G4int                   fStepperType;
 

@@ -34,7 +34,9 @@ G4VPhysicalVolume* QTDetectorConstruction::Construct()
   fUserLimit = new G4UserLimits(fMaxStep,DBL_MAX,fMaxTime,0.,0.); // max time limit
   
   auto* worldLV = fparser.GetVolume("worldLV");
+  auto* targetLV = fparser.GetVolume("Gas_log");
   worldLV->SetUserLimits(fUserLimit); // apply limit to world volume
+  targetLV->SetUserLimits(fUserLimit); // apply limit to gas volume
 
   return fparser.GetWorldVolume();
 }

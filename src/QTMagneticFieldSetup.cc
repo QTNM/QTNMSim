@@ -46,6 +46,8 @@
 #include "G4ChordFinder.hh"
 
 #include "BorisStepper.hh"
+#include "G4BorisScheme.hh"
+#include "G4BorisDriver.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -62,6 +64,8 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
    fEMfield(0),
    fStepper(0),
    fIntgrDriver(0),
+   fBStepper(0),
+   fBDriver(0),
    fStepperType(0),    // Boris Stepper, no radiation -- the default stepper
    fFieldMessenger(nullptr)   
 {
@@ -72,7 +76,8 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
 
   fFieldManager = GetGlobalFieldManager();
 
-  UpdateIntegrator();
+  //  UpdateIntegrator();
+  SetUpBorisDriver();
   fFieldMessenger = new QTFieldMessenger(this);
 }
 
@@ -86,6 +91,8 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
     fEMfield(0),
     fStepper(0),
     fIntgrDriver(0),
+    fBStepper(0),
+    fBDriver(0),
     fStepperType(0),    // Boris Stepper, no radiation -- the default stepper
     fFieldMessenger(nullptr)
 {
@@ -94,8 +101,10 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
   fEquation = new QTEquationOfMotion(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
-  UpdateIntegrator();
-  
+
+  //  UpdateIntegrator();
+  SetUpBorisDriver();
+
   fFieldMessenger = new QTFieldMessenger(this);
 }
 
@@ -109,11 +118,60 @@ QTMagneticFieldSetup::~QTMagneticFieldSetup()
   
   delete fChordFinder;  fChordFinder= nullptr;
   delete fStepper;      fStepper = nullptr;
+  delete fBStepper;     fBStepper = nullptr;
   delete fEquation;     fEquation = nullptr;
   delete fEMfield;      fEMfield = nullptr;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void QTMagneticFieldSetup::SetUpBorisDriver()
+{
+  // set up Boris driver from Geant4.11, follows example field01
+  G4cout << " F01FieldSetup::CreateAndSetupBorisDriver() called. " << G4endl;   
+  G4cout << "   1. Creating Scheme (Stepper)."  << G4endl;
+  fBStepper = new G4BorisScheme(fEquation);
+  G4cout << "   2. Creating Driver."  << G4endl;
+  fBDriver  = new G4BorisDriver(fMinStep, fBStepper);
+
+  G4cout  << "  3. Creating ChordFinder."  << G4endl;
+  fChordFinder = new G4ChordFinder( fBDriver );
+
+  G4cout  << "  4. Updating Field Manager (with ChordFinder, field)."  << G4endl;
+  fFieldManager->SetChordFinder( fChordFinder );
+  fFieldManager->SetDetectorField(fEMfield );
+
+}
+
+
+void QTMagneticFieldSetup::UpdateAll()
+{
+  // It must be possible to call 'again' after an alternative stepper
+  //   has been chosen, or other changes have been made
+  // Focus here are G4 Boris objects only.
+  assert(fEquation!=nullptr);
+
+  G4cout<< " QTMagneticFieldSetup: The minimal step is equal to "
+        << fMinStep/mm << " mm" << G4endl;
+
+  if (fChordFinder) {
+     delete fChordFinder;
+     fChordFinder= nullptr;
+     // The chord-finder's destructor deletes the driver
+     fBDriver= nullptr;
+  }
+  
+  // Currently driver does not 'own' stepper      ( 17.05.2017 J.A. )
+  //   -- so this stepper is still a valid object after this
+
+  if( fBStepper ) {
+     delete fBStepper;
+     fBStepper = nullptr;
+  }
+
+  SetUpBorisDriver();
+}
+
 
 void QTMagneticFieldSetup::UpdateIntegrator()
 {
