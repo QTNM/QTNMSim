@@ -14,14 +14,15 @@
 class QTEventAction : public G4UserEventAction
 {
 public:
-  QTEventAction(G4int);
+  QTEventAction(G4int na);
   virtual ~QTEventAction();
 
   virtual void BeginOfEventAction(const G4Event* event);
   virtual void EndOfEventAction(const G4Event* event);
 
-  std::vector<G4double>& GetTimeVec(G4int i)    { return tvec[i]; }
-  std::vector<G4double>& GetVoltageVec(G4int i) { return vvec[i]; }
+  std::vector<G4int>&    GetAntennaID()    { return avec; }
+  std::vector<G4double>& GetTimeVec()      { return tvec; }
+  std::vector<G4double>& GetVoltageVec()   { return vvec; }
 
 private:
   // methods
@@ -30,11 +31,12 @@ private:
 
   // data members
   // hit data
-  G4int                 fGID    = -1;
-  G4int                 nAntenna; // vector array size
+  G4int                 fGID     = -1;
+  G4int                 nAntenna = -1;
 
-  std::vector<G4double>* tvec;    // vector array
-  std::vector<G4double>* vvec;    // vector array
+  std::vector<G4int>    avec;    // vector container
+  std::vector<G4double> tvec;    // vector container
+  std::vector<G4double> vvec;    // vector container
   
 };
 

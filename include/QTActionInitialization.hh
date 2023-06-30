@@ -21,7 +21,6 @@ public:
 private:
   std::vector<G4double> angles;
   G4String              foutname;
-  G4int                 nAntenna;
 };
 
 #endif

@@ -20,10 +20,7 @@ G4Allocator<QTTrajectory>*& myTrajectoryAllocator()
 QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 : G4VTrajectory()
 , fAngles(ang)
-, vpos(aTrack->GetVertexPosition())
-, vmom(aTrack->GetVertexMomentumDirection())
-, venergy(aTrack->GetVertexKineticEnergy())
-, pos(aTrack->GetPosition())
+, pos(aTrack->GetPosition()) // set all constant starter values
 , gltime(aTrack->GetGlobalTime())
 , ParticleName(aTrack->GetDefinition()->GetParticleName())
 , PDGCharge(aTrack->GetDefinition()->GetPDGCharge())
@@ -32,13 +29,6 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 , fParentID(aTrack->GetParentID())
 , initialMomentum(aTrack->GetMomentum())
 {
-  positionRecord = new G4TrajectoryPointContainer();
-
-  // Following is for the first trajectory point
-  positionRecord->push_back(new G4TrajectoryPoint(aTrack->GetPosition()));
-
-  fVT = new VTcontainer [fAngles.size()]; // instantiate array
-  
   // set up information retrieval from singleton
   pfieldManager = G4TransportationManager::GetTransportationManager()->GetFieldManager();
   pEqn = dynamic_cast<QTEquationOfMotion*>(pfieldManager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion());
@@ -58,26 +48,15 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
   
   // for all antenna, first entry, set zero at start
   for (unsigned int i=0;i<fAngles.size();++i) {
-    fVT[i].push_back(std::make_pair(gltime,0.0));
+    fAntennaID.push_back((G4int)i);            // which antenna
+    fVT.push_back(std::make_pair(gltime,0.0)); // data for antenna signal
   }
 }
 
 QTTrajectory::~QTTrajectory()
 {
-  if (positionRecord != nullptr) {
-    for(std::size_t i=0; i<positionRecord->size(); ++i)
-      {
-	delete  (*positionRecord)[i];
-      }
-    positionRecord->clear();
-    delete positionRecord;
-  }
-
-  // for all antenna
-  for (unsigned int i=0;i<fAngles.size();++i) {
-    fVT[i].clear();
-  }
-  delete [] fVT;
+  fVT.clear();
+  fAntennaID.clear();
 }
 
 void QTTrajectory::AppendStep(const G4Step* aStep)
@@ -99,7 +78,8 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
 
   // for all antenna
   for (unsigned int i=0;i<fAngles.size();++i) {
-    fVT[i].push_back(convertToVT(i));
+    fAntennaID.push_back((G4int)i);            // which antenna
+    fVT.push_back(convertToVT(i));
   }
 }
 
@@ -173,17 +153,17 @@ void QTTrajectory::DrawTrajectory() const
 {
 }
 
+G4VTrajectoryPoint* QTTrajectory::GetPoint(G4int) const
+{
+  return nullptr;
+}
+
+G4int QTTrajectory::GetPointEntries() const
+{
+  return 0;
+}
+
 void QTTrajectory::MergeTrajectory(G4VTrajectory* secondTrajectory)
 {
   G4cout << "PRINT>>> in merge traj function." << G4endl;
-  if(secondTrajectory == nullptr) return;
-
-  QTTrajectory* seco = (QTTrajectory*)secondTrajectory;
-  G4int ent = seco->GetPointEntries();
-  for(G4int i=1; i<ent; ++i) // initial pt of 2nd trajectory shouldn't be merged
-  {
-    positionRecord->push_back((*(seco->positionRecord))[i]);
-  }
-  delete (*seco->positionRecord)[0];
-  seco->positionRecord->clear();
 }

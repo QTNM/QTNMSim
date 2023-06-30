@@ -23,7 +23,6 @@
 class QTTrajectory : public G4VTrajectory
 {
   using VTcontainer = std::vector<std::pair<double,double>>;
-  using G4TrajectoryPointContainer = std::vector<G4VTrajectoryPoint*>;
 
 public:
   QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang);
@@ -31,6 +30,8 @@ public:
 
   virtual void ShowTrajectory(std::ostream& os = G4cout) const;
   virtual void DrawTrajectory() const;
+  virtual G4VTrajectoryPoint* GetPoint(G4int) const;
+  virtual G4int GetPointEntries() const;
   virtual void AppendStep(const G4Step* aStep);
   virtual void MergeTrajectory(G4VTrajectory* secondTrajectory);
 
@@ -39,10 +40,8 @@ public:
   inline int   operator==(const QTTrajectory& right) const { return (this == &right); }
 
   // access
-  VTcontainer   getVT(G4int iAntenna) {return fVT[iAntenna];};
-  G4ThreeVector getVPosition() {return vpos;}
-  G4ThreeVector getVMomDir()   {return vmom;}
-  G4double      getVEnergy()   {return venergy;}
+  VTcontainer&          getVT() {return fVT;};
+  std::vector<G4int>&   getAntennaID() {return fAntennaID;};
 
   inline G4int GetTrackID() const
     { return fTrackID; }
@@ -57,11 +56,6 @@ public:
   inline G4ThreeVector GetInitialMomentum() const
     { return initialMomentum; }
 
-  virtual G4int GetPointEntries() const
-    { return G4int(positionRecord->size()); }
-  virtual G4VTrajectoryPoint* GetPoint(G4int i) const
-    { return (*positionRecord)[i]; }
-
 private:
   std::pair<double,double> convertToVT(unsigned int which);
   G4double               gltime;  // global time
@@ -73,15 +67,13 @@ private:
   G4ThreeVector          beta;    // trajectory velocity
   G4ThreeVector          acc;     // trajectory acceleration
 
-  G4double               venergy; // vertex kinetic energy
-  G4ThreeVector          vpos;    // Vertex position vector
-  G4ThreeVector          vmom;    // Vertex momentum vector
-  std::vector<G4double>& fAngles; // from geometry
-  VTcontainer*           fVT;     // array, Cyclotron radiation
-  G4FieldManager*        pfieldManager; // singleton for info
-  QTEquationOfMotion*    pEqn;    // info on particle
+  std::vector<G4double>& fAngles;    // from geometry
+  std::vector<G4int>     fAntennaID; // antenna ID parallel to VTcontainer entries
+  VTcontainer            fVT;        // container, Cyclotron radiation pairs, time, voltage
 
-  G4TrajectoryPointContainer* positionRecord = nullptr;
+  G4FieldManager*        pfieldManager; // singleton for info
+  QTEquationOfMotion*    pEqn;          // info on particle
+
   G4int                       fTrackID = 0;
   G4int                       fParentID = 0;
   G4int                       PDGEncoding = 0;

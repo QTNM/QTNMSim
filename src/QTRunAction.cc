@@ -8,11 +8,10 @@
 
 #include <string>
 
-QTRunAction::QTRunAction(QTEventAction* eventAction, G4String name, G4int na)
+QTRunAction::QTRunAction(QTEventAction* eventAction, G4String name)
 : G4UserRunAction()
 , fEventAction(eventAction)
 , fout(std::move(name))
-, nAntenna(na)
 {
   // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -40,22 +39,15 @@ QTRunAction::QTRunAction(QTEventAction* eventAction, G4String name, G4int na)
 
   // Creating ntuple 1 with vector entries
   //
+  G4String aidname  = "AntennaID";
   G4String tvecname = "TimeVec";
   G4String vvecname = "VoltageVec";
   analysisManager->CreateNtuple("Signal", "Time-series");
   analysisManager->CreateNtupleIColumn("EventID");
-  analysisManager->CreateNtupleDColumn("VKine");
-  analysisManager->CreateNtupleDColumn("Vmomx");
-  analysisManager->CreateNtupleDColumn("Vmomy");
-  analysisManager->CreateNtupleDColumn("Vmomz");
-  analysisManager->CreateNtupleDColumn("Vposx");
-  analysisManager->CreateNtupleDColumn("Vposy");
-  analysisManager->CreateNtupleDColumn("Vposz");
   // TODO FIXME - These need passing a reference to the vector
-  for (G4int i=0;i<nAntenna;++i) {
-    analysisManager->CreateNtupleDColumn(tvecname + std::to_string(i), fEventAction->GetTimeVec(i));
-    analysisManager->CreateNtupleDColumn(vvecname + std::to_string(i), fEventAction->GetVoltageVec(i));
-  }
+  analysisManager->CreateNtupleIColumn(aidname, fEventAction->GetAntennaID());
+  analysisManager->CreateNtupleDColumn(tvecname, fEventAction->GetTimeVec());
+  analysisManager->CreateNtupleDColumn(vvecname, fEventAction->GetVoltageVec());
   analysisManager->FinishNtuple();
 }
 

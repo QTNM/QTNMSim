@@ -17,7 +17,7 @@ class QTRunAction : public G4UserRunAction
   using G4AnalysisManager = G4RootAnalysisManager;
 
 public:
-  QTRunAction(QTEventAction* eventAction, G4String name, G4int na);
+  QTRunAction(QTEventAction* eventAction, G4String name);
   virtual ~QTRunAction();
 
   virtual void BeginOfRunAction(const G4Run*);
@@ -26,7 +26,6 @@ public:
 private:
   QTEventAction* fEventAction;  // have event information for run
   G4String       fout;          // output file name
-  G4int          nAntenna;      // sets ntuple output
 };
 
 
