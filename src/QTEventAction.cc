@@ -71,7 +71,10 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   // Gas detector
   for ( G4int i=0; i<GnofHits; i++ ) 
   {
-    auto hh = (*GasHC)[i];
+    //    auto hh = (*GasHC)[i];
+    G4cout << "PRINT>>> access QTGasHit: " << G4endl;
+    auto hh = dynamic_cast<QTGasHit*>(GasHC->GetHit(i));
+    G4cout << "PRINT>>> got QTGasHit: access id " << hh->GetTrackID() << G4endl;
 
     int    id = (hh->GetTrackID());
     double e  = (hh->GetEdep()) / G4Analysis::GetUnitValue("keV");
@@ -98,10 +101,13 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
 
   // fill the ntuple - check column id?
   G4int eventID = event->GetEventID();
+  G4cout << "PRINT>>> Before filling ntuple. " << G4endl;
   for (unsigned int i=0;i<tedep.size();i++)
   {
     analysisManager->FillNtupleIColumn(0, 0, eventID); // repeat all rows
+    G4cout << "PRINT>>> filled first IColumn " << G4endl;
     analysisManager->FillNtupleIColumn(0, 1, tid.at(i));
+    G4cout << "PRINT>>> filled tid IColumn " << G4endl;
     analysisManager->FillNtupleDColumn(0, 2, tedep.at(i));
     analysisManager->FillNtupleDColumn(0, 3, ttime.at(i));
     analysisManager->FillNtupleDColumn(0, 4, tkine.at(i));
