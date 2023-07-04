@@ -63,7 +63,7 @@ public:
   virtual ~QTMagneticFieldSetup();
 
    // Methods to set parameters or select 
-  void SetStepperType( G4int i) { fStepperType = i ; CreateStepper(); }
+  // void SetStepperType( G4int i) { fStepperType = i ; CreateStepper(); }
 
   void SetMinStep(G4double s) { fMinStep = s ; }
 
@@ -74,7 +74,7 @@ public:
   void UpdateAll();
   // allow messenger commands to update values
 
-  void UpdateIntegrator();
+  // void UpdateIntegrator();
    // Prepare all the classes required for tracking - from stepper 
    //    to Chord-Finder
    //   NOTE:  field and equation must have been created before calling this.
@@ -88,7 +88,7 @@ protected:
   void SetUpBorisDriver();
    // Prepare all the classes required for tracking
 
-  void CreateStepper();
+  // void CreateStepper();
    // Implementation method - should not be exposed
 
 private:
@@ -108,7 +108,7 @@ private:
   G4BorisScheme*          fBStepper;
   G4BorisDriver*          fBDriver;
 
-  G4int                   fStepperType;
+  //  G4int                   fStepperType;
 
    
   QTFieldMessenger*       fFieldMessenger;

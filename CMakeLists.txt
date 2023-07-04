@@ -15,15 +15,14 @@ find_package(Geant4 11.1 REQUIRED gdml)
 # Build
 add_executable(qtnmSim
   qtnmSim.cc
-  src/BorisStepper.cc
   src/QTDetectorConstruction.cc
   src/QTFieldMessenger.cc
   src/QTMagneticFieldSetup.cc
   src/QTRunAction.cc
-  src/BorisStepperRadiation.cc
   src/QTEquationOfMotion.cc
   src/QTGasHit.cc
   src/QTNMPhysicsList.cc
+  src/QTOutputManager.cc
   src/QTTrackingAction.cc
   src/QTActionInitialization.cc
   src/QTEventAction.cc

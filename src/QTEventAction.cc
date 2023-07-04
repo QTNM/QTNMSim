@@ -1,4 +1,5 @@
 #include "QTEventAction.hh"
+#include "QTOutputManager.hh"
 #include "QTTrajectory.hh"
 #include "QTGasSD.hh"
 
@@ -13,8 +14,9 @@
 #include "G4AnalysisManager.hh"
 
 
-QTEventAction::QTEventAction(G4int na)
+QTEventAction::QTEventAction(G4int na, QTOutputManager* out)
   : G4UserEventAction()
+  , fOutput(out)
   , nAntenna(na)
 {
 }
@@ -46,7 +48,11 @@ QTEventAction::GetGasHitsCollection(G4int hcID,
 
 void QTEventAction::BeginOfEventAction(const G4Event*
                                          /*event*/)
-{ ; }
+{ 
+  avec.clear(); // clean start
+  tvec.clear(); 
+  vvec.clear(); 
+}
 
 void QTEventAction::EndOfEventAction(const G4Event* event)
 {
@@ -61,9 +67,6 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   // dummy storage
   std::vector<double> tedep, ttime, tkine, px, py, pz, posx, posy, posz;
   std::vector<int> tid;
-
-  // get analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
 
   // fill Hits output from SD
   G4int GnofHits = GasHC->entries();
@@ -104,20 +107,20 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   G4cout << "PRINT>>> Before filling ntuple. " << G4endl;
   for (unsigned int i=0;i<tedep.size();i++)
   {
-    analysisManager->FillNtupleIColumn(0, 0, eventID); // repeat all rows
+    fOutput->FillNtupleI(0, 0, eventID); // repeat all rows
     G4cout << "PRINT>>> filled first IColumn " << G4endl;
-    analysisManager->FillNtupleIColumn(0, 1, tid.at(i));
+    fOutput->FillNtupleI(0, 1, tid.at(i));
     G4cout << "PRINT>>> filled tid IColumn " << G4endl;
-    analysisManager->FillNtupleDColumn(0, 2, tedep.at(i));
-    analysisManager->FillNtupleDColumn(0, 3, ttime.at(i));
-    analysisManager->FillNtupleDColumn(0, 4, tkine.at(i));
-    analysisManager->FillNtupleDColumn(0, 5, px.at(i));
-    analysisManager->FillNtupleDColumn(0, 6, py.at(i));
-    analysisManager->FillNtupleDColumn(0, 7, pz.at(i));
-    analysisManager->FillNtupleDColumn(0, 8, posx.at(i));
-    analysisManager->FillNtupleDColumn(0, 9, posy.at(i));
-    analysisManager->FillNtupleDColumn(0, 10, posz.at(i));
-    analysisManager->AddNtupleRow(0);
+    fOutput->FillNtupleD(0, 2, tedep.at(i));
+    fOutput->FillNtupleD(0, 3, ttime.at(i));
+    fOutput->FillNtupleD(0, 4, tkine.at(i));
+    fOutput->FillNtupleD(0, 5, px.at(i));
+    fOutput->FillNtupleD(0, 6, py.at(i));
+    fOutput->FillNtupleD(0, 7, pz.at(i));
+    fOutput->FillNtupleD(0, 8, posx.at(i));
+    fOutput->FillNtupleD(0, 9, posy.at(i));
+    fOutput->FillNtupleD(0, 10, posz.at(i));
+    fOutput->AddNtupleRow(0);
   }
   // next fill vectors from trajectory store, i.e. stored G4Steps
 
@@ -134,19 +137,19 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       QTTrajectory* trj = dynamic_cast<QTTrajectory*>(entry);
       G4int counter = 0;
       for (G4int j=0;j<nAntenna;++j) {    // nAntenna * step pairs
-	for (auto entry : trj->getVT()) {  // std::pair<double,double>
+	for (auto values : trj->getVT()) {  // std::pair<double,double>
 	  avec.push_back((trj->getAntennaID()).at(counter));
-	  tvec.push_back(entry.first);
-	  vvec.push_back(entry.second);
+	  tvec.push_back(values.first);
+	  vvec.push_back(values.second);
 	  counter++;
 	}
       }
         
       // fill the ntuple, n antenna data for each trajectory
-      analysisManager->FillNtupleIColumn(1, 0, eventID); // repeat all rows
+      fOutput->FillNtupleI(1, 0, eventID); // repeat all rows
       // Note no need to call FillNtupleDColumn for vector types
       // Filled automatically on call to AddNtupleRow
-      analysisManager->AddNtupleRow(1);
+      fOutput->AddNtupleRow(1);
 
       // clear antenna signals
       avec.clear();

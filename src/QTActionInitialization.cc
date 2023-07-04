@@ -3,6 +3,7 @@
 #include "QTPrimaryGeneratorAction.hh"
 #include "QTRunAction.hh"
 #include "QTTrackingAction.hh"
+#include "QTOutputManager.hh"
 
 
 QTActionInitialization::QTActionInitialization(G4String name, std::vector<G4double> ang)
@@ -15,16 +16,21 @@ QTActionInitialization::~QTActionInitialization() = default;
 
 void QTActionInitialization::BuildForMaster() const
 {
-  auto event = new QTEventAction((G4int)angles.size());
-  SetUserAction(new QTRunAction(event, foutname));
+  auto output = new QTOutputManager(foutname);
+  auto event = new QTEventAction((G4int)angles.size(), output);
+  SetUserAction(new QTRunAction(output, event));
 }
 
 void QTActionInitialization::Build() const
 {
   // forward detector
   SetUserAction(new QTPrimaryGeneratorAction());
-  auto event = new QTEventAction((G4int)angles.size());
-  SetUserAction(event);
-  SetUserAction(new QTRunAction(event, foutname));
   SetUserAction(new QTTrackingAction(angles));
+
+  auto output = new QTOutputManager(foutname);
+  auto event = new QTEventAction((G4int)angles.size(), output);
+  SetUserAction(event);
+
+  SetUserAction(new QTRunAction(output, event));
+
 }

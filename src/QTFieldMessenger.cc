@@ -35,7 +35,7 @@
 #include "QTFieldMessenger.hh"
 
 #include "QTMagneticFieldSetup.hh"
-#include "G4UIcmdWithAnInteger.hh"
+// #include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4UIcmdWithoutParameter.hh"
@@ -46,7 +46,7 @@ QTFieldMessenger::QTFieldMessenger(QTMagneticFieldSetup* fieldSetup)
  : G4UImessenger(),
    fElFieldSetup(fieldSetup),
    fFieldDir(0),
-   fStepperCmd(0),
+   // fStepperCmd(0),
    fBFieldZCmd(0),
    fBFieldCmd(0),
    fMinStepCmd(0),
@@ -55,11 +55,11 @@ QTFieldMessenger::QTFieldMessenger(QTMagneticFieldSetup* fieldSetup)
   fFieldDir = new G4UIdirectory("/field/");
   fFieldDir->SetGuidance("QT field tracking control.");
 
-  fStepperCmd = new G4UIcmdWithAnInteger("/field/setStepperType",this);
-  fStepperCmd->SetGuidance("Select stepper type for magnetic field");
-  fStepperCmd->SetParameterName("choice",true);
-  fStepperCmd->SetDefaultValue(4);
-  fStepperCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  // fStepperCmd = new G4UIcmdWithAnInteger("/field/setStepperType",this);
+  // fStepperCmd->SetGuidance("Select stepper type for magnetic field");
+  // fStepperCmd->SetParameterName("choice",true);
+  // fStepperCmd->SetDefaultValue(4);
+  // fStepperCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   fUpdateCmd = new G4UIcmdWithoutParameter("/field/update",this);
   fUpdateCmd->SetGuidance("Update calorimeter geometry.");
@@ -73,7 +73,7 @@ QTFieldMessenger::QTFieldMessenger(QTMagneticFieldSetup* fieldSetup)
   fBFieldZCmd->SetGuidance("Value of magnetic field has to be given in Tesla");
   fBFieldZCmd->SetParameterName("Bz",false,false);
   fBFieldZCmd->SetDefaultUnit("tesla");
-  fStepperCmd->SetDefaultValue(1.0);
+  fBFieldZCmd->SetDefaultValue(1.0);
   fBFieldZCmd->AvailableForStates(G4State_Idle);
  
   fBFieldCmd = new G4UIcmdWith3VectorAndUnit("/field/setField",this);
@@ -94,7 +94,7 @@ QTFieldMessenger::QTFieldMessenger(QTMagneticFieldSetup* fieldSetup)
 
 QTFieldMessenger::~QTFieldMessenger()
 {
-  delete fStepperCmd;
+  //  delete fStepperCmd;
   delete fBFieldZCmd;
   delete fBFieldCmd;
   delete fMinStepCmd;
@@ -106,8 +106,8 @@ QTFieldMessenger::~QTFieldMessenger()
 
 void QTFieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if( command == fStepperCmd )
-    fElFieldSetup->SetStepperType(fStepperCmd->GetNewIntValue(newValue));
+  // if( command == fStepperCmd )
+  //   fElFieldSetup->SetStepperType(fStepperCmd->GetNewIntValue(newValue));
   if( command == fUpdateCmd )
     fElFieldSetup->UpdateAll();
   //    fElFieldSetup->UpdateIntegrator();

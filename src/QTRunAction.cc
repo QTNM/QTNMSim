@@ -1,5 +1,6 @@
 #include "QTRunAction.hh"
-
+#include "QTEventAction.hh"
+#include "QTOutputManager.hh"
 
 #include "G4Run.hh"
 #include "G4RunManager.hh"
@@ -8,68 +9,26 @@
 
 #include <string>
 
-QTRunAction::QTRunAction(QTEventAction* eventAction, G4String name)
+QTRunAction::QTRunAction(QTOutputManager* out, QTEventAction* fevent)
 : G4UserRunAction()
-, fEventAction(eventAction)
-, fout(std::move(name))
+, fOutput(out)
+, fEvent(fevent)
 {
-  // Create analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
-
-  // Create directories
-  analysisManager->SetVerboseLevel(1);
-  analysisManager->SetNtupleMerging(true);
-  analysisManager->SetNtupleDirectoryName("ntuple");
-
-  // Creating ntuple 0 with number entries
-  //
-  analysisManager->CreateNtuple("Score", "Hits");
-  analysisManager->CreateNtupleIColumn("EventID");
-  analysisManager->CreateNtupleIColumn("TrackID");
-  analysisManager->CreateNtupleDColumn("Edep");
-  analysisManager->CreateNtupleDColumn("TimeStamp");
-  analysisManager->CreateNtupleDColumn("Kine");
-  analysisManager->CreateNtupleDColumn("Px");
-  analysisManager->CreateNtupleDColumn("Py");
-  analysisManager->CreateNtupleDColumn("Pz");
-  analysisManager->CreateNtupleDColumn("Posx");
-  analysisManager->CreateNtupleDColumn("Posy");
-  analysisManager->CreateNtupleDColumn("Posz");
-  analysisManager->FinishNtuple();
-
-  // Creating ntuple 1 with vector entries
-  //
-  G4String aidname  = "AntennaID";
-  G4String tvecname = "TimeVec";
-  G4String vvecname = "VoltageVec";
-  analysisManager->CreateNtuple("Signal", "Time-series");
-  analysisManager->CreateNtupleIColumn("EventID");
-  // TODO FIXME - These need passing a reference to the vector
-  analysisManager->CreateNtupleIColumn(aidname, fEventAction->GetAntennaID());
-  analysisManager->CreateNtupleDColumn(tvecname, fEventAction->GetTimeVec());
-  analysisManager->CreateNtupleDColumn(vvecname, fEventAction->GetVoltageVec());
-  analysisManager->FinishNtuple();
+  fOutput->SetIDVec(fEvent->GetAntennaID()); // signal output where data is stored. 
+  fOutput->SetTimeVec(fEvent->GetTimeVec());
+  fOutput->SetVoltageVec(fEvent->GetVoltageVec());  
 }
 
-QTRunAction::~QTRunAction() { delete G4AnalysisManager::Instance(); }
+QTRunAction::~QTRunAction() = default;
 
 void QTRunAction::BeginOfRunAction(const G4Run* /*run*/)
 {
-  // Get analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
-
-  // Open an output file
-  //
-  analysisManager->OpenFile(fout);
+  fOutput->Book(); // set up output
 }
 
-void QTRunAction::EndOfRunAction(const G4Run* /*run*/)
+void QTRunAction::EndOfRunAction(const G4Run* aRun)
 {
-  // Get analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
-
-  // save ntuple
-  //
-  analysisManager->Write();
-  analysisManager->CloseFile();
+  G4int nofEvents = aRun->GetNumberOfEvent();
+  G4cout << "End of Run: number of events to file is " << nofEvents << G4endl;
+  fOutput->Save(); // write and close
 }
