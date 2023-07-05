@@ -1,5 +1,4 @@
 #include "QTRunAction.hh"
-#include "QTEventAction.hh"
 #include "QTOutputManager.hh"
 
 #include "G4Run.hh"
@@ -9,14 +8,10 @@
 
 #include <string>
 
-QTRunAction::QTRunAction(QTOutputManager* out, QTEventAction* fevent)
+QTRunAction::QTRunAction(QTOutputManager* out)
 : G4UserRunAction()
 , fOutput(out)
-, fEvent(fevent)
 {
-  fOutput->SetIDVec(fEvent->GetAntennaID()); // signal output where data is stored. 
-  fOutput->SetTimeVec(fEvent->GetTimeVec());
-  fOutput->SetVoltageVec(fEvent->GetVoltageVec());  
 }
 
 QTRunAction::~QTRunAction() = default;

@@ -67,7 +67,7 @@ private:
   G4ThreeVector          beta;    // trajectory velocity
   G4ThreeVector          acc;     // trajectory acceleration
 
-  std::vector<G4double>& fAngles;    // from geometry
+  std::vector<G4double>  fAngles;    // from geometry
   std::vector<G4int>     fAntennaID; // antenna ID parallel to VTcontainer entries
   VTcontainer            fVT;        // container, Cyclotron radiation pairs, time, voltage
 

@@ -49,9 +49,6 @@ QTEventAction::GetGasHitsCollection(G4int hcID,
 void QTEventAction::BeginOfEventAction(const G4Event*
                                          /*event*/)
 { 
-  avec.clear(); // clean start
-  tvec.clear(); 
-  vvec.clear(); 
 }
 
 void QTEventAction::EndOfEventAction(const G4Event* event)
@@ -64,7 +61,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   //
   auto GasHC     = GetGasHitsCollection(fGID, event);
 
-  // dummy storage
+  // dummy hit storage
   std::vector<double> tedep, ttime, tkine, px, py, pz, posx, posy, posz;
   std::vector<int> tid;
 
@@ -138,9 +135,10 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       G4int counter = 0;
       for (G4int j=0;j<nAntenna;++j) {    // nAntenna * step pairs
 	for (auto values : trj->getVT()) {  // std::pair<double,double>
-	  avec.push_back((trj->getAntennaID()).at(counter));
-	  tvec.push_back(values.first);
-	  vvec.push_back(values.second);
+	  fOutput->FillTIDVec(trj->GetTrackID()); // same for every trajectory
+	  fOutput->FillAntennaVec((trj->getAntennaID()).at(counter)); // same size as
+	  fOutput->FillTimeVec(values.first);                         // VT container
+	  fOutput->FillVoltageVec(values.second);
 	  counter++;
 	}
       }
@@ -149,12 +147,9 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       fOutput->FillNtupleI(1, 0, eventID); // repeat all rows
       // Note no need to call FillNtupleDColumn for vector types
       // Filled automatically on call to AddNtupleRow
+      // assumes clearing of storage vectors after streaming.
       fOutput->AddNtupleRow(1);
-
-      // clear antenna signals
-      avec.clear();
-      tvec.clear();
-      vvec.clear();
+      
     }
   }
 }

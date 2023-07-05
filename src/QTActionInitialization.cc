@@ -17,8 +17,7 @@ QTActionInitialization::~QTActionInitialization() = default;
 void QTActionInitialization::BuildForMaster() const
 {
   auto output = new QTOutputManager(foutname);
-  auto event = new QTEventAction((G4int)angles.size(), output);
-  SetUserAction(new QTRunAction(output, event));
+  SetUserAction(new QTRunAction(output));
 }
 
 void QTActionInitialization::Build() const
@@ -31,6 +30,6 @@ void QTActionInitialization::Build() const
   auto event = new QTEventAction((G4int)angles.size(), output);
   SetUserAction(event);
 
-  SetUserAction(new QTRunAction(output, event));
+  SetUserAction(new QTRunAction(output));
 
 }
