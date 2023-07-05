@@ -16,11 +16,10 @@ QTOutputManager::QTOutputManager(G4String fname)
   analysisManager->SetDefaultFileType("root");
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// leave deleting to run manager, follows AnaEx01
 
-QTOutputManager::~QTOutputManager() { delete G4AnalysisManager::Instance(); }
+TOutputManager::~QTOutputManager() = default;
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void QTOutputManager::Book()
 {

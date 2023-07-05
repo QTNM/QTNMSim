@@ -16,7 +16,8 @@ QTGasHit::QTGasHit()
    fPosz(0.)
 {}
 
-QTGasHit::~QTGasHit() {}
+QTGasHit::~QTGasHit() = default;
+
 
 QTGasHit::QTGasHit(const QTGasHit& right)
   : G4VHit()

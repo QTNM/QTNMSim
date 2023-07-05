@@ -12,7 +12,7 @@ class QTActionInitialization : public G4VUserActionInitialization
 {
 public:
   QTActionInitialization(G4String, std::vector<G4double>);
-  virtual ~QTActionInitialization();
+  ~QTActionInitialization() override;
 
   virtual void BuildForMaster() const;
   virtual void Build() const;

@@ -12,7 +12,7 @@ class QTOutputManager
 
 public:
   QTOutputManager(G4String);
-  virtual ~QTOutputManager();
+  ~QTOutputManager() override;
   
   void Book();
   void Save();

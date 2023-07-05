@@ -10,6 +10,9 @@ QTTrackingAction::QTTrackingAction(std::vector<G4double> ang)
 {}
 
 
+QTTrackingAction::~QTTrackingAction() = default;
+
+
 void QTTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 {
   // Create trajectory for track

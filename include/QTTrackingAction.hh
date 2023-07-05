@@ -9,7 +9,7 @@ class QTTrackingAction : public G4UserTrackingAction
 {
 public:
   QTTrackingAction(std::vector<G4double> ang);
-  virtual ~QTTrackingAction(){};
+  ~QTTrackingAction(){} override;
 
   virtual void PreUserTrackingAction(const G4Track*);
   virtual void PostUserTrackingAction(const G4Track*);

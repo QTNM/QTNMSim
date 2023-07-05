@@ -22,9 +22,8 @@ QTEventAction::QTEventAction(G4int na, QTOutputManager* out)
 }
 
 
-QTEventAction::~QTEventAction()
-{
-}
+QTEventAction::~QTEventAction() = default;
+
 
 
 QTGasHitsCollection* 

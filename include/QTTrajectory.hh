@@ -26,7 +26,7 @@ class QTTrajectory : public G4VTrajectory
 
 public:
   QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang);
-  virtual ~QTTrajectory();
+  ~QTTrajectory() override;
 
   virtual void ShowTrajectory(std::ostream& os = G4cout) const;
   virtual void DrawTrajectory() const;

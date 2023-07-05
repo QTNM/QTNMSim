@@ -15,7 +15,7 @@ class QTRunAction : public G4UserRunAction
 
 public:
   QTRunAction(QTOutputManager*);
-  virtual ~QTRunAction();
+  ~QTRunAction() override;
 
   virtual void BeginOfRunAction(const G4Run*);
   virtual void EndOfRunAction(const G4Run*);

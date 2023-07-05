@@ -8,9 +8,8 @@ QTEquationOfMotion::QTEquationOfMotion(G4MagneticField *magField)
 {
 }
 
-QTEquationOfMotion::~QTEquationOfMotion()
-{
-}
+QTEquationOfMotion::~QTEquationOfMotion() = default;
+
 
 void QTEquationOfMotion::SetChargeMomentumMass(G4ChargeState particleCharge,
 					       G4double MomentumXc,

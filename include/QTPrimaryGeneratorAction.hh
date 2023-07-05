@@ -23,7 +23,7 @@ class QTPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
   QTPrimaryGeneratorAction();
-  virtual ~QTPrimaryGeneratorAction();
+  ~QTPrimaryGeneratorAction() override;
 
   virtual void GeneratePrimaries(G4Event*);
 

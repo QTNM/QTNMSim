@@ -10,7 +10,7 @@ class QTEquationOfMotion : public G4Mag_UsualEqRhs
 public:
 
   QTEquationOfMotion(G4MagneticField *magField);
-  ~QTEquationOfMotion();
+  ~QTEquationOfMotion() override;
 
   void SetChargeMomentumMass(G4ChargeState particleCharge,
 			     G4double MomentumXc,
