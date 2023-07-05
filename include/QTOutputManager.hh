@@ -5,6 +5,8 @@
 #include "G4AnalysisManager.hh"
 #include "globals.hh"
 
+#include <vector>
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class QTOutputManager
@@ -12,7 +14,7 @@ class QTOutputManager
 
 public:
   QTOutputManager(G4String);
-  ~QTOutputManager() override;
+  ~QTOutputManager();
   
   void Book();
   void Save();

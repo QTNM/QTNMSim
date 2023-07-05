@@ -18,7 +18,7 @@ QTOutputManager::QTOutputManager(G4String fname)
 
 // leave deleting to run manager, follows AnaEx01
 
-TOutputManager::~QTOutputManager() = default;
+QTOutputManager::~QTOutputManager() = default;
 
 
 void QTOutputManager::Book()

@@ -60,7 +60,7 @@ public:
   QTMagneticFieldSetup(G4ThreeVector);  //  The value of the field
   QTMagneticFieldSetup();               //  A zero field - true value set later
 
-  ~QTMagneticFieldSetup() override;
+  ~QTMagneticFieldSetup();
 
    // Methods to set parameters or select 
   // void SetStepperType( G4int i) { fStepperType = i ; CreateStepper(); }
