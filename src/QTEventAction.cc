@@ -70,10 +70,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   // Gas detector
   for ( G4int i=0; i<GnofHits; i++ ) 
   {
-    //    auto hh = (*GasHC)[i];
-    G4cout << "PRINT>>> access QTGasHit: " << G4endl;
     auto hh = dynamic_cast<QTGasHit*>(GasHC->GetHit(i));
-    G4cout << "PRINT>>> got QTGasHit: access id " << hh->GetTrackID() << G4endl;
 
     int    id = (hh->GetTrackID());
     double e  = (hh->GetEdep()) / G4Analysis::GetUnitValue("keV");
@@ -100,13 +97,10 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
 
   // fill the ntuple - check column id?
   G4int eventID = event->GetEventID();
-  G4cout << "PRINT>>> Before filling ntuple. " << G4endl;
   for (unsigned int i=0;i<tedep.size();i++)
   {
     fOutput->FillNtupleI(0, 0, eventID); // repeat all rows
-    G4cout << "PRINT>>> filled first IColumn " << G4endl;
     fOutput->FillNtupleI(0, 1, tid.at(i));
-    G4cout << "PRINT>>> filled tid IColumn " << G4endl;
     fOutput->FillNtupleD(0, 2, tedep.at(i));
     fOutput->FillNtupleD(0, 3, ttime.at(i));
     fOutput->FillNtupleD(0, 4, tkine.at(i));
@@ -120,7 +114,6 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   }
   // next fill vectors from trajectory store, i.e. stored G4Steps
 
-  G4cout << "PRINT>>> just before n of trajectories: " << G4endl;
   G4TrajectoryContainer* trajectoryContainer = event->GetTrajectoryContainer();
   G4int                  n_trajectories =
     (trajectoryContainer == nullptr) ? 0 : trajectoryContainer->entries();
@@ -129,21 +122,19 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   
   if(n_trajectories > 0) {
     for(auto* entry : *(trajectoryContainer->GetVector())) {  // vector<G4VTrajectory*>*
-      //      QTTrajectory* trj = (QTTrajectory*) ((*(event->GetTrajectoryContainer()))[i]);
       QTTrajectory* trj = dynamic_cast<QTTrajectory*>(entry);
       G4int counter = 0;
-      for (G4int j=0;j<nAntenna;++j) {    // nAntenna * step pairs
-	for (auto values : trj->getVT()) {  // std::pair<double,double>
-	  fOutput->FillTIDVec(trj->GetTrackID()); // same for every trajectory
-	  fOutput->FillAntennaVec((trj->getAntennaID()).at(counter)); // same size as
-	  fOutput->FillTimeVec(values.first);                         // VT container
-	  fOutput->FillVoltageVec(values.second);
-	  counter++;
-	}
+      for (auto values : trj->getVT()) {  // std::pair<double,double>
+	fOutput->FillTIDVec(trj->GetTrackID()); // same for every trajectory
+	fOutput->FillAntennaVec((trj->getAntennaID()).at(counter)); // same size as
+	fOutput->FillTimeVec(values.first);                         // VT container
+	fOutput->FillVoltageVec(values.second);
+	counter++;
       }
         
       // fill the ntuple, n antenna data for each trajectory
       fOutput->FillNtupleI(1, 0, eventID); // repeat all rows
+
       // Note no need to call FillNtupleDColumn for vector types
       // Filled automatically on call to AddNtupleRow
       // assumes clearing of storage vectors after streaming.

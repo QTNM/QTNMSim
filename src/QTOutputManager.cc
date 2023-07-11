@@ -23,6 +23,9 @@ QTOutputManager::~QTOutputManager() = default;
 
 void QTOutputManager::Book()
 {
+  // Create or get analysis manager
+  analysisManager = G4AnalysisManager::Instance();
+
   if ( ! fFactoryOn ) {
     analysisManager->SetVerboseLevel(1);
     analysisManager->SetNtupleMerging(true);
@@ -83,27 +86,40 @@ void QTOutputManager::Book()
 
 void QTOutputManager::Save()
 {
+  // Create or get analysis manager
+  analysisManager = G4AnalysisManager::Instance();
+
   if (! fFactoryOn) { return; }
   
   analysisManager->Write();
   analysisManager->CloseFile();
+  analysisManager->Clear();
   
 }
 
 void QTOutputManager::FillNtupleI(G4int which, G4int col, G4int val)
 {
+  // Create or get analysis manager
+  analysisManager = G4AnalysisManager::Instance();
+
   analysisManager->FillNtupleIColumn(which, col, val);
 }
 
 
 void QTOutputManager::FillNtupleD(G4int which, G4int col, G4double val)
 {
+  // Create or get analysis manager
+  analysisManager = G4AnalysisManager::Instance();
+
   analysisManager->FillNtupleDColumn(which, col, val);
 }
 
 
 void QTOutputManager::AddNtupleRow(G4int which)
 {
+  // Create or get analysis manager
+  analysisManager = G4AnalysisManager::Instance();
+
   analysisManager->AddNtupleRow(which);
 
   // clear internal vector storage after writing to disk with this method.
