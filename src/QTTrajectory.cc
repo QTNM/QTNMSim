@@ -139,14 +139,14 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
 
   G4ThreeVector Runit = (fAntennaPos - pos).unit();
   G4double dummy = 1.0 - Runit.dot(beta);
+  // modify prefactor
+  fac /= dummy*dummy*dummy;
 
   G4ThreeVector relFarEField = fac*(Runit.cross((Runit-beta).cross(acc/c_SI))) / dist;
   G4cout << "E-field1= (" << relFarEField.x() 
   	 << ", " << relFarEField.y() << ", " 
   	 << relFarEField.z() << ")" << G4endl;
 
-  // modify prefactor
-  fac /= dummy*dummy*dummy;
   G4ThreeVector relNearEField = fac*c_SI*((1.0-beta.mag2())*(Runit-beta)) / (dist*dist);
   G4cout << "E-field2= (" << relNearEField.x() 
   	 << ", " << relNearEField.y() << ", " 
