@@ -63,7 +63,6 @@ private:
   G4ThreeVector          fAntennaNormal; // antenna normal towards origin
   G4ThreeVector          fAntennaPos;    // antenna position
   G4ThreeVector          pos;     // trajectory position
-  G4ThreeVector          mom;     // trajectory momentum
   G4ThreeVector          beta;    // trajectory velocity
   G4ThreeVector          acc;     // trajectory acceleration
 
