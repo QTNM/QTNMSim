@@ -3,6 +3,7 @@
 #include "G4LogicalVolumeStore.hh"
 #include "G4Tubs.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4TwoVector.hh"
 #include "G4TrajectoryPoint.hh"
 #include "G4ChordFinder.hh"
 #include "G4ChargeState.hh"
@@ -94,19 +95,20 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   // retrieve required info from outside, propose EqnOfMotion object.
   // need frequency and acceleration
   // both known at every point by EqnOfMotion - store and offer for access.
-  // means no repeat calculation.
-  // likely needs: dynamic_cast<QT_LD_EqnRHS*>GetEquationOfMotion()->acc()
-  // since method for acceleration access does not exist by default. Make ourselves.
 
-  fAntennaPos.setRThetaPhi(fAntennaRad, halfpi, fAngles[which]/360.0 * twopi); // [mm]
-  G4cout << "antenna pos: " << fAntennaPos.x()/CLHEP::mm 
-  	 << ", " << fAntennaPos.y()/CLHEP::mm << ", " 
-  	 << fAntennaPos.z()/CLHEP::mm << G4endl;
+  G4ThreeVector antennaPos;
+  antennaPos.setRThetaPhi(fAntennaRad, halfpi, fAngles[which]/360.0 * twopi); // [mm]
+  G4cout << "antenna pos: " << antennaPos.x()/CLHEP::mm 
+  	 << ", " << antennaPos.y()/CLHEP::mm << ", " 
+  	 << antennaPos.z()/CLHEP::mm << G4endl;
 
-  fAntennaNormal = (-fAntennaPos).unit(); // inward direction; to origin
-  G4cout << "antenna normal: " << fAntennaNormal.x() 
-  	 << ", " << fAntennaNormal.y() << ", " 
-  	 << fAntennaNormal.z() << G4endl;
+  G4ThreeVector antennaNormal = (-antennaPos).unit(); // inward direction; to origin, not used yet
+  G4TwoVector   antennaArm(antennaPos); // discard z-component
+  
+  G4ThreeVector antennaPolarisation = G4ThreeVector(antennaArm.orthogonal()); // along the dipole
+  G4cout << "antenna polarisation: " << antennaPolarisation.x() 
+  	 << ", " << antennaPolarisation.y() << ", " 
+  	 << antennaPolarisation.z() << G4endl;
 
   // collect required values
   // DONE - this would be better done using the actual field object
@@ -134,10 +136,10 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   //  G4cout << "wavelength [m] = " << wvlg << G4endl;
 
   G4double fac   = electron_charge*e_SI / (4.0*pi*eps0_SI*c_SI);
-  G4double dist  = (fAntennaPos - pos).mag() / m; // [m] SI explicit
+  G4double dist  = (antennaPos - pos).mag() / m; // [m] SI explicit
   //  G4cout << "antenna - charge distance [m] = " << dist << G4endl;
 
-  G4ThreeVector Runit = (fAntennaPos - pos).unit();
+  G4ThreeVector Runit = (antennaPos - pos).unit();
   G4double dummy = 1.0 - Runit.dot(beta);
   // modify prefactor
   fac /= dummy*dummy*dummy;
@@ -153,7 +155,7 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   	 << relNearEField.z() << ")" << G4endl;
 
   // assume half wave dipole eff length as wvlg/pi
-  G4double voltage = wvlg/pi * (relFarEField+relNearEField).dot(fAntennaNormal);
+  G4double voltage = wvlg/pi * (relFarEField+relNearEField).dot(antennaPolarisation);
   
   G4cout << "append step called, (t [ns], v [V]): " << gltime << ", " << voltage << G4endl;
   return std::make_pair(gltime, voltage);
