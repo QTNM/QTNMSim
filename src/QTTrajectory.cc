@@ -98,14 +98,14 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
 
   G4ThreeVector antennaPos;
   antennaPos.setRThetaPhi(fAntennaRad, halfpi, fAngles[which]/360.0 * twopi); // [mm]
-  G4cout << "antenna pos: " << antennaPos.x()/CLHEP::mm 
-  	 << ", " << antennaPos.y()/CLHEP::mm << ", " 
-  	 << antennaPos.z()/CLHEP::mm << G4endl;
+  // G4cout << "antenna pos: " << antennaPos.x()/CLHEP::mm 
+  // 	 << ", " << antennaPos.y()/CLHEP::mm << ", " 
+  // 	 << antennaPos.z()/CLHEP::mm << G4endl;
 
   G4ThreeVector antennaNormal = (-antennaPos).unit(); // inward direction; to origin, not used yet
   G4TwoVector   antennaArm(antennaPos); // discard z-component
   
-  G4ThreeVector antennaPolarisation = G4ThreeVector(antennaArm.orthogonal()); // along the dipole
+  G4ThreeVector antennaPolarisation = G4ThreeVector(antennaArm.orthogonal()).unit(); // along the dipole
   G4cout << "antenna polarisation: " << antennaPolarisation.x() 
   	 << ", " << antennaPolarisation.y() << ", " 
   	 << antennaPolarisation.z() << G4endl;
@@ -121,12 +121,12 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   // 	 << Bfield.z() << G4endl;
 
   G4double omega = pEqn->CalcOmegaGivenB(Bfield, beta).mag();
-  G4cout << "Omega magn. = " << omega << G4endl; // needed in [Hz]
+  //  G4cout << "Omega magn. = " << omega << G4endl; // needed in [Hz]
 
   acc = pEqn->CalcAccGivenB(Bfield, beta);
-  G4cout << "acceleration= (" << acc.x()
-  	 << ", " << acc.y() << ", " 
-  	 << acc.z() << ")" << G4endl;
+  // G4cout << "acceleration= (" << acc.x()
+  // 	 << ", " << acc.y() << ", " 
+  // 	 << acc.z() << ")" << G4endl;
 
   // explicit SI units here transparent
   static constexpr G4double c_SI    = c_light/(m/s);
