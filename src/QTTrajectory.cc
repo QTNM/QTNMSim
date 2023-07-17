@@ -99,14 +99,14 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   // since method for acceleration access does not exist by default. Make ourselves.
 
   fAntennaPos.setRThetaPhi(fAntennaRad, halfpi, fAngles[which]/360.0 * twopi); // [mm]
-  // G4cout << "antenna pos: " << fAntennaPos.x()/CLHEP::mm 
-  // 	 << ", " << fAntennaPos.y()/CLHEP::mm << ", " 
-  // 	 << fAntennaPos.z()/CLHEP::mm << G4endl;
+  G4cout << "antenna pos: " << fAntennaPos.x()/CLHEP::mm 
+  	 << ", " << fAntennaPos.y()/CLHEP::mm << ", " 
+  	 << fAntennaPos.z()/CLHEP::mm << G4endl;
 
   fAntennaNormal = (-fAntennaPos).unit(); // inward direction; to origin
-  // G4cout << "antenna normal: " << fAntennaNormal.x() 
-  // 	 << ", " << fAntennaNormal.y() << ", " 
-  // 	 << fAntennaNormal.z() << G4endl;
+  G4cout << "antenna normal: " << fAntennaNormal.x() 
+  	 << ", " << fAntennaNormal.y() << ", " 
+  	 << fAntennaNormal.z() << G4endl;
 
   // collect required values
   // DONE - this would be better done using the actual field object
@@ -130,7 +130,7 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   static constexpr G4double c_SI    = c_light/(m/s);
   static constexpr G4double eps0_SI = epsilon0 / farad * m;
 
-  G4double wvlg  = c_SI / (omega / twopi); // force [m/s]
+  G4double wvlg  = c_SI / (omega / twopi);
   //  G4cout << "wavelength [m] = " << wvlg << G4endl;
 
   G4double fac   = electron_charge*e_SI / (4.0*pi*eps0_SI*c_SI);
@@ -143,19 +143,19 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   fac /= dummy*dummy*dummy;
 
   G4ThreeVector relFarEField = fac*(Runit.cross((Runit-beta).cross(acc/c_SI))) / dist;
-  G4cout << "E-field1= (" << relFarEField.x() 
+  G4cout << "E-field far= (" << relFarEField.x() 
   	 << ", " << relFarEField.y() << ", " 
   	 << relFarEField.z() << ")" << G4endl;
 
   G4ThreeVector relNearEField = fac*c_SI*((1.0-beta.mag2())*(Runit-beta)) / (dist*dist);
-  G4cout << "E-field2= (" << relNearEField.x() 
+  G4cout << "E-field near= (" << relNearEField.x() 
   	 << ", " << relNearEField.y() << ", " 
   	 << relNearEField.z() << ")" << G4endl;
 
   // assume half wave dipole eff length as wvlg/pi
   G4double voltage = wvlg/pi * (relFarEField+relNearEField).dot(fAntennaNormal);
   
-  G4cout << "append step called, t [ns], v: " << gltime << ", " << voltage << G4endl;
+  G4cout << "append step called, (t [ns], v [V]): " << gltime << ", " << voltage << G4endl;
   return std::make_pair(gltime, voltage);
 }
 

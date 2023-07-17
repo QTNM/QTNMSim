@@ -66,7 +66,6 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
    fIntgrDriver(0),
    fBStepper(0),
    fBDriver(0),
-   //   fStepperType(0),    // Boris Stepper, no radiation -- the default stepper
    fFieldMessenger(nullptr)   
 {
   G4ThreeVector fieldVector( 0.0, 0.0, 1.0 * CLHEP::tesla);
@@ -93,7 +92,6 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
     fIntgrDriver(0),
     fBStepper(0),
     fBDriver(0),
-    //    fStepperType(0),    // Boris Stepper, no radiation -- the default stepper
     fFieldMessenger(nullptr)
 {
   fEMfield = new G4UniformMagField(fieldVector);
@@ -172,87 +170,6 @@ void QTMagneticFieldSetup::UpdateAll()
   SetUpBorisDriver();
 }
 
-
-// void QTMagneticFieldSetup::UpdateIntegrator()
-// {
-//   // Register this field to 'global' Field Manager and
-//   // Create Stepper and Chord Finder with predefined type, minstep (resp.)
-
-//   // It must be possible to call 'again' after an alternative stepper
-//   //   has been chosen, or other changes have been made
-//   assert(fEquation!=nullptr);
-
-//   G4cout<< " QTMagneticFieldSetup: The minimal step is equal to "
-//         << fMinStep/mm << " mm" << G4endl;
-
-//   if (fChordFinder) {
-//      delete fChordFinder;
-//      fChordFinder= nullptr;
-//      // The chord-finder's destructor deletes the driver
-//      fIntgrDriver= nullptr;
-//   }
-  
-//   // Currently driver does not 'own' stepper      ( 17.05.2017 J.A. )
-//   //   -- so this stepper is still a valid object after this
-
-//   if( fStepper ) {
-//      delete fStepper;
-//      fStepper = nullptr;
-//   }
-  
-//   // Create the new objects, in turn for all relevant classes
-//   //  -- Careful to call this after all old objects are destroyed, and
-//   //      pointers nullified.
-//   CreateStepper();  // Note that this method deleted the existing Stepper!
-//   assert(fStepper != nullptr);
-
-//   if( fStepper ) {
-//      fIntgrDriver = new G4MagInt_Driver(fMinStep,
-//                                         fStepper,
-//                                         fStepper->GetNumberOfVariables());
-//      if( fIntgrDriver ){ 
-//         fChordFinder = new G4ChordFinder(fIntgrDriver);
-//      }
-//   }
-
-//   fFieldManager->SetChordFinder(fChordFinder);
-//   fFieldManager->SetDetectorField(fEMfield);
-// }
-
-// //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-// void QTMagneticFieldSetup::CreateStepper()
-// {
-//   // Deletes the existing stepper
-//   //   and creates a new stepper object of the chosen stepper type
-
-//   const G4int nvar = 8;
-
-//   auto oldStepper= fStepper;
-
-//   switch ( fStepperType )
-//   {
-//     case 0:
-//       fStepper = new BorisStepper( fEquation );
-//       G4cout<<"BorisStepper is called"<<G4endl;
-//       break;
-//     default:
-//       fStepper = new BorisStepper( fEquation );
-//       G4cout<<"BorisStepper is called"<<G4endl;
-//       break;
-//   }
-
-//   delete oldStepper;
-//   // Now must make sure it is 'stripped' from the dependent object(s)
-//   //  ... but the next line does this anyway - by informing
-//   //      the driver (if it exists) about the new stepper.
-
-//   // Always inform the (existing) driver about the new stepper
-//   if( fIntgrDriver )
-//       fIntgrDriver->RenewStepperAndAdjust( fStepper );
-// }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void QTMagneticFieldSetup::SetFieldZValue(G4double fieldValue)
 {

@@ -3,7 +3,7 @@ Geant4 simulation of physics processes in the QTNM CRESDA geometry.
 
 Collect requirements in issue tracker and start populating code base.
 
-## Build instruction (REQUIREMENTS - no build yet)
+## Build instruction
 
 At Warwick, SCRTP, use cvmfs as the easiest environment setup (with bash):
 
