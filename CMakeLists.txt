@@ -21,7 +21,6 @@ add_executable(qtnmSim
   src/QTRunAction.cc
   src/QTEquationOfMotion.cc
   src/QTGasHit.cc
-  src/QTNMPhysicsList.cc
   src/QTOutputManager.cc
   src/QTTrackingAction.cc
   src/QTActionInitialization.cc
