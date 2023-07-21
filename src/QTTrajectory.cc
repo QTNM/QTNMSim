@@ -2,14 +2,12 @@
 
 #include "G4LogicalVolumeStore.hh"
 #include "G4Tubs.hh"
-#include "G4PhysicalConstants.hh"
 #include "G4TwoVector.hh"
 #include "G4TrajectoryPoint.hh"
 #include "G4ChordFinder.hh"
 #include "G4ChargeState.hh"
 #include "G4PropagatorInField.hh"
 #include "G4UserLimits.hh"
-#include "G4SystemOfUnits.hh"
 
 
 G4Allocator<QTTrajectory>*& myTrajectoryAllocator()
@@ -106,9 +104,9 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   G4TwoVector   antennaArm(antennaPos); // discard z-component
   
   G4ThreeVector antennaPolarisation = G4ThreeVector(antennaArm.orthogonal()).unit(); // along the dipole
-  G4cout << "antenna polarisation: " << antennaPolarisation.x() 
-  	 << ", " << antennaPolarisation.y() << ", " 
-  	 << antennaPolarisation.z() << G4endl;
+  // G4cout << "antenna polarisation: " << antennaPolarisation.x() 
+  // 	 << ", " << antennaPolarisation.y() << ", " 
+  // 	 << antennaPolarisation.z() << G4endl;
 
   // collect required values
   // DONE - this would be better done using the actual field object
@@ -128,10 +126,6 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   // 	 << ", " << acc.y() << ", " 
   // 	 << acc.z() << ")" << G4endl;
 
-  // explicit SI units here transparent
-  static constexpr G4double c_SI    = c_light/(m/s);
-  static constexpr G4double eps0_SI = epsilon0 / farad * m;
-
   G4double wvlg  = c_SI / (omega / twopi);
   //  G4cout << "wavelength [m] = " << wvlg << G4endl;
 
@@ -145,19 +139,19 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   fac /= dummy*dummy*dummy;
 
   G4ThreeVector relFarEField = fac*(Runit.cross((Runit-beta).cross(acc/c_SI))) / dist;
-  G4cout << "E-field far= (" << relFarEField.x() 
-  	 << ", " << relFarEField.y() << ", " 
-  	 << relFarEField.z() << ")" << G4endl;
+  // G4cout << "E-field far= (" << relFarEField.x() 
+  // 	 << ", " << relFarEField.y() << ", " 
+  // 	 << relFarEField.z() << ")" << G4endl;
 
   G4ThreeVector relNearEField = fac*c_SI*((1.0-beta.mag2())*(Runit-beta)) / (dist*dist);
-  G4cout << "E-field near= (" << relNearEField.x() 
-  	 << ", " << relNearEField.y() << ", " 
-  	 << relNearEField.z() << ")" << G4endl;
+  // G4cout << "E-field near= (" << relNearEField.x() 
+  // 	 << ", " << relNearEField.y() << ", " 
+  // 	 << relNearEField.z() << ")" << G4endl;
 
   // assume half wave dipole eff length as wvlg/pi
   G4double voltage = wvlg/pi * (relFarEField+relNearEField).dot(antennaPolarisation);
   
-  G4cout << "append step called, (t [ns], v [V]): " << gltime << ", " << voltage << G4endl;
+  // G4cout << "append step called, (t [ns], v [V]): " << gltime << ", " << voltage << G4endl;
   return std::make_pair(gltime, voltage);
 }
 
@@ -181,5 +175,5 @@ G4int QTTrajectory::GetPointEntries() const
 
 void QTTrajectory::MergeTrajectory(G4VTrajectory* secondTrajectory)
 {
-  G4cout << "PRINT>>> in merge traj function." << G4endl;
+  //  G4cout << "PRINT>>> in merge traj function." << G4endl;
 }

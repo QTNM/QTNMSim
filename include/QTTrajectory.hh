@@ -10,6 +10,8 @@
 #include "G4Track.hh"
 #include "G4VTrajectory.hh"
 #include "G4ios.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4PhysicalConstants.hh"
 #include "globals.hh"
 
 // us
@@ -77,6 +79,11 @@ private:
   G4double                    PDGCharge = 0.0;
   G4String                    ParticleName = "";
   G4ThreeVector               initialMomentum;
+
+  // explicit SI units here transparent
+  static constexpr G4double c_SI    = c_light/(m/s);
+  static constexpr G4double eps0_SI = epsilon0 / farad * m;
+
 };
 
 extern G4TRACKING_DLL G4Allocator<QTTrajectory>*& myTrajectoryAllocator();

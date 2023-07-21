@@ -4,6 +4,9 @@
 #include "G4Mag_UsualEqRhs.hh"
 #include "G4ThreeVector.hh"
 #include "G4ChargeState.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+
 
 class QTEquationOfMotion : public G4Mag_UsualEqRhs
 {
@@ -24,6 +27,11 @@ private:
   G4double fCof_val;
   G4double fMass;
   G4double fCharge;
+
+  // conversion in [kg] not working
+  static constexpr G4double m_e = 9.1093837e-31; // [electron mass in [kg]; needed only here
+  static constexpr G4double c_SI = c_light/(m/s); // explicit SI units
+
 };
 
 #endif
