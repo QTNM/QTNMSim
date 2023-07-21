@@ -14,8 +14,8 @@ QTGasSD::QTGasSD(const G4String& name,
   collectionName.insert(hitsCollectionName);
 }
 
-QTGasSD::~QTGasSD() 
-{}
+QTGasSD::~QTGasSD() = default;
+
 
 void QTGasSD::Initialize(G4HCofThisEvent* hce)
 {

@@ -19,7 +19,7 @@ class QTGasSD : public G4VSensitiveDetector
   public:
     QTGasSD(const G4String& name, 
             const G4String& hitsCollectionName);
-    virtual ~QTGasSD();
+    ~QTGasSD() override;
   
     // methods from base class
     virtual void   Initialize(G4HCofThisEvent* hitCollection);

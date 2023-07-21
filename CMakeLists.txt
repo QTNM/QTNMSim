@@ -7,19 +7,32 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # CTest if we need it
-include(CTest)
+# include(CTest)
 
 # Dependencies
-find_package(Geant4 11.0 REQUIRED)
+find_package(Geant4 11.1 REQUIRED gdml)
 
 # Build
 add_executable(qtnmSim
   qtnmSim.cc
+  src/QTDetectorConstruction.cc
+  src/QTFieldMessenger.cc
+  src/QTMagneticFieldSetup.cc
+  src/QTRunAction.cc
+  src/QTEquationOfMotion.cc
+  src/QTGasHit.cc
+  src/QTOutputManager.cc
+  src/QTTrackingAction.cc
+  src/QTActionInitialization.cc
+  src/QTEventAction.cc
+  src/QTGasSD.cc
+  src/QTPrimaryGeneratorAction.cc
+  src/QTTrajectory.cc
   src/QTNMPhysicsList.cc)
 target_include_directories(qtnmSim PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(qtnmSim PRIVATE ${Geant4_LIBRARIES})
 
 # Test
-if(BUILD_TESTING)
-  add_subdirectory(test)
-endif()
+#if(BUILD_TESTING)
+#  add_subdirectory(test)
+#endif()

@@ -83,8 +83,8 @@ QTNMPhysicsList::QTNMPhysicsList(G4int ver,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-QTNMPhysicsList::~QTNMPhysicsList()
-{}
+QTNMPhysicsList::~QTNMPhysicsList() = default;
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

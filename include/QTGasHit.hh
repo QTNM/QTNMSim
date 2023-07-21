@@ -15,7 +15,7 @@ class QTGasHit : public G4VHit
   public:
     QTGasHit();
     QTGasHit(const QTGasHit&);
-    virtual ~QTGasHit();
+    ~QTGasHit() override;
 
     // operators
     const QTGasHit& operator=(const QTGasHit&);

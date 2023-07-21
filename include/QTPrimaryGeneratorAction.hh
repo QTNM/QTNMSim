@@ -23,7 +23,7 @@ class QTPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
   QTPrimaryGeneratorAction();
-  virtual ~QTPrimaryGeneratorAction();
+  ~QTPrimaryGeneratorAction() override;
 
   virtual void GeneratePrimaries(G4Event*);
 
@@ -34,6 +34,7 @@ private:
   G4ParticleGun*      fParticleGun;
   G4GenericMessenger* fMessenger;
 
+  G4bool              fTestElectron;
   G4bool              fGunType;
   // electron gun parameter
   G4double            fMean;
@@ -50,7 +51,7 @@ private:
 };
 
 // us
-#include "TBetaGenerator.hpp"
+#include "TBetaGenerator.hh"
 
 // build generation functor
 // operator calls eactly one 
