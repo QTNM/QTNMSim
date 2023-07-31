@@ -24,6 +24,11 @@ G4ThreeVector QTEquationOfMotion::GetCachedFieldValue()
   return G4ThreeVector(0.,0.,0.);
 }
 
+G4ThreeVector QTEquationOfMotion::CalcRadiationAcceleration(G4ThreeVector Bfield, G4ThreeVector pos, G4ThreeVector beta)
+{
+}
+
+
 G4ThreeVector QTEquationOfMotion::CalcOmegaGivenB(G4ThreeVector Bfield, G4ThreeVector beta)
 {
   // B must arrive in [Tesla]

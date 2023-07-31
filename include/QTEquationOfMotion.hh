@@ -20,6 +20,7 @@ public:
 			     G4double mass);
 
   G4ThreeVector GetCachedFieldValue();
+  G4ThreeVector CalcRadiationAcceleration(G4ThreeVector, G4ThreeVector, G4ThreeVector);
   G4ThreeVector CalcOmegaGivenB(G4ThreeVector, G4ThreeVector);
   G4ThreeVector CalcAccGivenB(G4ThreeVector, G4ThreeVector);
 

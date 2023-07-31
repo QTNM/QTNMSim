@@ -45,9 +45,8 @@
 #include "G4MagIntegratorDriver.hh"
 #include "G4ChordFinder.hh"
 
-// #include "BorisStepper.hh"
-#include "G4BorisScheme.hh"
-#include "G4BorisDriver.hh"
+#include "QTBorisScheme.hh"
+#include "QTBorisDriver.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -128,9 +127,9 @@ void QTMagneticFieldSetup::SetUpBorisDriver()
   // set up Boris driver from Geant4.11, follows example field01
   G4cout << " F01FieldSetup::CreateAndSetupBorisDriver() called. " << G4endl;   
   G4cout << "   1. Creating Scheme (Stepper)."  << G4endl;
-  fBStepper = new G4BorisScheme(fEquation);
+  fBStepper = new QTBorisScheme(fEquation);
   G4cout << "   2. Creating Driver."  << G4endl;
-  fBDriver  = new G4BorisDriver(fMinStep, fBStepper);
+  fBDriver  = new QTBorisDriver(fMinStep, fBStepper);
 
   G4cout  << "  3. Creating ChordFinder."  << G4endl;
   fChordFinder = new G4ChordFinder( fBDriver );
