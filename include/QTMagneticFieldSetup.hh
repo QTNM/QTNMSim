@@ -40,11 +40,11 @@
 
 class G4FieldManager;
 class G4ChordFinder;
-class QTEquationOfMotion;
 class G4MagIntegratorStepper;
 class G4MagInt_Driver;
-class G4BorisScheme;
-class G4BorisDriver;
+class QTBorisDriver;
+class QTBorisScheme;
+class QTEquationOfMotion;
 class QTFieldMessenger;
 
 /// A class for control of the Magnetic Field of the detector.
@@ -105,8 +105,8 @@ private:
  
   G4MagIntegratorStepper* fStepper;
   G4MagInt_Driver*        fIntgrDriver;
-  G4BorisScheme*          fBStepper;
-  G4BorisDriver*          fBDriver;
+  QTBorisScheme*          fBStepper;
+  QTBorisDriver*          fBDriver;
 
   //  G4int                   fStepperType;
 
