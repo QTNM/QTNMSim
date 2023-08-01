@@ -24,8 +24,26 @@ G4ThreeVector QTEquationOfMotion::GetCachedFieldValue()
   return G4ThreeVector(0.,0.,0.);
 }
 
-G4ThreeVector QTEquationOfMotion::CalcRadiationAcceleration(G4ThreeVector Bfield, G4ThreeVector pos, G4ThreeVector beta)
+G4ThreeVector QTEquationOfMotion::CalcRadiationAcceleration(G4ThreeVector Bfield, G4ThreeVector beta)
 {
+  // calculate acceleration from the radiation reaction force
+  // form is from Ford & O'Connell equation in 3D
+  G4ThreeVector omega = CalcOmegaGivenB(BField, beta);
+  G4double denom = 1.0+tau_SI*tau_SI*(omega.dot(omega));
+
+  // target vector
+  G4ThreeVector acc;
+  acc[0] -= tau_SI*(omega[2]*omega[2]+omega[1]*omega[1])*beta[0]*c_SI;
+  acc[0] += tau_SI*omega[0]*(omega[2]*beta[2]+omega[1]*beta[1])*c_SI;
+
+  acc[1] -= tau_SI*(omega[2]*omega[2]+omega[0]*omega[0])*beta[1]*c_SI;
+  acc[1] += tau_SI*omega[1]*(omega[2]*beta[2]+omega[0]*beta[0])*c_SI;
+
+  acc[2] -= tau_SI*(omega[0]*omega[0]+omega[1]*omega[1])*beta[2]*c_SI;
+  acc[2] += tau_SI*omega[2]*(omega[0]*beta[0]+omega[1]*beta[1])*c_SI;
+
+  acc /= denom;
+  return acc;
 }
 
 
