@@ -43,50 +43,50 @@ class G4EquationOfMotion;
 
 class QTBorisScheme
 {
-  public:
+public:
 
-    QTBorisScheme() = default;
-    QTBorisScheme( // G4EqMagElectricField
-       G4EquationOfMotion* equation,
-                        G4int nvar = 6);
-   ~QTBorisScheme() = default;
-
-    void DoStep( G4double restMass, G4double charge, const G4double yIn[], 
-                 G4double yOut[], G4double hstep) const;
-
-  protected:
-    // Used to implement the 'DoStep' method above
-    void UpdatePosition(const G4double restMass, const G4double charge, const G4double yIn[],
-                 G4double yOut[], G4double hstep) const;
-
-    void UpdateVelocity(const G4double restMass, const G4double charge, const G4double yIn[],
-                 G4double yOut[], G4double hstep) const;
-
-  public: 
-    // - Methods using the Boris Scheme Stepping to estimate integration error
-    void StepWithErrorEstimate(const G4double yIn[], G4double restMass, G4double charge, G4double hstep,
-                               G4double yOut[], G4double yErr[]) const;
-      // Use two half-steps (comparing to a full step) to obtain output and error estimate
-
-   void StepWithMidAndErrorEstimate(const G4double yIn[], G4double restMass, G4double charge, G4double hstep,
-                               G4double yMid[], G4double yOut[], G4double yErr[]) const;
-      // Same, and also return mid-point evaluation
-
-    // Auxiliary method
-    inline G4EquationOfMotion* GetEquationOfMotion();
-    // inline void SetEquationOfMotion(G4EquationOfMotion* equation);  // Un-needed, dangerous
-
-    inline G4int GetNumberOfVariables() const;
-   
-  private:
-
-    void copy(G4double dst[], const G4double src[]) const;
-
-  private:
-
-    G4EquationOfMotion* fEquation = nullptr;
-    G4int fnvar = 8;
-    static constexpr G4double c_l = CLHEP::c_light/CLHEP::m*CLHEP::second;
+  QTBorisScheme() = default;
+  QTBorisScheme( // G4EqMagElectricField
+		G4EquationOfMotion* equation,
+		G4int nvar = 6);
+  ~QTBorisScheme() = default;
+  
+  void DoStep( G4double restMass, G4double charge, const G4double yIn[], 
+	       G4double yOut[], G4double hstep) const;
+  
+protected:
+  // Used to implement the 'DoStep' method above
+  void UpdatePosition(const G4double restMass, const G4double charge, const G4double yIn[],
+		      G4double yOut[], G4double hstep) const;
+  
+  void UpdateVelocity(const G4double restMass, const G4double charge, const G4double yIn[],
+		      G4double yOut[], G4double hstep) const;
+  
+public: 
+  // - Methods using the Boris Scheme Stepping to estimate integration error
+  void StepWithErrorEstimate(const G4double yIn[], G4double restMass, G4double charge, G4double hstep,
+			     G4double yOut[], G4double yErr[]) const;
+  // Use two half-steps (comparing to a full step) to obtain output and error estimate
+  
+  void StepWithMidAndErrorEstimate(const G4double yIn[], G4double restMass, G4double charge, G4double hstep,
+				   G4double yMid[], G4double yOut[], G4double yErr[]) const;
+  // Same, and also return mid-point evaluation
+  
+  // Auxiliary method
+  inline G4EquationOfMotion* GetEquationOfMotion();
+  // inline void SetEquationOfMotion(G4EquationOfMotion* equation);  // Un-needed, dangerous
+  
+  inline G4int GetNumberOfVariables() const;
+  
+private:
+  
+  void copy(G4double dst[], const G4double src[]) const;
+  
+private:
+  
+  G4EquationOfMotion* fEquation = nullptr;
+  G4int fnvar = 8;
+  static constexpr G4double c_l = CLHEP::c_light/CLHEP::m*CLHEP::second; // SI unit
 };
 
 #include "QTBorisScheme.icc"
