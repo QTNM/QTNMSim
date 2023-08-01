@@ -64,5 +64,6 @@ G4ThreeVector QTEquationOfMotion::CalcOmegaGivenB(G4ThreeVector Bfield, G4ThreeV
 G4ThreeVector QTEquationOfMotion::CalcAccGivenB(G4ThreeVector BField, G4ThreeVector beta)
 {
   G4ThreeVector omega = CalcOmegaGivenB(BField, beta);
-  return beta.cross(omega) * c_SI; // missing radiation acceleration term
+  G4ThreeVector rad_acceleration = CalcRadiationAcceleration(BField, beta);
+  return beta.cross(omega) * c_SI + rad_acceleration; // added radiation acceleration term
 }
