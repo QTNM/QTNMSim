@@ -67,33 +67,35 @@ void QTBorisScheme::DoStep(const G4double restMass,const G4double charge, const 
 void QTBorisScheme::UpdatePosition(const G4double restMass, const G4double /*charge*/, const G4double yIn[],
                                    G4double yOut[], G4double hstep) const
 {
-    // Particle information
-    copy(yOut, yIn);
-    
-    // Obtaining velocity
-    G4ThreeVector momentum_vec =G4ThreeVector(yIn[3],yIn[4],yIn[5]);
-    G4double momentum_mag = momentum_vec.mag();
-    G4ThreeVector momentum_dir =(1.0/momentum_mag)*momentum_vec;
-
-    G4double velocity_mag = momentum_mag*(c_l)/(std::sqrt(sqr(momentum_mag) +sqr(restMass)));
-    G4ThreeVector velocity = momentum_dir*velocity_mag;
-
-    //Obtaining the time step from the length step
-
-    hstep /= velocity_mag*CLHEP::m;
-
-    // Updating the Position
-    for(G4int i = 0; i <3; i++ )
+  // Calculations use SI units
+  // Particle information
+  copy(yOut, yIn);
+  
+  // Obtaining velocity
+  G4ThreeVector momentum_vec =G4ThreeVector(yIn[3],yIn[4],yIn[5]);
+  G4double momentum_mag = momentum_vec.mag();
+  G4ThreeVector momentum_dir =(1.0/momentum_mag)*momentum_vec;
+  
+  G4double velocity_mag = momentum_mag*(c_l)/(std::sqrt(sqr(momentum_mag) +sqr(restMass)));
+  G4ThreeVector velocity = momentum_dir*velocity_mag;
+  
+  //Obtaining the time step from the length step
+  
+  hstep /= velocity_mag*CLHEP::m;
+  
+  // Updating the Position
+  for(G4int i = 0; i <3; i++ )
     {
       G4double pos = yIn[i]/CLHEP::m;
       pos += hstep*velocity[i];
       yOut[i] = pos*CLHEP::m;
-    }   
+    }
 }
 
 void QTBorisScheme::UpdateVelocity(const G4double restMass, const G4double charge, const G4double yIn[], 
                                    G4double yOut[], G4double hstep) const
 {
+  // Calculations use SI units
   //Particle information
   G4ThreeVector momentum_vec =G4ThreeVector(yIn[3],yIn[4],yIn[5]);
   G4double momentum_mag = momentum_vec.mag();
@@ -103,31 +105,32 @@ void QTBorisScheme::UpdateVelocity(const G4double restMass, const G4double charg
   
   G4double mass = (restMass/c_squared)/CLHEP::kg;
   
-  //Obtaining velocity
+  //Obtaining velocity; SI unit, not beta
   
   G4double velocity_mag = momentum_mag*(c_l)/(std::sqrt(sqr(momentum_mag) +sqr(restMass)));
   G4ThreeVector velocity = momentum_dir*velocity_mag;
   
   ////Obtaining the time step from the length step
   
-  hstep /= velocity_mag*CLHEP::m; 
+  hstep /= velocity_mag*CLHEP::m; // in [s] if v in SI
   
   // Obtaining the field values
   G4double PositionAndTime[4]; // copy from G4EquationOfMotion.icc
   G4double fieldValue[6] ={0,0,0,0,0,0};
   
   // Position
-  PositionAndTime[0] = yIn[0]; // internal units for call
-  PositionAndTime[1] = yIn[1];
-  PositionAndTime[2] = yIn[2];
+  PositionAndTime[0] = yIn[0]; // internal units for call?
+  PositionAndTime[1] = yIn[1]; // not according to previous call
+  PositionAndTime[2] = yIn[2]; // to EvaluateRhsReturnB(yIn,...)
   // Global Time
   PositionAndTime[3] = yIn[7];  // See G4FieldTrack::LoadFromArray
+
   // use inherited get field value function, get B-field array
   fEquation->GetFieldValue(PositionAndTime, fieldValue) ; // by-passes RHS evaluation, not needed.
   
   // fEquation->EvaluateRhsReturnB(yIn, dydx, fieldValue); // use getFieldValue(postime, fieldValue)
   
-  //Initializing Vectors
+  //Initializing Vector
   G4ThreeVector B;
   // G4ThreeVector E; // not used
   copy(yOut, yIn);
@@ -137,19 +140,19 @@ void QTBorisScheme::UpdateVelocity(const G4double restMass, const G4double charg
       B[i] = fieldValue[i]/CLHEP::tesla; // into SI units
     }
   
-  //Boris Algorithm
+  //Boris Algorithm, assume SI units throughout
   G4double qd = hstep*(charge/(2*mass*gamma));
   G4ThreeVector h = qd*B;
   //  G4ThreeVector u = velocity + qd*E;
-  G4ThreeVector radAcc = fEquation->CalcRadiationAcceleration(B, velocity);
-  G4ThreeVector u = velocity + (hstep/2.0)*radAcc/c_l; // half-time step acceleration to beta speed unit
+  G4ThreeVector radAcc = fEquation->CalcRadiationAcceleration(B, velocity/c_l); // with beta in call
+  G4ThreeVector u = velocity + (hstep/2.0)*radAcc; // half-time step acceleration
   G4double h_l = h[0]*h[0] + h[1]*h[1] + h[2]*h[2];
   G4ThreeVector s_1 = (2*h)/(1 + h_l);
   G4ThreeVector ud = u + (u + u.cross(h)).cross(s_1);
   //  G4ThreeVector v_fi = ud +qd*E;
-  radAcc = fEquation->CalcRadiationAcceleration(B, ud); // for next half-step
-  G4ThreeVector v_fi = ud + (hstep/2.0)*radAcc/c_l; // half-time step acceleration to beta speed unit
-  G4double v_mag = std::sqrt(v_fi.mag2());
+  radAcc = fEquation->CalcRadiationAcceleration(B, ud/c_l); // for next half-step, beta in call
+  G4ThreeVector v_fi = ud + (hstep/2.0)*radAcc; // half-time step acceleration
+  G4double v_mag = v_fi.mag();
   G4ThreeVector v_dir = v_fi/v_mag;
   G4double momen_mag = (restMass*v_mag)/(std::sqrt(c_l*c_l - v_mag*v_mag));
   G4ThreeVector momen = momen_mag*v_dir;
