@@ -98,7 +98,8 @@ class QTBorisDriver : public G4VIntegrationDriver,
       ChordFinderDelegate::ResetStepEstimate();
     }
 
-    void OnComputeStep(const G4FieldTrack*) override {}
+  //  void OnComputeStep(const G4FieldTrack*) override {}
+  void OnComputeStep() override {}
 
     // 3. Does the method redo integrations when called to obtain values for
     //    internal, smaller intervals? (when needed to identify an intersection)

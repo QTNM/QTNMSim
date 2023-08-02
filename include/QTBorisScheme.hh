@@ -36,6 +36,7 @@
 #define QTBORIS_SCHEME_HH
 
 class G4EquationOfMotion;
+class QTEquationOfMotion;
 
 #include "G4Types.hh"
 
@@ -84,7 +85,8 @@ private:
   
 private:
   
-  G4EquationOfMotion* fEquation = nullptr;
+  G4EquationOfMotion* fEquation = nullptr; // general EoM
+  QTEquationOfMotion* pEqn      = nullptr; // our EoM
   G4int fnvar = 8;
   static constexpr G4double c_l = CLHEP::c_light/CLHEP::m*CLHEP::second; // SI unit
 };

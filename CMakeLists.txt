@@ -16,6 +16,8 @@ find_package(Geant4 11.1 REQUIRED gdml)
 add_executable(qtnmSim
   qtnmSim.cc
   src/QTDetectorConstruction.cc
+  src/QTBorisScheme.cc
+  src/QTBorisDriver.cc
   src/QTFieldMessenger.cc
   src/QTMagneticFieldSetup.cc
   src/QTRunAction.cc

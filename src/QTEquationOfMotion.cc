@@ -28,11 +28,11 @@ G4ThreeVector QTEquationOfMotion::CalcRadiationAcceleration(G4ThreeVector Bfield
 {
   // calculate acceleration from the radiation reaction force
   // form is from Ford & O'Connell equation in 3D
-  G4ThreeVector omega = CalcOmegaGivenB(BField, beta);
+  G4ThreeVector omega = CalcOmegaGivenB(Bfield, beta);
   G4double denom = 1.0+tau_SI*tau_SI*(omega.dot(omega));
 
   // target vector
-  G4ThreeVector acc;
+  G4ThreeVector acc; // default constructor sets components to 0.0
   acc[0] -= tau_SI*(omega[2]*omega[2]+omega[1]*omega[1])*beta[0]*c_SI;
   acc[0] += tau_SI*omega[0]*(omega[2]*beta[2]+omega[1]*beta[1])*c_SI;
 
@@ -61,9 +61,14 @@ G4ThreeVector QTEquationOfMotion::CalcOmegaGivenB(G4ThreeVector Bfield, G4ThreeV
     return (fCharge*e_SI) * Bfield / m_e / gamma_rel;
 }
 
-G4ThreeVector QTEquationOfMotion::CalcAccGivenB(G4ThreeVector BField, G4ThreeVector beta)
+G4ThreeVector QTEquationOfMotion::CalcAccGivenB(G4ThreeVector Bfield, G4ThreeVector beta)
 {
-  G4ThreeVector omega = CalcOmegaGivenB(BField, beta);
-  G4ThreeVector rad_acceleration = CalcRadiationAcceleration(BField, beta);
+  G4ThreeVector omega = CalcOmegaGivenB(Bfield, beta);
+  G4ThreeVector rad_acceleration = CalcRadiationAcceleration(Bfield, beta);
+  // G4cout << "Acc inputs: "
+  // 	 << " omega mag " << omega.mag() 
+  // 	 << " radacc = " << rad_acceleration.x() 
+  // 	 << ", " << rad_acceleration.y() << ", " << rad_acceleration.z() 
+  // 	 << G4endl;
   return beta.cross(omega) * c_SI + rad_acceleration; // added radiation acceleration term
 }
