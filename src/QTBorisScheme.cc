@@ -34,6 +34,7 @@
 #include "G4PhysicalConstants.hh"
 #include "G4EquationOfMotion.hh"
 
+#include "QTEquationOfMotion.hh"
 #include "QTBorisScheme.hh"
 
 
@@ -49,6 +50,8 @@ QTBorisScheme::QTBorisScheme( G4EquationOfMotion* equation,
                 "GeomField0002", FatalException,
                 "Invalid number of variables; must be greater than zero!");
   }
+
+  pEqn = dynamic_cast<QTEquationOfMotion*>(fEquation); // requires our object
 }
 
 void QTBorisScheme::DoStep(const G4double restMass,const G4double charge, const G4double yIn[], 
@@ -139,18 +142,19 @@ void QTBorisScheme::UpdateVelocity(const G4double restMass, const G4double charg
       //        E[i] = fieldValue[i+3]/CLHEP::volt*CLHEP::meter;// FIXME - Check Units
       B[i] = fieldValue[i]/CLHEP::tesla; // into SI units
     }
+
   
   //Boris Algorithm, assume SI units throughout
   G4double qd = hstep*(charge/(2*mass*gamma));
   G4ThreeVector h = qd*B;
   //  G4ThreeVector u = velocity + qd*E;
-  G4ThreeVector radAcc = fEquation->CalcRadiationAcceleration(B, velocity/c_l); // with beta in call
+  G4ThreeVector radAcc = pEqn->CalcRadiationAcceleration(B, velocity/c_l); // with beta in call
   G4ThreeVector u = velocity + (hstep/2.0)*radAcc; // half-time step acceleration
   G4double h_l = h[0]*h[0] + h[1]*h[1] + h[2]*h[2];
   G4ThreeVector s_1 = (2*h)/(1 + h_l);
   G4ThreeVector ud = u + (u + u.cross(h)).cross(s_1);
   //  G4ThreeVector v_fi = ud +qd*E;
-  radAcc = fEquation->CalcRadiationAcceleration(B, ud/c_l); // for next half-step, beta in call
+  radAcc = pEqn->CalcRadiationAcceleration(B, ud/c_l); // for next half-step, beta in call
   G4ThreeVector v_fi = ud + (hstep/2.0)*radAcc; // half-time step acceleration
   G4double v_mag = v_fi.mag();
   G4ThreeVector v_dir = v_fi/v_mag;
