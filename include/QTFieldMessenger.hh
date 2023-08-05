@@ -39,7 +39,6 @@
 
 class QTMagneticFieldSetup;
 class G4UIdirectory;
-// class G4UIcmdWithAnInteger;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWith3VectorAndUnit;
 class G4UIcmdWithoutParameter;
@@ -56,14 +55,16 @@ class QTFieldMessenger: public G4UImessenger
  
   private:
 
-    QTMagneticFieldSetup*      fElFieldSetup;
+    QTMagneticFieldSetup*      fEMFieldSetup;
 
     G4UIdirectory*             fFieldDir;
-  //    G4UIcmdWithAnInteger*      fStepperCmd;
     G4UIcmdWithADoubleAndUnit* fBFieldZCmd;
     G4UIcmdWith3VectorAndUnit* fBFieldCmd;
     G4UIcmdWithADoubleAndUnit* fMinStepCmd;
     G4UIcmdWithoutParameter*   fUpdateCmd;
+    G4UIcmdWithoutParameter*   fComsolBCmd;
+    G4UIcmdWithoutParameter*   fBathtubBCmd;
+    G4UIcmdWithoutParameter*   fTestBCmd;
 };
 
 #endif

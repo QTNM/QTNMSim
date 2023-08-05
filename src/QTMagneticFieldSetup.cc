@@ -64,8 +64,9 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
    fFieldMessenger(nullptr)   
 {
   G4ThreeVector fieldVector( 0.0, 0.0, 1.0 * CLHEP::tesla);
+  fFieldVector = fieldVector; // initialize
 
-  fEMfield = new G4UniformMagField(fieldVector);
+  fEMfield = new G4UniformMagField(fieldVector); // set default
   fEquation = new QTEquationOfMotion(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
@@ -87,7 +88,8 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
     fBDriver(0),
     fFieldMessenger(nullptr)
 {
-  fEMfield = new G4UniformMagField(fieldVector);
+  fFieldVector = fieldVector;
+  fEMfield = new G4UniformMagField(fieldVector); // default
 
   fEquation = new QTEquationOfMotion(fEMfield);
 
@@ -163,6 +165,72 @@ void QTMagneticFieldSetup::UpdateAll()
 }
 
 
+void QTMagneticFieldSetup::SetUniformB()
+{
+  // switch on uniform B-field.
+  fTest = true;
+  fBathTub = false; // allow only one option
+  fComsol  = false;
+  UpdateBField();
+}
+
+void QTMagneticFieldSetup::SetBathTubB()
+{
+  // switch on Bathtub B-field.
+  fTest    = false;
+  fBathTub = true; // allow only one option
+  fComsol  = false;
+  UpdateBField();
+}
+
+void QTMagneticFieldSetup::SetComsolB()
+{
+  // switch on Comsol B-field map.
+  fTest    = false;
+  fBathTub = false; // allow only one option
+  fComsol  = true;
+  UpdateBField();
+}
+
+
+void QTMagneticFieldSetup::UpdateBField()
+{
+  // any change to parameter or types needs this update.
+
+  if (fEMfield) delete fEMfield;
+  // Set the value of the Global Field value to fieldVector
+
+  // Find the Field Manager for the global field
+  G4FieldManager* fieldMgr= GetGlobalFieldManager();
+
+  if (fTest) {
+    if (fFieldVector != G4ThreeVector(0.,0.,0.)) // set zero on purpose
+      {
+	fEMfield = new G4UniformMagField(fFieldVector);
+      }
+    else
+      {
+	// If the new field's value is Zero, then it is best to
+	//  insure that it is not used for propagation.
+	fEMfield = 0;
+      }
+  }
+  else if (fBathTub) {
+    // tbimpl
+    // fEMfield = new QTTrapField(fFieldVector);
+  }
+  else {
+    // tbimpl
+    // if (!fFileName.empty())
+    // fEMfield = new QTComsolReader(fFileName);
+  }
+
+  fieldMgr->SetDetectorField(fEMfield);
+  fEquation->SetFieldObj(fEMfield);  // must now point to the new field
+
+}
+
+
 void QTMagneticFieldSetup::SetFieldZValue(G4double fieldValue)
 {
   // Set the value of the Global Field to fieldValue along Z
@@ -175,24 +243,7 @@ void QTMagneticFieldSetup::SetFieldZValue(G4double fieldValue)
 
 void QTMagneticFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
 {
-  if (fEMfield) delete fEMfield;
-  // Set the value of the Global Field value to fieldVector
-
-  // Find the Field Manager for the global field
-  G4FieldManager* fieldMgr= GetGlobalFieldManager();
-
-  if (fieldVector != G4ThreeVector(0.,0.,0.))
-  {
-    fEMfield = new G4UniformMagField(fieldVector);
-  }
-  else
-  {
-    // If the new field's value is Zero, then it is best to
-    //  insure that it is not used for propagation.
-    fEMfield = 0;
-  }
-  fieldMgr->SetDetectorField(fEMfield);
-  fEquation->SetFieldObj(fEMfield);  // must now point to the new field
+  fFieldVector = fieldVector;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
