@@ -31,7 +31,7 @@ add_executable(qtnmSim
   src/QTPrimaryGeneratorAction.cc
   src/QTTrajectory.cc
   src/QTNMPhysicsList.cc)
-target_include_directories(qtnmSim PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(qtnmSim PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
 target_link_libraries(qtnmSim PRIVATE ${Geant4_LIBRARIES})
 
 # Test
