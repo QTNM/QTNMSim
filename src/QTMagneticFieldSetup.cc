@@ -41,8 +41,6 @@
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
 #include "QTEquationOfMotion.hh"
-#include "G4MagIntegratorStepper.hh"
-#include "G4MagIntegratorDriver.hh"
 #include "G4ChordFinder.hh"
 
 #include "QTBorisScheme.hh"
@@ -61,8 +59,6 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
    fChordFinder(0),
    fEquation(0),
    fEMfield(0),
-   fStepper(0),
-   fIntgrDriver(0),
    fBStepper(0),
    fBDriver(0),
    fFieldMessenger(nullptr)   
@@ -87,8 +83,6 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
     fChordFinder(0),
     fEquation(0),
     fEMfield(0),
-    fStepper(0),
-    fIntgrDriver(0),
     fBStepper(0),
     fBDriver(0),
     fFieldMessenger(nullptr)
@@ -114,7 +108,6 @@ QTMagneticFieldSetup::~QTMagneticFieldSetup()
    // Delete the messenger first, to avoid messages to deleted classes!
   
   delete fChordFinder;  fChordFinder= nullptr;
-  delete fStepper;      fStepper = nullptr;
   delete fBStepper;     fBStepper = nullptr;
   delete fEquation;     fEquation = nullptr;
   delete fEMfield;      fEMfield = nullptr;

@@ -40,8 +40,6 @@
 
 class G4FieldManager;
 class G4ChordFinder;
-class G4MagIntegratorStepper;
-class G4MagInt_Driver;
 class QTBorisDriver;
 class QTBorisScheme;
 class QTEquationOfMotion;
@@ -62,9 +60,6 @@ public:
 
   ~QTMagneticFieldSetup();
 
-   // Methods to set parameters or select 
-  // void SetStepperType( G4int i) { fStepperType = i ; CreateStepper(); }
-
   void SetMinStep(G4double s) { fMinStep = s ; }
 
   void SetFieldValue(G4ThreeVector fieldVector);
@@ -73,12 +68,8 @@ public:
 
   void UpdateAll();
   // allow messenger commands to update values
+  //   NOTE:  field and equation must have been created before calling this.
 
-  // void UpdateIntegrator();
-   // Prepare all the classes required for tracking - from stepper 
-   //    to Chord-Finder
-   //   NOTE:  field and equation must have been created before calling this.
-   
 protected:
 
   // Find the global Field Manager
@@ -87,9 +78,6 @@ protected:
 
   void SetUpBorisDriver();
    // Prepare all the classes required for tracking
-
-  // void CreateStepper();
-   // Implementation method - should not be exposed
 
 private:
   G4double                fMinStep;
@@ -103,14 +91,9 @@ private:
 
   G4MagneticField*        fEMfield;
  
-  G4MagIntegratorStepper* fStepper;
-  G4MagInt_Driver*        fIntgrDriver;
   QTBorisScheme*          fBStepper;
   QTBorisDriver*          fBDriver;
 
-  //  G4int                   fStepperType;
-
-   
   QTFieldMessenger*       fFieldMessenger;
 
 };
