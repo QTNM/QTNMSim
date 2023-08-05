@@ -62,9 +62,20 @@ public:
 
   void SetMinStep(G4double s) { fMinStep = s ; }
 
+   // Set/Get Field strength in Geant4 units
+  void SetUniformB(); // switch; default true
   void SetFieldValue(G4ThreeVector fieldVector);
   void SetFieldZValue(G4double      fieldValue);
-   // Set/Get Field strength in Geant4 units
+
+   // Set/Get Trap Field in Geant4 units
+  void SetBathTubB(); // switch; default false
+  void SetTrapCurrent(G4double);
+  void SetTrapRadius(G4double);
+  void SetCoilsAtZ(G4double); // 2 coils +- zcoil
+
+   // Set/Get Comsol field map in Geant4 units
+  void SetComsolB(); // switch; default false
+  void SetComsolFileName(G4String);
 
   void UpdateAll();
   // allow messenger commands to update values
@@ -81,7 +92,14 @@ protected:
 
 private:
   G4double                fMinStep;
-  G4bool                  fVerbose;
+  G4double                fTrapCurrent;
+  G4double                fTrapRadius;
+  G4double                fTrapZPos;
+  G4bool                  fTest;
+  G4bool                  fBathTub;
+  G4bool                  fComsol;
+  G4String                fFileName;
+  G4ThreeVector           fFieldVector;
 
   G4FieldManager*         fFieldManager;
 
