@@ -47,6 +47,9 @@ QTFieldMessenger::QTFieldMessenger(QTMagneticFieldSetup* fieldSetup)
    fFieldDir(0),
    fBFieldZCmd(0),
    fBFieldCmd(0),
+   fTrapZCmd(0),
+   fTrapRadiusCmd(0),
+   fTrapCurrentCmd(0),
    fMinStepCmd(0),
    fTestBCmd(0),
    fBathtubBCmd(0),
@@ -95,6 +98,27 @@ QTFieldMessenger::QTFieldMessenger(QTMagneticFieldSetup* fieldSetup)
   fMinStepCmd->SetParameterName("min step",false,false);
   fMinStepCmd->SetDefaultUnit("mm");
   fMinStepCmd->AvailableForStates(G4State_Idle);
+
+  fTrapCurrentCmd = new G4UIcmdWithADoubleAndUnit("/field/setCurrent",this);
+  fTrapCurrentCmd->SetGuidance("Define trapping current");
+  fTrapCurrentCmd->SetParameterName("Trap Current",false,false);
+  fTrapCurrentCmd->SetDefaultUnit("ampere");
+  fTrapCurrentCmd->SetDefaultValue(1.0);
+  fTrapCurrentCmd->AvailableForStates(G4State_Idle);
+
+  fTrapRadiusCmd = new G4UIcmdWithADoubleAndUnit("/field/setRadius",this);
+  fTrapRadiusCmd->SetGuidance("Define trapping radius");
+  fTrapRadiusCmd->SetParameterName("Trap Radius",false,false);
+  fTrapRadiusCmd->SetDefaultUnit("mm");
+  fTrapRadiusCmd->SetDefaultValue(20.0);
+  fTrapRadiusCmd->AvailableForStates(G4State_Idle);
+
+  fTrapZCmd = new G4UIcmdWithADoubleAndUnit("/field/setZPos",this);
+  fTrapZCmd->SetGuidance("Define coil +- z-position");
+  fTrapZCmd->SetParameterName("Trap Z position",false,false);
+  fTrapZCmd->SetDefaultUnit("mm");
+  fTrapZCmd->SetDefaultValue(20.0);
+  fTrapZCmd->AvailableForStates(G4State_Idle);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -107,6 +131,9 @@ QTFieldMessenger::~QTFieldMessenger()
   delete fBFieldZCmd;
   delete fBFieldCmd;
   delete fMinStepCmd;
+  delete fTrapCurrentCmd;
+  delete fTrapRadiusCmd;
+  delete fTrapZCmd;
   delete fFieldDir;
   delete fUpdateCmd;
 }
@@ -129,6 +156,12 @@ void QTFieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     fEMFieldSetup->SetFieldValue(fBFieldCmd->GetNew3VectorValue(newValue));
   if( command == fMinStepCmd )
     fEMFieldSetup->SetMinStep(fMinStepCmd->GetNewDoubleValue(newValue));
+  if( command == fTrapCurrentCmd )
+    fEMFieldSetup->SetTrapCurrent(fTrapCurrentCmd->GetNewDoubleValue(newValue));
+  if( command == fTrapRadiusCmd )
+    fEMFieldSetup->SetTrapRadius(fTrapRadiusCmd->GetNewDoubleValue(newValue));
+  if( command == fTrapZCmd )
+    fEMFieldSetup->SetCoilsAtZ(fTrapZCmd->GetNewDoubleValue(newValue));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -64,18 +64,18 @@ public:
 
    // Set/Get Field strength in Geant4 units
   void SetUniformB(); // switch; default true
-  void SetFieldValue(G4ThreeVector fieldVector);
-  void SetFieldZValue(G4double      fieldValue);
+  inline void SetFieldValue(G4ThreeVector fv) { fFieldVector = fv;}
+  void SetFieldZValue(G4double);
 
    // Set/Get Trap Field in Geant4 units
   void SetBathTubB(); // switch; default false
-  void SetTrapCurrent(G4double);
-  void SetTrapRadius(G4double);
-  void SetCoilsAtZ(G4double); // 2 coils +- zcoil
+  inline void SetTrapCurrent(G4double c) { fTrapCurrent = c;}
+  inline void SetTrapRadius(G4double r) { fTrapRadius = r;}
+  inline void SetCoilsAtZ(G4double z) { fTrapZPos = z;} // 2 coils +- zcoil
 
    // Set/Get Comsol field map in Geant4 units
   void SetComsolB(); // switch; default false
-  void SetComsolFileName(G4String);
+  inline void SetComsolFileName(G4String s) { fFileName = s;}
 
   void UpdateAll();
   // allow messenger commands to update values
@@ -88,6 +88,7 @@ protected:
   G4FieldManager*         GetGlobalFieldManager();
 
   void SetUpBorisDriver();
+  void UpdateBField();
    // Prepare all the classes required for tracking
 
 private:
