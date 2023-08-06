@@ -40,11 +40,12 @@
 #include "G4UniformMagField.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
-#include "QTEquationOfMotion.hh"
 #include "G4ChordFinder.hh"
 
+#include "QTEquationOfMotion.hh"
 #include "QTBorisScheme.hh"
 #include "QTBorisDriver.hh"
+#include "QTMagneticTrap.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -55,6 +56,9 @@
 
 QTMagneticFieldSetup::QTMagneticFieldSetup()
  : fMinStep(0.010*mm),  // minimal step of 10 microns
+   fTest(true),         // default case
+   fBathTub(false),
+   fComsol(false),
    fFieldManager(0),
    fChordFinder(0),
    fEquation(0),
@@ -63,6 +67,10 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
    fBDriver(0),
    fFieldMessenger(nullptr)   
 {
+  fTrapCurrent = 1.0*ampere; // defaults
+  fTrapRadius  = 20.0*mm;
+  fTrapZPos    = 20.0*mm; // +- 2cm
+  fFileName    = "";
   G4ThreeVector fieldVector( 0.0, 0.0, 1.0 * CLHEP::tesla);
   fFieldVector = fieldVector; // initialize
 
@@ -80,6 +88,9 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
 
 QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
   : fMinStep(0.010*mm),  // minimal step of 10 microns
+    fTest(true),         // default case
+    fBathTub(false),
+    fComsol(false),
     fFieldManager(0),
     fChordFinder(0),
     fEquation(0),
@@ -88,6 +99,10 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
     fBDriver(0),
     fFieldMessenger(nullptr)
 {
+  fTrapCurrent = 1.0*ampere; // defaults
+  fTrapRadius  = 20.0*mm;
+  fTrapZPos    = 20.0*mm; // +- 2cm
+  fFileName    = "";
   fFieldVector = fieldVector;
   fEMfield = new G4UniformMagField(fieldVector); // default
 
@@ -95,7 +110,6 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
 
   fFieldManager = GetGlobalFieldManager();
 
-  //  UpdateIntegrator();
   SetUpBorisDriver();
 
   fFieldMessenger = new QTFieldMessenger(this);
@@ -189,6 +203,7 @@ void QTMagneticFieldSetup::SetComsolB()
   fTest    = false;
   fBathTub = false; // allow only one option
   fComsol  = true;
+  
   UpdateBField();
 }
 
@@ -216,13 +231,16 @@ void QTMagneticFieldSetup::UpdateBField()
       }
   }
   else if (fBathTub) {
-    // tbimpl
-    // fEMfield = new QTTrapField(fFieldVector);
+    fEMfield = new QTMagneticTrap(fFieldVector);
+    fEMfield->SetCurrent(fTrapCurrent);
+    fEMfield->SetRadius(fTrapRadius);
+    fEMfield->SetCoilZ(fTrapZPos);
   }
   else {
     // tbimpl
     // if (!fFileName.empty())
     // fEMfield = new QTComsolReader(fFileName);
+    // else
   }
 
   fieldMgr->SetDetectorField(fEMfield);
@@ -237,13 +255,6 @@ void QTMagneticFieldSetup::SetFieldZValue(G4double fieldValue)
   G4ThreeVector fieldVector( 0.0, 0.0, fieldValue );
 
   SetFieldValue( fieldVector );
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void QTMagneticFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
-{
-  fFieldVector = fieldVector;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
