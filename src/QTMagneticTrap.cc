@@ -49,14 +49,24 @@ void QTMagneticTrap::GetFieldValue (const G4double yIn[7],
 {
 
   G4double field[3];
-  EvaluateCoils(yIn, field);
+  // coil at zpos_, can be 0.0 for single coil harmonic trap
+  EvaluateCoils(yIn, 1.0, field);
   
   B[0]= fFieldComponents[0] + field[0] ;
   B[1]= fFieldComponents[1] + field[1] ;
   B[2]= fFieldComponents[2] + field[2] ;
+
+  // coil at -zpos_
+  if (zpos_!=0.0) {
+    EvaluateCoils(yIn, -1.0, field);
+    
+    B[0]+= field[0] ;
+    B[1]+= field[1] ;
+    B[2]+= field[2] ;
+  }
 }
 
-void QTMagneticTrap::EvaluateCoils(const G4double yIn[7], G4double field[3]) const
+void QTMagneticTrap::EvaluateCoils(const G4double yIn[7], G4double zfactor, G4double field[3]) const
 {
   G4double x = yIn[0];
   G4double y = yIn[1];
@@ -68,11 +78,11 @@ void QTMagneticTrap::EvaluateCoils(const G4double yIn[7], G4double field[3]) con
     double radius2 = pow(radius_,2);
     field[0] = 0.0;
     field[1] = 0.0;
-    field[2] = CLHEP::mu0 * current_ * radius2 / (2.0 * pow(radius2 + pow(zpos_ - z,2), 1.5));
+    field[2] = CLHEP::mu0 * current_ * radius2 / (2.0 * pow(radius2 + pow(zfactor*zpos_ - z,2), 1.5));
     return;
   }
 
-  double z_rel = z - zpos_;
+  double z_rel = z - zfactor*zpos_;
   double rad_norm = rad / radius_;
   double rad_norm2 = pow(rad_norm, 2);
   double z_norm2 = pow(z_rel / radius_, 2);

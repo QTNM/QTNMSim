@@ -12,6 +12,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Dependencies
 find_package(Geant4 11.1 REQUIRED gdml)
 
+# Look for Boost
+#TODO This should be a required package if using clang
+find_package(Boost)
+
+if(Boost_FOUND)
+  add_compile_definitions(HAVE_BOOST)
+  include_directories(${Boost_INCLUDE_DIRS})
+endif()
+
 # Build
 add_executable(qtnmSim
   qtnmSim.cc
@@ -20,6 +29,7 @@ add_executable(qtnmSim
   src/QTBorisDriver.cc
   src/QTFieldMessenger.cc
   src/QTMagneticFieldSetup.cc
+  src/QTMagneticTrap.cc
   src/QTRunAction.cc
   src/QTEquationOfMotion.cc
   src/QTGasHit.cc

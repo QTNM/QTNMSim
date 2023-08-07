@@ -39,7 +39,7 @@ private:
   G4double zpos_;
   G4double b_central_;
 
-  void EvaluateCoils(const G4double yIn[7], G4double field[3]) const;
+  void EvaluateCoils(const G4double yIn[7], G4double fac, G4double field[3]) const;
   void SetCentralField();
 };
 #endif
