@@ -59,8 +59,11 @@ class QTFieldMessenger: public G4UImessenger
 
     G4UIdirectory*             fFieldDir;
     G4UIcmdWithADoubleAndUnit* fBFieldZCmd;
-    G4UIcmdWith3VectorAndUnit* fBFieldCmd;
+    G4UIcmdWithADoubleAndUnit* fTrapZCmd;
+    G4UIcmdWithADoubleAndUnit* fTrapRadiusCmd;
+    G4UIcmdWithADoubleAndUnit* fTrapCurrentCmd;
     G4UIcmdWithADoubleAndUnit* fMinStepCmd;
+    G4UIcmdWith3VectorAndUnit* fBFieldCmd;
     G4UIcmdWithoutParameter*   fUpdateCmd;
     G4UIcmdWithoutParameter*   fComsolBCmd;
     G4UIcmdWithoutParameter*   fBathtubBCmd;
