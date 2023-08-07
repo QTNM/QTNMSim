@@ -66,7 +66,8 @@ public:
   typedef point<coordinate_type, dimensions> point_type;
 private:
   struct node {
-    node(const point_type& pt) : point_(pt), left_(nullptr), right_(nullptr) {}
+    node(const point_type& pt) : point_(pt), left_(nullptr), right_(nullptr), id_(0) {}
+    node(const point_type& pt, const int& idx) : point_(pt), left_(nullptr), right_(nullptr), id_(idx) {}
     coordinate_type get(size_t index) const {
       return point_.get(index);
     }
@@ -74,6 +75,7 @@ private:
       return point_.distance(pt);
     }
     point_type point_;
+    int id_; // attribute point label
     node* left_;
     node* right_;
   };
@@ -154,6 +156,22 @@ public:
   }
   
   /**
+   * Constructor taking a vector of points.
+   * Labels for nodes are being set to retrieve
+   * indices for point results.
+   *
+   * @param vector of points
+   */
+  kdtree(std::vector<point_type>& data) {
+    nodes_.reserve(data.size());
+    for (size_t i = 0; i < data.size(); ++i) {
+      node nd(data[i], (int)i); // set an id number for point
+      nodes_.push_back(nd);
+    }
+    root_ = make_tree(0, nodes_.size(), 0);
+  }
+  
+  /**
    * Returns true if the tree is empty, false otherwise.
    */
   bool empty() const { return nodes_.empty(); }
@@ -164,20 +182,42 @@ public:
    *
    * @param pt a point
    * @param k number of nearest points to find
-   * @return the vector of k nearest point in the tree to the given point
+   * @return the vector of k nearest points and indices in the tree to the given point
    */
-  std::vector<point_type> k_nearest(const point_type& pt, int k) {
+  std::vector<std::pair<point_type, int> > k_nearest(const point_type& pt, int k) {
     if (root_ == nullptr)
       throw std::logic_error("tree is empty");
 
-    std::vector<point_type> knn;
+    std::vector<std::pair<point_type, int> > knn;
     best_dist_ = 0;
 
     k_nearest(root_, pt, 0, k); // fill bounded priority queue
     while (!pq_.empty()) { // collect points
-      knn.push_back(pq_.top().second->point_);
-      // std::cout << " In k_nearest, push back: d^2=" << pq_.top().first;
-      // std::cout << " point: " << pq_.top().second->point_ << std::endl;
+      knn.push_back(std::make_pair(pq_.top().second->point_, pq_.top().second->id_));
+      pq_.pop();
+    }
+    std::reverse(knn.begin(), knn.end()); // smallest distance first
+    return knn;
+  }
+
+  /**
+   * Finds the k-nearest points in the tree to the given point.
+   * It is not valid to call this function if the tree is empty.
+   *
+   * @param pt a point
+   * @param k number of nearest points to find
+   * @return the vector of k distances and indices in the tree to the given point
+   */
+  std::vector<std::pair<double, int> > kn_distance_id(const point_type& pt, int k) {
+    if (root_ == nullptr)
+      throw std::logic_error("tree is empty");
+
+    std::vector<std::pair<double, int> > knn;
+    best_dist_ = 0;
+
+    k_nearest(root_, pt, 0, k); // fill bounded priority queue
+    while (!pq_.empty()) { // collect points
+      knn.push_back(std::make_pair(pq_.top().first, pq_.top().second->id_));
       pq_.pop();
     }
     std::reverse(knn.begin(), knn.end()); // smallest distance first

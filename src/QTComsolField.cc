@@ -16,19 +16,26 @@ namespace{
   G4Mutex myComsolFieldLock = G4MUTEX_INITIALIZER;
 }
 
-
 QTComsolField::QTComsolField(G4String& name)
   : fname(name)
 {
   readGzipCSV();
-  setupDataStructure();
+
 }
+
+
+QTComsolField::~QTComsolField()
+{
+  delete ftree; ftree = nullptr;
+}
+
 
 void
 QTComsolField::readGzipCSV()
 {
   std::string value; // needed for std::stod()
-  std::vector<double> x, y, z, bx, by, bz; // data arrays
+  double x, y, z, bx, by, bz; // data items
+  std::vector<point3d> coords; // data array
   constexpr std::size_t BUFFSIZE = 256;
 
   //This is a thread-local class and we have to avoid that all workers open the 
@@ -51,27 +58,36 @@ QTComsolField::readGzipCSV()
     else {
       // convert to double, structure from COMSOL csv line
       // coordinates
-      x.push_back(std::stod(value));
+      x = std::stod(value);
       value = strtok(NULL, ","); // next
-      y.push_back(std::stod(value));
+      y = std::stod(value);
       value = strtok(NULL, ","); // next
-      z.push_back(std::stod(value));
+      z = std::stod(value);
+      coords.push_back(point3d({x,y,z}));
+
       // B-field values
       value = strtok(NULL, ","); // next
-      bx.push_back(std::stod(value));
+      bx= std::stod(value);
       value = strtok(NULL, ","); // next
-      by.push_back(std::stod(value));
+      by = std::stod(value);
       value = strtok(NULL, ","); // next
-      bz.push_back(std::stod(value));
+      bz = std::stod(value);
+      fBfieldMap.push_back(point3d({bx,by,bz}));
     }
   }
   delete [] buff;
   lock.unlock();
+
+  ftree = new tree3d(coords); // kd-tree construction
 }
 
 void QTComsolField::GetFieldValue (const G4double yIn[7],
 				       G4double *B  ) const 
 {
-
   G4double field[3];
+  // get distance and ID from kd-tree, 8 nearest
+  point3d pt({yIn[0], yIn[1], yIn[2]});
+  std::vector<std::pair<double, int> > di = ftree->kn_distance_id(pt, 8);
+
+
 }
