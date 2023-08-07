@@ -2,56 +2,6 @@
 #include "streams.hh"
 
 // std
-#include <iostream>
-#include <cstring>
-
-int main()
-{
-  std::string const fname{"data.csv.gz"};
-  std::string value; // needed for std::stod()
-  std::vector<double> x, y, ex, ey; // data arrays
-  constexpr std::size_t BUFFSIZE = 256;
-  char * buff = new char[BUFFSIZE]();
-  
-  gzip_streambuf gzbuf{fname.c_str()};
-  std::istream is{&gzbuf};
-  
-  while(is.getline(buff, BUFFSIZE)) {
-    //    char* entry = strtok(buff, ", "); // can be , or space here
-    value = strtok(buff, ", "); // can be , or space here
-    //    value = entry; // convert to string
-
-    // header ignore, COMSOL specific
-    if (value=="%") {
-      std::cout << "header line " << std::endl;
-      continue;
-    }
-    else {
-      // convert to double, structure from COMSOL csv line
-      x.push_back(std::stod(value));
-      value = strtok(NULL, ","); // next
-      //	entry = strtok(NULL, ","); // next
-      //	value = entry; // conversion for stod()
-      y.push_back(std::stod(value));
-      value = strtok(NULL, ","); // next
-      //      std::cout << "3rd strtok " << value << std::endl;
-      //	entry = strtok(NULL, ","); // next
-      //	value = entry;
-      ex.push_back(std::stod(value));
-      value = strtok(NULL, ","); // next
-      //	entry = strtok(NULL, ","); // next
-      //	value = entry;
-      ey.push_back(std::stod(value));
-      //      entry = strtok(NULL, ","); // finish
-      //	std::cout << "endofline strtok " << value << std::endl;
-      std::cout << x.back() << "," << y.back() << ","
-		<< ex.back() << "," << ey.back() << std::endl;
-    }
-  }
-  delete [] buff;
-  return EXIT_SUCCESS;
-}
-
 #include <streambuf>
 #include <cstdlib>
 #include <cassert>

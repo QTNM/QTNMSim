@@ -237,10 +237,15 @@ void QTMagneticFieldSetup::UpdateBField()
     fEMfield->SetCoilZ(fTrapZPos);
   }
   else {
-    // tbimpl
-    // if (!fFileName.empty())
-    // fEMfield = new QTComsolReader(fFileName);
-    // else
+    if (!fFileName.empty())
+      fEMfield = new QTComsolField(fFileName);
+    else {
+      G4ExceptionDescription ed;
+      ed << "File name not set, empty! " << std::endl;
+      G4Exception("QTMagneticFieldSetup::UpdateBField",
+		  "qtnmsim001",FatalException,ed);
+    }
+
   }
 
   fieldMgr->SetDetectorField(fEMfield);
