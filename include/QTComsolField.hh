@@ -2,6 +2,11 @@
 #define QTComsolField_h 1
 
 #include "G4MagneticField.hh"
+#include "kdtree.hh"
+
+// from kdtree.hh
+typedef point<double, 3> point3d;
+typedef kdtree<double, 3> tree3d;
 
 class QTComsolField : public G4MagneticField
 {
@@ -9,7 +14,7 @@ public:  // with description
   
   QTComsolField(G4String& s );
 
-  virtual ~QTComsolField() = default;
+  ~QTComsolField();
 
   virtual void GetFieldValue(const G4double yTrack[4],
 			     G4double *MagField) const ;
@@ -17,7 +22,9 @@ public:  // with description
 private:
   // reader interface for compressed (gzip) csv files 
   void readGzipCSV();
-  void setupDataStructure();
+
+  tree3d* ftree = nullptr;
+  std::vector<point3d> fBfieldMap; // data array
 
   G4String fname;
 };
