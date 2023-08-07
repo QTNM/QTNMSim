@@ -3,6 +3,8 @@
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
+#include <cmath>
+
 QTMagneticTrap::QTMagneticTrap(const G4ThreeVector& FieldVector )
 {
   fFieldComponents[0] = FieldVector.x();
