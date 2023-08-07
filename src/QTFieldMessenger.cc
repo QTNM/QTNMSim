@@ -35,6 +35,7 @@
 #include "QTFieldMessenger.hh"
 
 #include "QTMagneticFieldSetup.hh"
+#include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4UIcmdWithoutParameter.hh"
@@ -45,6 +46,7 @@ QTFieldMessenger::QTFieldMessenger(QTMagneticFieldSetup* fieldSetup)
  : G4UImessenger(),
    fEMFieldSetup(fieldSetup),
    fFieldDir(0),
+   fFileNameCmd(0),
    fBFieldZCmd(0),
    fBFieldCmd(0),
    fTrapZCmd(0),
@@ -119,6 +121,12 @@ QTFieldMessenger::QTFieldMessenger(QTMagneticFieldSetup* fieldSetup)
   fTrapZCmd->SetDefaultUnit("mm");
   fTrapZCmd->SetDefaultValue(20.0);
   fTrapZCmd->AvailableForStates(G4State_Idle);
+
+  fFileNameCmd = new G4UIcmdWithAString("/field/comsolFileName",this);
+  fFileNameCmd->SetGuidance("Set bespoke COMSOL file name for reading (ending .csv.gz)");
+  fFileNameCmd->SetParameterName("File Name",false,false);
+  fFileNameCmd->SetDefaultValue(""); // empty default
+  fFileNameCmd->AvailableForStates(G4State_Idle);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -128,6 +136,7 @@ QTFieldMessenger::~QTFieldMessenger()
   delete fComsolBCmd;
   delete fBathtubBCmd;
   delete fTestBCmd;
+  delete fFileNameCmd;
   delete fBFieldZCmd;
   delete fBFieldCmd;
   delete fMinStepCmd;
@@ -150,6 +159,8 @@ void QTFieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     fEMFieldSetup->SetComsolB();
   if( command == fUpdateCmd )
     fEMFieldSetup->UpdateAll();
+  if( command == fFileNameCmd )
+    fEMFieldSetup->SetComsolFileName(fFileNameCmd->GetCurrentValue(newValue));
   if( command == fBFieldZCmd )
     fEMFieldSetup->SetFieldZValue(fBFieldZCmd->GetNewDoubleValue(newValue));
   if( command == fBFieldCmd )

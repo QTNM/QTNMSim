@@ -42,6 +42,7 @@ class G4UIdirectory;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWith3VectorAndUnit;
 class G4UIcmdWithoutParameter;
+class G4UIcmdWithAString;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -58,6 +59,7 @@ class QTFieldMessenger: public G4UImessenger
     QTMagneticFieldSetup*      fEMFieldSetup;
 
     G4UIdirectory*             fFieldDir;
+    G4UIcmdWithAString*        fFileNameCmd;
     G4UIcmdWithADoubleAndUnit* fBFieldZCmd;
     G4UIcmdWithADoubleAndUnit* fTrapZCmd;
     G4UIcmdWithADoubleAndUnit* fTrapRadiusCmd;
