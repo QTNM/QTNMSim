@@ -30,6 +30,8 @@ add_executable(qtnmSim
   src/QTFieldMessenger.cc
   src/QTMagneticFieldSetup.cc
   src/QTMagneticTrap.cc
+  src/QTComsolField.cc
+  src/gzip_streambuf.cc
   src/QTRunAction.cc
   src/QTEquationOfMotion.cc
   src/QTGasHit.cc

@@ -46,6 +46,7 @@
 #include "QTBorisScheme.hh"
 #include "QTBorisDriver.hh"
 #include "QTMagneticTrap.hh"
+#include "QTComsolField.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -63,6 +64,8 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
    fChordFinder(0),
    fEquation(0),
    fEMfield(0),
+   fTrapfield(0),
+   fCMfield(0),
    fBStepper(0),
    fBDriver(0),
    fFieldMessenger(nullptr)   
@@ -79,7 +82,6 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
 
   fFieldManager = GetGlobalFieldManager();
 
-  //  UpdateIntegrator();
   SetUpBorisDriver();
   fFieldMessenger = new QTFieldMessenger(this);
 }
@@ -95,6 +97,8 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
     fChordFinder(0),
     fEquation(0),
     fEMfield(0),
+    fTrapfield(0),
+    fCMfield(0),
     fBStepper(0),
     fBDriver(0),
     fFieldMessenger(nullptr)
@@ -127,6 +131,8 @@ QTMagneticFieldSetup::~QTMagneticFieldSetup()
   delete fBStepper;     fBStepper = nullptr;
   delete fEquation;     fEquation = nullptr;
   delete fEMfield;      fEMfield = nullptr;
+  delete fTrapfield;      fTrapfield = nullptr;
+  delete fCMfield;      fCMfield = nullptr;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -145,7 +151,13 @@ void QTMagneticFieldSetup::SetUpBorisDriver()
 
   G4cout  << "  4. Updating Field Manager (with ChordFinder, field)."  << G4endl;
   fFieldManager->SetChordFinder( fChordFinder );
-  fFieldManager->SetDetectorField(fEMfield );
+  // field switches are unique
+  if (fTest)
+    fFieldManager->SetDetectorField(fEMfield );
+  else if (fBathTub)
+    fFieldManager->SetDetectorField(fTrapfield );
+  else
+    fFieldManager->SetDetectorField(fCMfield );
 
 }
 
@@ -212,7 +224,9 @@ void QTMagneticFieldSetup::UpdateBField()
 {
   // any change to parameter or types needs this update.
 
-  if (fEMfield) delete fEMfield;
+  if (fEMfield)   delete fEMfield;
+  if (fTrapfield) delete fTrapfield;
+  if (fCMfield)   delete fCMfield;
   // Set the value of the Global Field value to fieldVector
 
   // Find the Field Manager for the global field
@@ -229,28 +243,30 @@ void QTMagneticFieldSetup::UpdateBField()
 	//  insure that it is not used for propagation.
 	fEMfield = 0;
       }
+    fieldMgr->SetDetectorField(fEMfield);
+    fEquation->SetFieldObj(fEMfield);  // must now point to the new field
   }
   else if (fBathTub) {
-    fEMfield = new QTMagneticTrap(fFieldVector);
-    fEMfield->SetCurrent(fTrapCurrent);
-    fEMfield->SetRadius(fTrapRadius);
-    fEMfield->SetCoilZ(fTrapZPos);
+    fTrapfield = new QTMagneticTrap(fFieldVector);
+    fTrapfield->SetCurrent(fTrapCurrent);
+    fTrapfield->SetRadius(fTrapRadius);
+    fTrapfield->SetCoilZ(fTrapZPos);
+
+    fieldMgr->SetDetectorField(fTrapfield);
+    fEquation->SetFieldObj(fTrapfield);  // must now point to the new field
   }
   else {
     if (!fFileName.empty())
-      fEMfield = new QTComsolField(fFileName);
+      fCMfield = new QTComsolField(fFileName);
     else {
       G4ExceptionDescription ed;
       ed << "File name not set, empty! " << std::endl;
       G4Exception("QTMagneticFieldSetup::UpdateBField",
 		  "qtnmsim001",FatalException,ed);
     }
-
+    fieldMgr->SetDetectorField(fCMfield);
+    fEquation->SetFieldObj(fCMfield);  // must now point to the new field
   }
-
-  fieldMgr->SetDetectorField(fEMfield);
-  fEquation->SetFieldObj(fEMfield);  // must now point to the new field
-
 }
 
 

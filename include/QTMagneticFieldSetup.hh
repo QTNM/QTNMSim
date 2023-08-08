@@ -43,6 +43,8 @@ class G4ChordFinder;
 class QTBorisDriver;
 class QTBorisScheme;
 class QTEquationOfMotion;
+class QTMagneticTrap;
+class QTComsolField;
 class QTFieldMessenger;
 
 /// A class for control of the Magnetic Field of the detector.
@@ -109,6 +111,8 @@ private:
   QTEquationOfMotion*     fEquation;
 
   G4MagneticField*        fEMfield;
+  QTMagneticTrap*         fTrapfield;
+  QTComsolField*          fCMfield;
  
   QTBorisScheme*          fBStepper;
   QTBorisDriver*          fBDriver;

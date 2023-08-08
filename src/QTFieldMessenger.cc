@@ -160,7 +160,7 @@ void QTFieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   if( command == fUpdateCmd )
     fEMFieldSetup->UpdateAll();
   if( command == fFileNameCmd )
-    fEMFieldSetup->SetComsolFileName(fFileNameCmd->GetCurrentValue(newValue));
+    fEMFieldSetup->SetComsolFileName(fFileNameCmd->GetCurrentValue());
   if( command == fBFieldZCmd )
     fEMFieldSetup->SetFieldZValue(fBFieldZCmd->GetNewDoubleValue(newValue));
   if( command == fBFieldCmd )
