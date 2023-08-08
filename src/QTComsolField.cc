@@ -5,6 +5,7 @@
 
 // std
 #include <iostream>
+#include <string>
 #include <cstring>
 
 // G4
@@ -44,7 +45,7 @@ QTComsolField::readGzipCSV()
 
   char * buff = new char[BUFFSIZE]();
   
-  gzip_streambuf gzbuf{fname.c_str()};
+  gzip_streambuf gzbuf{fname.data()};
   std::istream is{&gzbuf};
   
   while(is.getline(buff, BUFFSIZE)) {
@@ -84,10 +85,33 @@ QTComsolField::readGzipCSV()
 void QTComsolField::GetFieldValue (const G4double yIn[7],
 				       G4double *B  ) const 
 {
-  G4double field[3];
   // get distance and ID from kd-tree, 8 nearest
-  point3d pt({yIn[0], yIn[1], yIn[2]});
+  // distance in COMSOL units from file, same for BfieldMap
+  point3d pt({yIn[0]/m, yIn[1]/m, yIn[2]/m}); // Comsol unit [m] from G4 unit [mm]
   std::vector<std::pair<double, int> > di = ftree->kn_distance_id(pt, 8);
-
+  std::vector<G4ThreeVector> allBvectors;
+  G4ThreeVector genvec;
+  G4double dsum = 0.0;
+  for (auto entry : di) {
+    int idx = entry.second;
+    // set to Tesla for G4 internal units
+    genvec.set(fBfieldMap[idx].get(0)*tesla,
+	       fBfieldMap[idx].get(1)*tesla,
+	       fBfieldMap[idx].get(2)*tesla);
+    allBvectors.push_back(genvec);
+    dsum += entry.first;
+  }
+  G4double denom = 0.0;
+  for (auto entry : di) denom += (1.0-entry.first / dsum);
+    
+  G4ThreeVector weightedvec;;
+  for (unsigned int j=0;j<allBvectors.size();++j) {
+    G4double weight = 1.0-di[j].first / dsum;
+    genvec = allBvectors.at(j)*(weight / denom);
+    weightedvec += genvec;
+  }
+  B[0] = weightedvec.x();
+  B[1] = weightedvec.y();
+  B[2] = weightedvec.z();
 
 }
