@@ -18,10 +18,10 @@ public:  // with description
   
   QTMagneticTrap(const G4ThreeVector& FieldVector );
 
-  virtual ~QTMagneticTrap() = default;
+  ~QTMagneticTrap() override;
 
-  virtual void GetFieldValue(const G4double yTrack[4],
-			     G4double *MagField) const ;
+  void GetFieldValue(const G4double yTrack[4],
+		     G4double *MagField) const override;
 
   void SetFieldValue(const G4ThreeVector& newFieldValue);
 

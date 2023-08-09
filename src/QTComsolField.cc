@@ -80,6 +80,7 @@ QTComsolField::readGzipCSV()
   delete [] buff;
   lock.unlock();
 
+  G4cout << "read values: " << coords.size() << G4endl;
   ftree = new tree3d(coords); // kd-tree construction
 }
 

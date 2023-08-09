@@ -62,9 +62,9 @@ QTFieldMessenger::QTFieldMessenger(QTMagneticFieldSetup* fieldSetup)
   fFieldDir->SetGuidance("QT field tracking control.");
 
   fUpdateCmd = new G4UIcmdWithoutParameter("/field/update",this);
-  fUpdateCmd->SetGuidance("Update calorimeter geometry.");
+  fUpdateCmd->SetGuidance("Update magnetic field confguration.");
   fUpdateCmd->SetGuidance("This command MUST be applied before \"beamOn\" ");
-  fUpdateCmd->SetGuidance("if you changed geometrical value(s).");
+  fUpdateCmd->SetGuidance("if you changed field value(s).");
   fUpdateCmd->AvailableForStates(G4State_Idle);
 
   fTestBCmd = new G4UIcmdWithoutParameter("/field/uniformB",this);
@@ -160,7 +160,7 @@ void QTFieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   if( command == fUpdateCmd )
     fEMFieldSetup->UpdateAll();
   if( command == fFileNameCmd )
-    fEMFieldSetup->SetComsolFileName(fFileNameCmd->GetCurrentValue());
+    fEMFieldSetup->SetComsolFileName(newValue);
   if( command == fBFieldZCmd )
     fEMFieldSetup->SetFieldZValue(fBFieldZCmd->GetNewDoubleValue(newValue));
   if( command == fBFieldCmd )

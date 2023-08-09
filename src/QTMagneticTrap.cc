@@ -11,12 +11,15 @@ QTMagneticTrap::QTMagneticTrap(const G4ThreeVector& FieldVector )
   fFieldComponents[1] = FieldVector.y();
   fFieldComponents[2] = FieldVector.z();
 
-  // TODO: More constructors/get/set routines for these
   radius_  = 20.0*mm; // 2cm
   current_ = 1 * ampere; // 1 Amp
   zpos_    = 20.0*mm; // +- 2cm
   SetCentralField();
 }
+
+
+QTMagneticTrap::~QTMagneticTrap() = default;
+
 
 void
 QTMagneticTrap::SetFieldValue(const G4ThreeVector& newFieldVector )
@@ -44,6 +47,7 @@ void
 QTMagneticTrap::SetCentralField()
 {
   b_central_ = current_ * CLHEP::mu0 / radius_ / 2.0;
+  G4cout << "set central field [T] at " << b_central_/tesla << G4endl;
 }
 
 void QTMagneticTrap::GetFieldValue (const G4double yIn[7],

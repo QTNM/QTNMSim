@@ -130,9 +130,18 @@ QTMagneticFieldSetup::~QTMagneticFieldSetup()
   delete fChordFinder;  fChordFinder= nullptr;
   delete fBStepper;     fBStepper = nullptr;
   delete fEquation;     fEquation = nullptr;
-  delete fEMfield;      fEMfield = nullptr;
-  delete fTrapfield;      fTrapfield = nullptr;
-  delete fCMfield;      fCMfield = nullptr;
+  if (fEMfield) {  
+    delete fEMfield;
+    fEMfield = nullptr;
+  }
+  if (fTrapfield) {
+    delete fTrapfield;
+    fTrapfield = nullptr;
+  }
+  if (fCMfield) {
+    delete fCMfield;
+    fCMfield = nullptr;
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -140,16 +149,16 @@ QTMagneticFieldSetup::~QTMagneticFieldSetup()
 void QTMagneticFieldSetup::SetUpBorisDriver()
 {
   // set up Boris driver from Geant4.11, follows example field01
-  G4cout << " F01FieldSetup::CreateAndSetupBorisDriver() called. " << G4endl;   
-  G4cout << "   1. Creating Scheme (Stepper)."  << G4endl;
+  G4cout << " QTFieldSetup::CreateAndSetupBorisDriver() called. " << G4endl;   
+  //  G4cout << "   1. Creating Scheme (Stepper)."  << G4endl;
   fBStepper = new QTBorisScheme(fEquation);
-  G4cout << "   2. Creating Driver."  << G4endl;
+  //  G4cout << "   2. Creating Driver."  << G4endl;
   fBDriver  = new QTBorisDriver(fMinStep, fBStepper);
 
-  G4cout  << "  3. Creating ChordFinder."  << G4endl;
+  //  G4cout  << "  3. Creating ChordFinder."  << G4endl;
   fChordFinder = new G4ChordFinder( fBDriver );
 
-  G4cout  << "  4. Updating Field Manager (with ChordFinder, field)."  << G4endl;
+  //  G4cout  << "  4. Updating Field Manager (with ChordFinder, field)."  << G4endl;
   fFieldManager->SetChordFinder( fChordFinder );
   // field switches are unique
   if (fTest)
@@ -169,7 +178,7 @@ void QTMagneticFieldSetup::UpdateAll()
   // Focus here are G4 Boris objects only.
   assert(fEquation!=nullptr);
 
-  G4cout<< " QTMagneticFieldSetup: The minimal step is equal to "
+  G4cout<< " QTMagneticFieldSetup/UpdateAll: The minimal step is equal to "
         << fMinStep/mm << " mm" << G4endl;
 
   if (fChordFinder) {
@@ -194,6 +203,7 @@ void QTMagneticFieldSetup::UpdateAll()
 void QTMagneticFieldSetup::SetUniformB()
 {
   // switch on uniform B-field.
+  G4cout << "set uniform field" << G4endl;
   fTest = true;
   fBathTub = false; // allow only one option
   fComsol  = false;
@@ -203,6 +213,7 @@ void QTMagneticFieldSetup::SetUniformB()
 void QTMagneticFieldSetup::SetBathTubB()
 {
   // switch on Bathtub B-field.
+  G4cout << "set bathtub field" << G4endl;
   fTest    = false;
   fBathTub = true; // allow only one option
   fComsol  = false;
@@ -212,6 +223,7 @@ void QTMagneticFieldSetup::SetBathTubB()
 void QTMagneticFieldSetup::SetComsolB()
 {
   // switch on Comsol B-field map.
+  G4cout << "set comsol field" << G4endl;
   fTest    = false;
   fBathTub = false; // allow only one option
   fComsol  = true;
@@ -224,9 +236,18 @@ void QTMagneticFieldSetup::UpdateBField()
 {
   // any change to parameter or types needs this update.
 
-  if (fEMfield)   delete fEMfield;
-  if (fTrapfield) delete fTrapfield;
-  if (fCMfield)   delete fCMfield;
+  if (fEMfield) {
+    delete fEMfield;
+    fEMfield = nullptr;
+  }
+  if (fTrapfield) {
+    delete fTrapfield;
+    fTrapfield = nullptr;
+  }
+  if (fCMfield) {
+    delete fCMfield;
+    fCMfield = nullptr;
+  }
   // Set the value of the Global Field value to fieldVector
 
   // Find the Field Manager for the global field
