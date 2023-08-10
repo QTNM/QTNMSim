@@ -17,4 +17,5 @@ and run in the build directory.
 
 ### Status update
 
-Compiles and runs at this stage for the test0.mac test case. Most required physics features are missing. They can now be implemented, each by separate branch, ideally.
+Compiles and runs at this stage for the test0/1/2.mac test cases. Most required physics features have been implemented.
+Next is the most flexible primary particle event generator, the GPS. Pre-defined primary particle event generators remain, i.e a test generator (default energy, at origin, 90 degree pitch angle, aka in x-direction), the electron gun generator and the Tritium beta decay generator. The GPS then allows creating a primary electron conveniently by macro, very flexible configurations are possible.
