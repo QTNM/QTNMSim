@@ -11,6 +11,7 @@
 #include "globals.hh"
 
 class G4ParticleGun;
+class G4GeneralParticleSource;
 class G4Event;
 
 
@@ -31,11 +32,14 @@ private:
 
   void DefineCommands();
 
-  G4ParticleGun*      fParticleGun;
+  G4ParticleGun*           fParticleGun;
+  G4GeneralParticleSource* fParticleGPS;
+
   G4GenericMessenger* fMessenger;
 
   G4bool              fTestElectron;
-  G4bool              fGunType;
+  G4bool              fEGun;
+  G4bool              fTritium;
   // electron gun parameter
   G4double            fMean;
   G4double            fStdev;
