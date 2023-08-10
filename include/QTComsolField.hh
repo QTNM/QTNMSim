@@ -2,6 +2,7 @@
 #define QTComsolField_h 1
 
 #include "G4MagneticField.hh"
+#include "G4ThreeVector.hh"
 #include "kdtree.hh"
 
 // from kdtree.hh
@@ -14,17 +15,17 @@ public:  // with description
   
   QTComsolField(G4String& s );
 
-  ~QTComsolField();
+  ~QTComsolField() override;
 
-  virtual void GetFieldValue(const G4double yTrack[4],
-			     G4double *MagField) const ;
+  void GetFieldValue(const G4double yTrack[4],
+		     G4double *MagField) const override;
 
 private:
   // reader interface for compressed (gzip) csv files 
   void readGzipCSV();
 
   tree3d* ftree = nullptr;
-  std::vector<point3d> fBfieldMap; // data array
+  std::vector<G4ThreeVector> fBfieldMap; // data array
 
   G4String fname;
 };

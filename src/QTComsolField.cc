@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+// #include <algorithm>
 
 // G4
 #include "G4PhysicalConstants.hh"
@@ -39,6 +40,7 @@ QTComsolField::readGzipCSV()
   double x, y, z, bx, by, bz; // data items
   std::vector<point3d> coords; // data array
   constexpr std::size_t BUFFSIZE = 256;
+  //  std::vector<G4ThreeVector> cdummy;
 
   //This is a thread-local class and we have to avoid that all workers open the 
   //file at the same time; from PurgingMag example in G4 Advanced
@@ -66,7 +68,7 @@ QTComsolField::readGzipCSV()
       value = strtok(NULL, ","); // next
       z = std::stod(value);
       coords.push_back(point3d({x,y,z}));
-
+      //      cdummy.push_back(G4ThreeVector(x*m,y*m,z*m));
       // B-field values
       value = strtok(NULL, ","); // next
       bx= std::stod(value);
@@ -74,13 +76,18 @@ QTComsolField::readGzipCSV()
       by = std::stod(value);
       value = strtok(NULL, ","); // next
       bz = std::stod(value);
-      fBfieldMap.push_back(point3d({bx,by,bz}));
+      // set to Tesla for G4 internal units
+      fBfieldMap.push_back(G4ThreeVector(bx*tesla,by*tesla,bz*tesla));
     }
   }
   delete [] buff;
   lock.unlock();
 
   G4cout << "read values: " << coords.size() << G4endl;
+  // G4cout << "max c: " << *std::max_element(cdummy.begin(), cdummy.end())/mm << G4endl;
+  // G4cout << "min c: " << *std::min_element(cdummy.begin(), cdummy.end())/mm << G4endl;
+  // G4cout << "max B: " << *std::max_element(fBfieldMap.begin(), fBfieldMap.end())/tesla << G4endl;
+  // G4cout << "min B: " << *std::min_element(fBfieldMap.begin(), fBfieldMap.end())/tesla << G4endl;
   ftree = new tree3d(coords); // kd-tree construction
 }
 
@@ -96,17 +103,16 @@ void QTComsolField::GetFieldValue (const G4double yIn[7],
   G4double dsum = 0.0;
   for (auto entry : di) {
     int idx = entry.second;
-    // set to Tesla for G4 internal units
-    genvec.set(fBfieldMap[idx].get(0)*tesla,
-	       fBfieldMap[idx].get(1)*tesla,
-	       fBfieldMap[idx].get(2)*tesla);
+    genvec.set(fBfieldMap[idx].x(),
+	       fBfieldMap[idx].y(),
+	       fBfieldMap[idx].z());
     allBvectors.push_back(genvec);
     dsum += entry.first;
   }
   G4double denom = 0.0;
   for (auto entry : di) denom += (1.0-entry.first / dsum);
     
-  G4ThreeVector weightedvec;;
+  G4ThreeVector weightedvec;
   for (unsigned int j=0;j<allBvectors.size();++j) {
     G4double weight = 1.0-di[j].first / dsum;
     genvec = allBvectors.at(j)*(weight / denom);
