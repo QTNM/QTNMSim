@@ -8,6 +8,7 @@
 #include "G4ThreeVector.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleGun.hh"
+#include "G4GeneralParticleSource.hh"
 #include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -22,11 +23,13 @@
 QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction()
 , fParticleGun(nullptr)
+, fParticleGPS(nullptr)
 , fMessenger(nullptr)
-, fMean(18.575)
-, fStdev(5.e-4)
-, fSpot(0.5)
-, fGunType(true) // calibration: true=electron gun
+, fMean(18.575) // energy [keV]
+, fStdev(5.e-4) // for E-gun
+, fSpot(0.5)    // for E-gun
+, fTritium(false) // switch to Trtium beta decay generator
+, fEGun(false) // calibration: true=electron gun
 , fTestElectron(false)  // 90 degree electron for testing, override other guns
 , fOrder(true)   // neutrino hierarchie: true=normal
 , fNumass(1.0e-4)
@@ -37,11 +40,19 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 
   G4int nofParticles = 1;
   fParticleGun       = new G4ParticleGun(nofParticles);
+  fParticleGPS       = new G4GeneralParticleSource(); // can now be used with macro commands
 
   auto particleTable = G4ParticleTable::GetParticleTable();
 
-  // default electron particle kinematics
+  // default electron particle for gun and GPS
   fParticleGun->SetParticleDefinition(particleTable->FindParticle("e-"));
+  // set up a simple default, if macro gives no instructions
+  fParticleGPS->SetParticleDefinition(particleTable->FindParticle("e-"));
+  fParticleGPS->SetNumberOfParticles(nofParticles);
+  fParticleGPS->GetCurrentSource()->GetPosDist()->SetPosDisType("Point");
+  fParticleGPS->GetCurrentSource()->GetPosDist()->SetCentreCoords(G4ThreeVector(0.0,0.0,0.0));
+  fParticleGPS->GetCurrentSource()->GetEneDist()->SetMonoEnergy(fMean * keV);
+  fParticleGPS->GetCurrentSource()->GetAngDist()->SetParticleMomentumDirection(G4ThreeVector(1.0,0.0,0.0));
 
   DefineCommands();
 }
@@ -50,6 +61,7 @@ QTPrimaryGeneratorAction::~QTPrimaryGeneratorAction()
 {
   delete fMessenger;
   delete fParticleGun;
+  delete fParticleGPS;
 }
 
 void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
@@ -69,9 +81,11 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     fParticleGun->SetParticlePosition(G4ThreeVector(0.0, 0.0, 0.0)); // origin
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.0, 0.0, 0.0)); // x-direction
     fParticleGun->SetParticleEnergy(fMean * keV); // defaults to 18.575 keV
+    fParticleGun->GeneratePrimaryVertex(event);
+    return;
   }
 
-  else if (fGunType) { // electron gun
+  else if (fEGun) { // electron gun
     G4Box* worldBox = dynamic_cast<G4Box*>(worldLV->GetSolid()); // assume a box
     G4double worldZHalfLength = worldBox->GetZHalfLength();
 
@@ -83,8 +97,10 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     // Gaussian random energy [keV]
     G4double en = G4RandGauss::shoot(fMean, fStdev);
     fParticleGun->SetParticleEnergy(en * keV);
+    fParticleGun->GeneratePrimaryVertex(event);
+    return;
   }
-  else {  // else implement tritium beta decay event generator
+  else if (fTritium) {  // use tritium beta decay event generator
 
     // distribution parameter
     int nw = 10000; // nw - number of bins
@@ -95,7 +111,7 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     pld_type ed(nw, lbound, ubound, betaGenerator(fOrder, fNumass,
 						  fSterilemass, fSterilemixing));
 
-    // random vertex location in cloud [mm]
+    // random vertex location in atom cloud [mm]
     G4Tubs* atomTubs = dynamic_cast<G4Tubs*>(sourceLV->GetSolid()); // assume a cylinder
     G4double atomZHalfLength = atomTubs->GetZHalfLength();
     G4double atomRadius      = atomTubs->GetOuterRadius();
@@ -108,9 +124,11 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     // Beta decay random energy [keV]
     G4double en = ed(generator); // this is with std random
     fParticleGun->SetParticleEnergy(en * keV);
+    fParticleGun->GeneratePrimaryVertex(event);
+    return;
   }
-
-  fParticleGun->GeneratePrimaryVertex(event);
+  // if nothing else, use the GPS
+  fParticleGPS->GeneratePrimaryVertex(event);
 }
 
 
@@ -122,15 +140,21 @@ void QTPrimaryGeneratorAction::DefineCommands()
 
   // gun type command
   auto& testCmd = fMessenger->DeclareProperty("test", fTestElectron,
-					      "Boolean gun testing choice: true=electron at 90 degrees; false=other generator.");
+					      "Boolean gun testing choice: true=electron at 90 degrees.");
   testCmd.SetParameterName("tt", true);
   testCmd.SetDefaultValue("false");
 
   // gun type command
-  auto& typeCmd = fMessenger->DeclareProperty("calibration", fGunType,
-					      "Boolean gun type choice: true=electron gun; false=TBetaDecay.");
-  typeCmd.SetParameterName("t", true);
-  typeCmd.SetDefaultValue("true");
+  auto& gunCmd = fMessenger->DeclareProperty("egun", fEGun,
+					      "Boolean true=use electron gun.");
+  gunCmd.SetParameterName("t", true);
+  gunCmd.SetDefaultValue("false");
+
+  // gun type command
+  auto& typeCmd = fMessenger->DeclareProperty("tritium", fTritium,
+					      "Boolean true=use TBetaDecay.");
+  typeCmd.SetParameterName("ttt", true);
+  typeCmd.SetDefaultValue("false");
 
   // energy command
   auto& energyCmd = fMessenger->DeclareProperty("gunEnergy", fMean,

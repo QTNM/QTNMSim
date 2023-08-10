@@ -1,0 +1,22 @@
+# minimal test macro
+# verbose
+/run/verbose 0
+/tracking/verbose 2
+
+# apply limit to transport before run init
+/QT/transport/maxtime 0.5 ns
+/QT/transport/maxstep 0.5 mm
+
+# run init
+/run/initialize
+
+# set field Z value
+/field/setFieldZ 1.0 tesla
+/field/uniformB
+/field/update
+
+# test GPS default, no command
+/gps/verbose 2
+
+# start
+/run/beamOn 1
