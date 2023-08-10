@@ -12,7 +12,10 @@
 
 # set field Z value
 /field/setFieldZ 1.0 tesla
-/field/uniformB
+/field/setRadius 25 mm
+/field/setCurrent 100.0 ampere
+/field/setZPos 20 mm
+/field/bathTubB
 /field/update
 
 # test gun

@@ -11,8 +11,8 @@
 /run/initialize
 
 # set field Z value
-/field/setFieldZ 1.0 tesla
-/field/uniformB
+/field/comsolFileName test.csv.gz
+/field/comsolB
 /field/update
 
 # test gun
