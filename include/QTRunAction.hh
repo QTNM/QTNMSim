@@ -5,6 +5,7 @@
 #include "globals.hh"
 
 class G4Run;
+class G4Timer;
 class QTOutputManager;
 
 /// Run action class
@@ -22,6 +23,7 @@ public:
 
 private:
   QTOutputManager* fOutput = nullptr; // outsource output file storage
+  G4Timer*         fTimer  = nullptr;
 
 };
 
