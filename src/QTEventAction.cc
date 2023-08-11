@@ -66,7 +66,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
 
   // fill Hits output from SD
   G4int GnofHits = GasHC->entries();
-  G4cout << "PRINT>>> number of hits: " << GnofHits << G4endl;
+  //  G4cout << "PRINT>>> number of hits: " << GnofHits << G4endl;
   // Gas detector
   for ( G4int i=0; i<GnofHits; i++ ) 
   {
@@ -118,7 +118,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   G4int                  n_trajectories =
     (trajectoryContainer == nullptr) ? 0 : trajectoryContainer->entries();
 
-  G4cout << "PRINT>>> number of trajectories: " << n_trajectories << G4endl;
+  //  G4cout << "PRINT>>> number of trajectories: " << n_trajectories << G4endl;
   
   if(n_trajectories > 0) {
     for(auto* entry : *(trajectoryContainer->GetVector())) {  // vector<G4VTrajectory*>*
