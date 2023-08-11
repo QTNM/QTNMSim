@@ -27,7 +27,7 @@ void QTOutputManager::Book()
   analysisManager = G4AnalysisManager::Instance();
 
   if ( ! fFactoryOn ) {
-    analysisManager->SetVerboseLevel(1);
+    analysisManager->SetVerboseLevel(0);
     analysisManager->SetNtupleMerging(true);
 
     // Create directory

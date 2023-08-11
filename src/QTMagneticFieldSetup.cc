@@ -149,7 +149,7 @@ QTMagneticFieldSetup::~QTMagneticFieldSetup()
 void QTMagneticFieldSetup::SetUpBorisDriver()
 {
   // set up Boris driver from Geant4.11, follows example field01
-  G4cout << " QTFieldSetup::CreateAndSetupBorisDriver() called. " << G4endl;   
+  //  G4cout << " QTFieldSetup::CreateAndSetupBorisDriver() called. " << G4endl;   
   //  G4cout << "   1. Creating Scheme (Stepper)."  << G4endl;
   fBStepper = new QTBorisScheme(fEquation);
   //  G4cout << "   2. Creating Driver."  << G4endl;
