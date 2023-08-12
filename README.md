@@ -22,3 +22,12 @@ The flexible primary particle event generator, the GPS, was implemented. Pre-def
 remain, i.e a test generator 
 (default energy, at origin, 90 degree pitch angle, aka in x-direction), the electron gun generator and the Tritium beta decay generator. The GPS allows creating a primary electron conveniently by macro, very flexible configurations are possible.
 A run timer is the latest update, printing to screen at the end of run.
+
+Additional output to file is the latest update. Two separate ntuples are stored in a ROOT output file: ntuple 'Score' holds 
+data extracted for each electron hit, i.e. a scattering event of the primary electron and any daughter particle on any 
+material, for instance a Tritium gas atom.
+
+The ntuple 'Signal' stores all the trajectory data, produced by the primary electron or any daughter as it is transported. 
+That data is ordered according to track ID and antenna ID per event, with the majority of data consisting of time points and 
+anntenna response points in time-order. Added in the latest update are the starter conditions, i.e. the location and 
+momentum direction vector of the primary particle from the begin of the event.
