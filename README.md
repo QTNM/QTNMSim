@@ -28,6 +28,9 @@ data extracted for each electron hit, i.e. a scattering event of the primary ele
 material, for instance a Tritium gas atom.
 
 The ntuple 'Signal' stores all the trajectory data, produced by the primary electron or any daughter as it is transported. 
-That data is ordered according to track ID and antenna ID per event, with the majority of data consisting of time points and 
-anntenna response points in time-order. Added in the latest update are the starter conditions, i.e. the location and 
-momentum direction vector of the primary particle from the begin of the event.
+That data is ordered according to track ID and antenna ID per event, with the majority of data consisting of time points 
+in nanoseconds and 
+anntenna response points in Volt, in time-order. Added in the latest update are the starter conditions, i.e. the location 
+components in millimetre 
+and pitch angle, i.e. emission angle with respect to the z-axis, and the initial kinetic energy of the primary particle from 
+the beginning of the event.

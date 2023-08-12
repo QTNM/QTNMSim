@@ -20,7 +20,8 @@ G4Allocator<QTTrajectory>*& myTrajectoryAllocator()
 QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 : G4VTrajectory()
 , fAngles(ang)
-, pos(aTrack->GetPosition()) // set all constant starter values
+, initialPos(aTrack->GetPosition()) // set all constant starter values
+, initialEnergy(aTrack->GetKineticEnergy())
 , gltime(aTrack->GetGlobalTime())
 , ParticleName(aTrack->GetDefinition()->GetParticleName())
 , PDGCharge(aTrack->GetDefinition()->GetPDGCharge())
