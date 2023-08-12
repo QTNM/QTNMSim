@@ -55,6 +55,10 @@ public:
     { return PDGCharge; }
   inline G4int GetPDGEncoding() const
     { return PDGEncoding; }
+  inline G4double GetInitialEnergy() const
+    { return initialEnergy; }
+  inline G4ThreeVector GetInitialPosition() const
+    { return initialPos; }
   inline G4ThreeVector GetInitialMomentum() const
     { return initialMomentum; }
 
@@ -78,7 +82,9 @@ private:
   G4int                       PDGEncoding = 0;
   G4double                    PDGCharge = 0.0;
   G4String                    ParticleName = "";
+  G4double                    initialEnergy = 0.0;
   G4ThreeVector               initialMomentum;
+  G4ThreeVector               initialPos;
 
   // explicit SI units here transparent
   static constexpr G4double c_SI    = c_light/(m/s);

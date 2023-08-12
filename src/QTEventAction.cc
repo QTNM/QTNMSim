@@ -134,7 +134,15 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
         
       // fill the ntuple, n antenna data for each trajectory
       fOutput->FillNtupleI(1, 0, eventID); // repeat all rows
-
+      // vertex info first in row
+      G4ThreeVector p = trj->GetInitialPosition();
+      fOutput->FillNtupleD(1, 1, p.x()); // [mm] default
+      fOutput->FillNtupleD(1, 2, p.y());
+      fOutput->FillNtupleD(1, 3, p.z());
+      G4ThreeVector mom = trj->GetInitialMomentum();
+      fOutput->FillNtupleD(1, 4, mom.theta());
+      fOutput->FillNtupleD(1, 5, trj->GetInitialEnergy() / G4Analysis::GetUnitValue("keV"));
+      
       // Note no need to call FillNtupleDColumn for vector types
       // Filled automatically on call to AddNtupleRow
       // assumes clearing of storage vectors after streaming.

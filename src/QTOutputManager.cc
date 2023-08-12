@@ -71,6 +71,11 @@ void QTOutputManager::Book()
     G4String vvecname = "VoltageVec";
     analysisManager->CreateNtuple("Signal", "Time-series");
     analysisManager->CreateNtupleIColumn("EventID");
+    analysisManager->CreateNtupleDColumn("Posx"); // single starter values
+    analysisManager->CreateNtupleDColumn("Posy"); // for each trajectory
+    analysisManager->CreateNtupleDColumn("Posz"); // vertex position and
+    analysisManager->CreateNtupleDColumn("PitchAngle"); // pitch angle wrt z-axis
+    analysisManager->CreateNtupleDColumn("KinEnergy"); // kinetic energy
     // These need passing a reference to the vector
     // filled by AddNtupleRow() assumed
     analysisManager->CreateNtupleIColumn(idname, GetTrackID());
