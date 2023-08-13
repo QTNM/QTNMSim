@@ -66,11 +66,11 @@ void QTOutputManager::Book()
     // Creating ntuple 1 with vector entries
     //
     G4String aidname  = "AntennaID";
-    G4String idname  = "TrackID";
     G4String tvecname = "TimeVec";
     G4String vvecname = "VoltageVec";
     analysisManager->CreateNtuple("Signal", "Time-series");
     analysisManager->CreateNtupleIColumn("EventID");
+    analysisManager->CreateNtupleIColumn("TrackID");
     analysisManager->CreateNtupleDColumn("Posx"); // single starter values
     analysisManager->CreateNtupleDColumn("Posy"); // for each trajectory
     analysisManager->CreateNtupleDColumn("Posz"); // vertex position and
@@ -78,7 +78,6 @@ void QTOutputManager::Book()
     analysisManager->CreateNtupleDColumn("KinEnergy"); // kinetic energy
     // These need passing a reference to the vector
     // filled by AddNtupleRow() assumed
-    analysisManager->CreateNtupleIColumn(idname, GetTrackID());
     analysisManager->CreateNtupleIColumn(aidname, GetAntennaID());
     analysisManager->CreateNtupleDColumn(tvecname, GetTimeVec());
     analysisManager->CreateNtupleDColumn(vvecname, GetVoltageVec());
@@ -129,7 +128,6 @@ void QTOutputManager::AddNtupleRow(G4int which)
 
   // clear internal vector storage after writing to disk with this method.
   avec.clear();
-  idvec.clear();
   tvec.clear();
   vvec.clear();
 }
