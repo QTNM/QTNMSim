@@ -125,7 +125,6 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       QTTrajectory* trj = dynamic_cast<QTTrajectory*>(entry);
       G4int counter = 0;
       for (auto values : trj->getVT()) {  // std::pair<double,double>
-	fOutput->FillTIDVec(trj->GetTrackID()); // same for every trajectory
 	fOutput->FillAntennaVec((trj->getAntennaID()).at(counter)); // same size as
 	fOutput->FillTimeVec(values.first);                         // VT container
 	fOutput->FillVoltageVec(values.second);
@@ -134,14 +133,15 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
         
       // fill the ntuple, n antenna data for each trajectory
       fOutput->FillNtupleI(1, 0, eventID); // repeat all rows
+      fOutput->FillNtupleI(1, 1, trj->GetTrackID()); // trajectory specific
       // vertex info first in row
       G4ThreeVector p = trj->GetInitialPosition();
-      fOutput->FillNtupleD(1, 1, p.x()); // [mm] default
-      fOutput->FillNtupleD(1, 2, p.y());
-      fOutput->FillNtupleD(1, 3, p.z());
+      fOutput->FillNtupleD(1, 2, p.x()); // [mm] default
+      fOutput->FillNtupleD(1, 3, p.y());
+      fOutput->FillNtupleD(1, 4, p.z());
       G4ThreeVector mom = trj->GetInitialMomentum();
-      fOutput->FillNtupleD(1, 4, mom.theta());
-      fOutput->FillNtupleD(1, 5, trj->GetInitialEnergy() / G4Analysis::GetUnitValue("keV"));
+      fOutput->FillNtupleD(1, 5, mom.theta());
+      fOutput->FillNtupleD(1, 6, trj->GetInitialEnergy() / G4Analysis::GetUnitValue("keV"));
       
       // Note no need to call FillNtupleDColumn for vector types
       // Filled automatically on call to AddNtupleRow
