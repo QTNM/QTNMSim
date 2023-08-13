@@ -1,3 +1,4 @@
+
 # QTNMSim
 Geant4 simulation of physics processes in the QTNM CRESDA geometry.
 
@@ -28,5 +29,7 @@ data extracted for each electron hit, i.e. a scattering event of the primary ele
 material, for instance a Tritium gas atom.
 
 The ntuple 'Signal' stores all the trajectory data, produced by the primary electron or any daughter as it is transported. 
-That data is contains event ID, track ID the majority of data consists of time points in nanoseconds and 
-anntenna response points in Volt, with an antenna ID vector labelling each time, volt point in time-order. Added in the latest update are the starter conditions, i.e. the location components in millimetre, pitch angle, i.e. emission angle with respect to the z-axis, and the initial kinetic energy of the primary particle from the beginning of the event.
+That data contains event ID and track ID, and the majority of data consists of time points in nanoseconds and 
+anntenna response points in Volt, with an antenna ID vector labelling each (time, volt) point in time-order. Added in the latest update are the trajectory starter conditions, i.e. the primary position components in millimetre, 
+pitch angle, 
+i.e. emission angle with respect to the z-axis, and the initial kinetic energy of the primary particle from the beginning of the trajectory.
