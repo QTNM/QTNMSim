@@ -47,11 +47,6 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
   G4Tubs*  Tubs = dynamic_cast<G4Tubs*>(G4LogicalVolumeStore::GetInstance()->GetVolume("AntennaLV")->GetSolid());
   fAntennaRad   = Tubs->GetInnerRadius(); // [mm] default
   
-  // for all antenna, first entry, set zero at start
-  for (unsigned int i=0;i<fAngles.size();++i) {
-    fAntennaID.push_back((G4int)i);            // which antenna
-    fVT.push_back(std::make_pair(gltime,0.0)); // data for antenna signal
-  }
 }
 
 QTTrajectory::~QTTrajectory()
