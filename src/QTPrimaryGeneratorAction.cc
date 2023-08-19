@@ -104,7 +104,7 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     // distribution parameter
     int nw = 10000; // nw - number of bins
-    double lbound = 0.2; // lower energy bound [keV]
+    double lbound = 1.5; // lower energy bound [keV]
     double ubound = TBeta::endAt(fNumass, 1); // max energy
 
     // create distribution
