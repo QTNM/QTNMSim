@@ -1,5 +1,6 @@
 #include "QTDetectorConstruction.hh"
 
+#include "G4SystemOfUnits.hh"
 #include "G4UserLimits.hh"
 #include "G4SDManager.hh"
 #include "QTGasSD.hh"
@@ -38,6 +39,7 @@ G4VPhysicalVolume* QTDetectorConstruction::Construct()
   worldLV->SetUserLimits(fUserLimit); // apply limit to world volume
   targetLV->SetUserLimits(fUserLimit); // apply limit to gas volume
 
+  G4cout << "Gas LV number density [1/cm3]: " << targetLV->GetMaterial()->GetTotNbOfAtomsPerVolume()*cm3 << G4endl;
   return fparser.GetWorldVolume();
 }
 
