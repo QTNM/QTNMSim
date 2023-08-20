@@ -7,6 +7,9 @@
 /QT/transport/maxtime 0.5 ns
 /QT/transport/maxstep 0.5 mm
 
+# store trajectories in Signal ntuple
+/tracking/storeTrajectory 1
+
 # run init
 /run/initialize
 
