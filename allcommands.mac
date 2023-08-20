@@ -1,0 +1,42 @@
+# minimal test macro
+# verbose
+/run/verbose 0
+/tracking/verbose 0
+
+# apply limit to transport before run init
+/QT/transport/maxtime 1.0 ns
+/QT/transport/maxstep 0.1 mm
+
+# store trajectories in Signal ntuple
+/tracking/storeTrajectory 1
+
+# run init
+/run/initialize
+
+# set field Z value
+/field/setFieldZ 1.0 tesla
+#/field/setField bx by bz tesla
+#/field/setMinStep 0.01 mm
+#/field/setRadius 20.0 mm
+#/field/setCurrent 100 ampere
+#/field/setZPos 20.0 mm
+#/field/comsolFileName xxx.csv.gz
+/field/uniformB
+#/field/bathTubB
+#/field/comsolB
+/field/update
+
+# test gun + all /gps commands
+/QT/generator/test true
+#/QT/generator/egun true
+#/QT/generator/tritium true
+#/QT/generator/gunEnergy 18.575
+#/QT/generator/gunWidth 5.0e-4
+#/QT/generator/gunSpot 0.5
+#/QT/generator/order true
+#/QT/generator/numass 1.0e-4
+#/QT/generator/mN 0.0
+#/QT/generator/eta 0.0
+
+# start
+/run/beamOn 1
