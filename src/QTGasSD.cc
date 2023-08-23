@@ -43,18 +43,19 @@ G4bool QTGasSD::ProcessHits(G4Step* aStep,
   else if ((premom.cross(postmom)).mag() <= 1.e-8) return false; // parallel = not interested
 
   QTGasHit* newHit = new QTGasHit();
-  G4ThreeVector postloc = aStep->GetPostStepPoint()->GetPosition();
+  G4ThreeVector preloc = aStep->GetPreStepPoint()->GetPosition();
 
   newHit->SetTrackID(aStep->GetTrack()->GetTrackID());
   newHit->SetEdep(edep);
   newHit->SetTime(aStep->GetTrack()->GetGlobalTime());
-  newHit->SetKine(aStep->GetPostStepPoint()->GetKineticEnergy());
+  newHit->SetPreKine(aStep->GetPreStepPoint()->GetKineticEnergy());
+  newHit->SetPostKine(aStep->GetPostStepPoint()->GetKineticEnergy());
   newHit->SetPx(postmom.x());
   newHit->SetPy(postmom.y());
   newHit->SetPz(postmom.z());
-  newHit->SetPosx(postloc.x());
-  newHit->SetPosy(postloc.y());
-  newHit->SetPosz(postloc.z());
+  newHit->SetPosx(preloc.x());
+  newHit->SetPosy(preloc.y());
+  newHit->SetPosz(preloc.z());
 
   fHitsCollection->insert( newHit );
 

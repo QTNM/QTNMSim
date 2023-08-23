@@ -54,7 +54,8 @@ void QTOutputManager::Book()
     analysisManager->CreateNtupleIColumn("TrackID");
     analysisManager->CreateNtupleDColumn("Edep");
     analysisManager->CreateNtupleDColumn("TimeStamp");
-    analysisManager->CreateNtupleDColumn("Kine");
+    analysisManager->CreateNtupleDColumn("PreKine");
+    analysisManager->CreateNtupleDColumn("PostKine");
     analysisManager->CreateNtupleDColumn("Px");
     analysisManager->CreateNtupleDColumn("Py");
     analysisManager->CreateNtupleDColumn("Pz");
