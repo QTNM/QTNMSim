@@ -61,7 +61,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   auto GasHC     = GetGasHitsCollection(fGID, event);
 
   // dummy hit storage
-  std::vector<double> tedep, ttime, tkine, px, py, pz, posx, posy, posz;
+  std::vector<double> tedep, ttime, tkine1, tkine2, px, py, pz, posx, posy, posz;
   std::vector<int> tid;
 
   // fill Hits output from SD
@@ -75,7 +75,8 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     int    id = (hh->GetTrackID());
     double e  = (hh->GetEdep()) / G4Analysis::GetUnitValue("keV");
     double tt = (hh->GetTime()) / G4Analysis::GetUnitValue("ns");
-    double k  = (hh->GetKine()) / G4Analysis::GetUnitValue("keV");
+    double k1  = (hh->GetPreKine()) / G4Analysis::GetUnitValue("keV");
+    double k2  = (hh->GetPostKine()) / G4Analysis::GetUnitValue("keV");
     double mx = (hh->GetPx()); // normalised momentum direction vector
     double my = (hh->GetPy());
     double mz = (hh->GetPz());
@@ -86,7 +87,8 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     tid.push_back(id);
     tedep.push_back(e);
     ttime.push_back(tt);
-    tkine.push_back(k);
+    tkine1.push_back(k1);
+    tkine2.push_back(k2);
     px.push_back(mx);
     py.push_back(my);
     pz.push_back(mz);
@@ -103,13 +105,14 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     fOutput->FillNtupleI(0, 1, tid.at(i));
     fOutput->FillNtupleD(0, 2, tedep.at(i));
     fOutput->FillNtupleD(0, 3, ttime.at(i));
-    fOutput->FillNtupleD(0, 4, tkine.at(i));
-    fOutput->FillNtupleD(0, 5, px.at(i));
-    fOutput->FillNtupleD(0, 6, py.at(i));
-    fOutput->FillNtupleD(0, 7, pz.at(i));
-    fOutput->FillNtupleD(0, 8, posx.at(i));
-    fOutput->FillNtupleD(0, 9, posy.at(i));
-    fOutput->FillNtupleD(0, 10, posz.at(i));
+    fOutput->FillNtupleD(0, 4, tkine1.at(i));
+    fOutput->FillNtupleD(0, 5, tkine2.at(i));
+    fOutput->FillNtupleD(0, 6, px.at(i));
+    fOutput->FillNtupleD(0, 7, py.at(i));
+    fOutput->FillNtupleD(0, 8, pz.at(i));
+    fOutput->FillNtupleD(0, 9, posx.at(i));
+    fOutput->FillNtupleD(0, 10, posy.at(i));
+    fOutput->FillNtupleD(0, 11, posz.at(i));
     fOutput->AddNtupleRow(0);
   }
   // next fill vectors from trajectory store, i.e. stored G4Steps
