@@ -34,25 +34,23 @@ class QTGasHit : public G4VHit
     void SetTime        (G4double tt)  { fTime = tt; };
     void SetPreKine     (G4double ke)  { fPreKine = ke; };
     void SetPostKine    (G4double ke)  { fPostKine = ke; };
-    void SetPx          (G4double px)  { fPx = px; };
-    void SetPy          (G4double py)  { fPy = py; };
-    void SetPz          (G4double pz)  { fPz = pz; };
+    void SetPreTheta    (G4double px)  { fPreT = px; };
+    void SetPostTheta   (G4double py)  { fPostT = py; };
     void SetPosx        (G4double lx)  { fPosx = lx; };
     void SetPosy        (G4double ly)  { fPosy = ly; };
     void SetPosz        (G4double lz)  { fPosz = lz; };
 
     // Get methods
-    G4double GetTrackID()  const     { return fTrackID; };
-    G4double GetEdep()     const     { return fEdep; };
-    G4double GetTime()     const     { return fTime; };
-    G4double GetPreKine()  const     { return fPreKine; };
-    G4double GetPostKine() const     { return fPostKine; };
-    G4double GetPx()       const     { return fPx; };
-    G4double GetPy()       const     { return fPy; };
-    G4double GetPz()       const     { return fPz; };
-    G4double GetPosx()     const     { return fPosx; };
-    G4double GetPosy()     const     { return fPosy; };
-    G4double GetPosz()     const     { return fPosz; };
+    G4double GetTrackID()   const     { return fTrackID; };
+    G4double GetEdep()      const     { return fEdep; };
+    G4double GetTime()      const     { return fTime; };
+    G4double GetPreKine()   const     { return fPreKine; };
+    G4double GetPostKine()  const     { return fPostKine; };
+    G4double GetPreTheta()  const     { return fPreT; };
+    G4double GetPostTheta() const     { return fPostT; };
+    G4double GetPosx()      const     { return fPosx; };
+    G4double GetPosy()      const     { return fPosy; };
+    G4double GetPosz()      const     { return fPosz; };
 
   private:
 
@@ -61,9 +59,8 @@ class QTGasHit : public G4VHit
       G4double      fTime;
       G4double      fPreKine;
       G4double      fPostKine;
-      G4double      fPx;
-      G4double      fPy;
-      G4double      fPz;
+      G4double      fPreT;
+      G4double      fPostT;
       G4double      fPosx;
       G4double      fPosy;
       G4double      fPosz;

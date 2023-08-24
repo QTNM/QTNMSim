@@ -9,9 +9,8 @@ QTGasHit::QTGasHit()
    fTime(0.),
    fPreKine(0.),
    fPostKine(0.),
-   fPx(0.),
-   fPy(0.),
-   fPz(0.),
+   fPreT(0.),
+   fPostT(0.),
    fPosx(0.),
    fPosy(0.),
    fPosz(0.)
@@ -28,9 +27,8 @@ QTGasHit::QTGasHit(const QTGasHit& right)
   fTime         = right.fTime;
   fPreKine      = right.fPreKine;
   fPostKine     = right.fPostKine;
-  fPx           = right.fPx;
-  fPy           = right.fPy;
-  fPz           = right.fPz;
+  fPreT         = right.fPreT;
+  fPostT        = right.fPostT;
   fPosx         = right.fPosx;
   fPosy         = right.fPosy;
   fPosz         = right.fPosz;
@@ -43,9 +41,8 @@ const QTGasHit& QTGasHit::operator=(const QTGasHit& right)
   fTime         = right.fTime;
   fPreKine      = right.fPreKine;
   fPostKine     = right.fPostKine;
-  fPx           = right.fPx;
-  fPy           = right.fPy;
-  fPz           = right.fPz;
+  fPreT         = right.fPreT;
+  fPostT        = right.fPostT;
   fPosx         = right.fPosx;
   fPosy         = right.fPosy;
   fPosz         = right.fPosz;

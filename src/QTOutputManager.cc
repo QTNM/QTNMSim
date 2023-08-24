@@ -56,9 +56,8 @@ void QTOutputManager::Book()
     analysisManager->CreateNtupleDColumn("TimeStamp");
     analysisManager->CreateNtupleDColumn("PreKine");
     analysisManager->CreateNtupleDColumn("PostKine");
-    analysisManager->CreateNtupleDColumn("Px");
-    analysisManager->CreateNtupleDColumn("Py");
-    analysisManager->CreateNtupleDColumn("Pz");
+    analysisManager->CreateNtupleDColumn("PreTheta");
+    analysisManager->CreateNtupleDColumn("PostTheta");
     analysisManager->CreateNtupleDColumn("Posx");
     analysisManager->CreateNtupleDColumn("Posy");
     analysisManager->CreateNtupleDColumn("Posz");
