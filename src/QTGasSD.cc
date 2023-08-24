@@ -50,9 +50,8 @@ G4bool QTGasSD::ProcessHits(G4Step* aStep,
   newHit->SetTime(aStep->GetTrack()->GetGlobalTime());
   newHit->SetPreKine(aStep->GetPreStepPoint()->GetKineticEnergy());
   newHit->SetPostKine(aStep->GetPostStepPoint()->GetKineticEnergy());
-  newHit->SetPx(postmom.x());
-  newHit->SetPy(postmom.y());
-  newHit->SetPz(postmom.z());
+  newHit->SetPreTheta(premom.theta());
+  newHit->SetPostTheta(postmom.theta());
   newHit->SetPosx(preloc.x());
   newHit->SetPosy(preloc.y());
   newHit->SetPosz(preloc.z());

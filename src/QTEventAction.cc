@@ -61,7 +61,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   auto GasHC     = GetGasHitsCollection(fGID, event);
 
   // dummy hit storage
-  std::vector<double> tedep, ttime, tkine1, tkine2, px, py, pz, posx, posy, posz;
+  std::vector<double> tedep, ttime, tkine1, tkine2, px, py, posx, posy, posz;
   std::vector<int> tid;
 
   // fill Hits output from SD
@@ -77,9 +77,8 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     double tt = (hh->GetTime()) / G4Analysis::GetUnitValue("ns");
     double k1  = (hh->GetPreKine()) / G4Analysis::GetUnitValue("keV");
     double k2  = (hh->GetPostKine()) / G4Analysis::GetUnitValue("keV");
-    double mx = (hh->GetPx()); // normalised momentum direction vector
-    double my = (hh->GetPy());
-    double mz = (hh->GetPz());
+    double mx = (hh->GetPreTheta()); // pitch angle from momentum
+    double my = (hh->GetPostTheta());
     double lx = (hh->GetPosx()); // interaction location
     double ly = (hh->GetPosy());
     double lz = (hh->GetPosz());
@@ -91,7 +90,6 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     tkine2.push_back(k2);
     px.push_back(mx);
     py.push_back(my);
-    pz.push_back(mz);
     posx.push_back(lx);
     posy.push_back(ly);
     posz.push_back(lz);
@@ -109,10 +107,9 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     fOutput->FillNtupleD(0, 5, tkine2.at(i));
     fOutput->FillNtupleD(0, 6, px.at(i));
     fOutput->FillNtupleD(0, 7, py.at(i));
-    fOutput->FillNtupleD(0, 8, pz.at(i));
-    fOutput->FillNtupleD(0, 9, posx.at(i));
-    fOutput->FillNtupleD(0, 10, posy.at(i));
-    fOutput->FillNtupleD(0, 11, posz.at(i));
+    fOutput->FillNtupleD(0, 8, posx.at(i));
+    fOutput->FillNtupleD(0, 9, posy.at(i));
+    fOutput->FillNtupleD(0, 10, posz.at(i));
     fOutput->AddNtupleRow(0);
   }
   // next fill vectors from trajectory store, i.e. stored G4Steps
