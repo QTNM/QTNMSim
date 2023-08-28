@@ -62,7 +62,10 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
 	aStep->GetTrack()->GetMaterial()->GetName()=="matT")) return;
 
   // take care of units [time] [distance]
-  gltime = aStep->GetTrack()->GetGlobalTime(); // [ns] default
+  // observed steps with equal time values -> prevent; time must be larger than previous
+  if (gltime>=aStep->GetTrack()->GetGlobalTime()) return; // avoid equal time storage
+  else 
+    gltime = aStep->GetTrack()->GetGlobalTime(); // [ns] default
   pos  = aStep->GetPostStepPoint()->GetPosition(); // [mm] default
 
   // only source beta=v/c enters radiation formulae
