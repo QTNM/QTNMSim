@@ -37,6 +37,16 @@
 #/QT/generator/numass 1.0e-4
 #/QT/generator/mN 0.0
 #/QT/generator/eta 0.0
+# example gps settings for tests
+#/gps/verbose 0
+#/gps/ene/mono 18.575 keV
+#/gps/pos/type Volume
+#/gps/pos/shape Cylinder
+#/gps/pos/radius 1.5 mm
+#/gps/pos/halfz 30.0 mm
+#/gps/ang/type cos
+#/gps/ang/mintheta 85 deg
+#/gps/ang/maxtheta 89 deg
 
 # start
 /run/beamOn 1
