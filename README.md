@@ -41,4 +41,4 @@ cyclotron radii to small to sample by realistic maximum step lengths, say 0.1mm.
 
 While testing for energy conservation which affects the chirp of the signal, the 'Signal' ntuple also contains the
 kinetic energy in MeV (G4 default) for each step. Next attempt after checking the textbook Boris algorithm is Tom Goffrey's 
-analytic solution of the For, O'Connell equations in 3D.
+analytic solution of the Ford, O'Connell equations in 3D.
