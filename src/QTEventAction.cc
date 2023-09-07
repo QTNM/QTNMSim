@@ -125,8 +125,9 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       QTTrajectory* trj = dynamic_cast<QTTrajectory*>(entry);
       G4int counter = 0;
       for (auto values : trj->getVT()) {  // std::pair<double,double>
-	fOutput->FillAntennaVec((trj->getAntennaID()).at(counter)); // same size as
-	fOutput->FillTimeVec(values.first);                         // VT container
+	fOutput->FillAntennaVec((trj->getAntennaID()).at(counter));
+	fOutput->FillKEVec((trj->getKE()).at(counter)); // same size as
+	fOutput->FillTimeVec(values.first);             // VT container
 	fOutput->FillVoltageVec(values.second);
 	counter++;
       }
@@ -140,7 +141,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       fOutput->FillNtupleD(1, 3, p.y());
       fOutput->FillNtupleD(1, 4, p.z());
       G4ThreeVector mom = trj->GetInitialMomentum();
-      fOutput->FillNtupleD(1, 5, mom.theta());
+      fOutput->FillNtupleD(1, 5, mom.theta()); // angle to z-axis
       fOutput->FillNtupleD(1, 6, trj->GetInitialEnergy() / G4Analysis::GetUnitValue("keV"));
       
       // Note no need to call FillNtupleDColumn for vector types

@@ -51,6 +51,7 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 
 QTTrajectory::~QTTrajectory()
 {
+  fKE.clear();
   fVT.clear();
   fAntennaID.clear();
 }
@@ -71,14 +72,18 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   // only source beta=v/c enters radiation formulae
   beta = aStep->GetPostStepPoint()->GetMomentumDirection() * aStep->GetPostStepPoint()->GetBeta();
 
-  // G4cout << "PRINT>>> in append step, data: t= " << gltime/CLHEP::ns << ", pos " 
-  // 	 << pos.x()/CLHEP::mm << ", " << pos.y()/CLHEP::mm << ", " << pos.z()/CLHEP::mm << G4endl;
-  // G4cout << "PRINT>>> beta= " << beta.x() << ", " << beta.y() << ", " << beta.z() << G4endl;
-
   // for all antenna
+  G4double pos_[3];
+  G4double B[3];
+  pos_[0] = pos[0];pos_[1] = pos[1];pos_[2] = pos[2]; // [mm] default
+  pfieldManager->GetDetectorField()->GetFieldValue(pos_, B);
+  G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] ) / tesla; // [Tesla] explicitly
+
   for (unsigned int i=0;i<fAngles.size();++i) {
     fAntennaID.push_back((G4int)i);            // which antenna
     fVT.push_back(convertToVT(i));
+    fKE.push_back(aStep->GetPostStepPoint()->GetKineticEnergy());
+    //    fKE.push_back(pEqn->CalcPowerGivenB(Bfield, beta));
   }
 }
 
@@ -150,7 +155,6 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   // assume half wave dipole eff length as wvlg/pi
   G4double voltage = wvlg/pi * (relFarEField+relNearEField).dot(antennaPolarisation);
   
-  // G4cout << "append step called, (t [ns], v [V]): " << gltime << ", " << voltage << G4endl;
   return std::make_pair(gltime, voltage);
 }
 

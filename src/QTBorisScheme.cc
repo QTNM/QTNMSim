@@ -27,12 +27,13 @@
 // Author: Divyansh Tiwari, Google Summer of Code 2022
 // Supervision: John Apostolakis,Renee Fatemi, Soon Yung Jun
 // --------------------------------------------------------------------
-
+#include <cmath>
 #include "G4FieldUtils.hh"
 #include "G4SystemOfUnits.hh"
 #include "globals.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4EquationOfMotion.hh"
+#include "G4ThreeVector.hh"
 
 #include "QTEquationOfMotion.hh"
 #include "QTBorisScheme.hh"
@@ -107,14 +108,12 @@ void QTBorisScheme::UpdateVelocity(const G4double restMass, const G4double charg
   G4double gamma = std::sqrt(sqr(momentum_mag) + sqr(restMass))/restMass;  
   
   G4double mass = (restMass/c_squared)/CLHEP::kg;
-  
+
   //Obtaining velocity; SI unit, not beta
-  
   G4double velocity_mag = momentum_mag*(c_l)/(std::sqrt(sqr(momentum_mag) +sqr(restMass)));
   G4ThreeVector velocity = momentum_dir*velocity_mag;
   
   ////Obtaining the time step from the length step
-  
   hstep /= velocity_mag*CLHEP::m; // in [s] if v in SI
   
   // Obtaining the field values
@@ -131,31 +130,32 @@ void QTBorisScheme::UpdateVelocity(const G4double restMass, const G4double charg
   // use inherited get field value function, get B-field array
   fEquation->GetFieldValue(PositionAndTime, fieldValue) ; // by-passes RHS evaluation, not needed.
   
-  // fEquation->EvaluateRhsReturnB(yIn, dydx, fieldValue); // use getFieldValue(postime, fieldValue)
-  
   //Initializing Vector
   G4ThreeVector B;
-  // G4ThreeVector E; // not used
   copy(yOut, yIn);
   for( G4int i = 0; i < 3; i++)
     {
-      //        E[i] = fieldValue[i+3]/CLHEP::volt*CLHEP::meter;// FIXME - Check Units
       B[i] = fieldValue[i]/CLHEP::tesla; // into SI units
     }
 
   
   //Boris Algorithm, assume SI units throughout
-  G4double qd = hstep*(charge/(2*mass*gamma));
-  G4ThreeVector h = qd*B;
-  //  G4ThreeVector u = velocity + qd*E;
+  //  G4double qd = hstep*(charge/(2*mass*gamma));
+  //  G4ThreeVector h = qd*B;
+  //  no E-field: G4ThreeVector u = velocity + qd*E;
+  // Try Tom's implementation
+  G4double Bnorm = B.mag();
+  G4double thetahalf = hstep*Bnorm*(charge/(2*mass*gamma));
+  G4ThreeVector h = tan(thetahalf) * B/Bnorm;
   G4ThreeVector radAcc = pEqn->CalcRadiationAcceleration(B, velocity/c_l); // with beta in call
   G4ThreeVector u = velocity + (hstep/2.0)*radAcc; // half-time step acceleration
-  G4double h_l = h[0]*h[0] + h[1]*h[1] + h[2]*h[2];
+  //  G4ThreeVector u = velocity; // no loss
+  G4double h_l = h.mag2();
   G4ThreeVector s_1 = (2*h)/(1 + h_l);
   G4ThreeVector ud = u + (u + u.cross(h)).cross(s_1);
-  //  G4ThreeVector v_fi = ud +qd*E;
   radAcc = pEqn->CalcRadiationAcceleration(B, ud/c_l); // for next half-step, beta in call
   G4ThreeVector v_fi = ud + (hstep/2.0)*radAcc; // half-time step acceleration
+  //  G4ThreeVector v_fi = ud; // no loss
   G4double v_mag = v_fi.mag();
   G4ThreeVector v_dir = v_fi/v_mag;
   G4double momen_mag = (restMass*v_mag)/(std::sqrt(c_l*c_l - v_mag*v_mag));
@@ -182,9 +182,14 @@ void QTBorisScheme::
 StepWithErrorEstimate(const G4double yIn[], G4double restMass, G4double charge, G4double hstep,
                       G4double yOut[], G4double yErr[]) const
 {
-   // Use two half-steps (comparing to a full step) to obtain output and error estimate
-   G4double yMid[G4FieldTrack::ncompSVEC];
-   StepWithMidAndErrorEstimate(yIn, restMass, charge, hstep, yMid, yOut, yErr);
+  // Use two half-steps (comparing to a full step) to obtain output and error estimate
+  G4double yMid[G4FieldTrack::ncompSVEC];
+  StepWithMidAndErrorEstimate(yIn, restMass, charge, hstep, yMid, yOut, yErr);
+
+  G4ThreeVector momentum_vec =G4ThreeVector(yIn[3],yIn[4],yIn[5]);
+  G4double momentum_mag1 = momentum_vec.mag();
+  momentum_vec =G4ThreeVector(yOut[3],yOut[4],yOut[5]);
+  G4double momentum_mag2 = momentum_vec.mag();
 }
 
 // ----------------------------------------------------------------------------------
