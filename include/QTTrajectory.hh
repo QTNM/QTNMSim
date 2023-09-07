@@ -42,8 +42,9 @@ public:
   inline int   operator==(const QTTrajectory& right) const { return (this == &right); }
 
   // access
-  VTcontainer&          getVT() {return fVT;};
-  std::vector<G4int>&   getAntennaID() {return fAntennaID;};
+  VTcontainer&           getVT() {return fVT;};
+  std::vector<G4int>&    getAntennaID() {return fAntennaID;};
+  std::vector<G4double>& getKE() {return fKE;};
 
   inline G4int GetTrackID() const
     { return fTrackID; }
@@ -72,6 +73,7 @@ private:
 
   std::vector<G4double>  fAngles;    // from geometry
   std::vector<G4int>     fAntennaID; // antenna ID parallel to VTcontainer entries
+  std::vector<G4double>  fKE;        // KE parallel to VTcontainer entries
   VTcontainer            fVT;        // container, Cyclotron radiation pairs, time, voltage
 
   G4FieldManager*        pfieldManager; // singleton for info
