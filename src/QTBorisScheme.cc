@@ -146,7 +146,7 @@ void QTBorisScheme::UpdateVelocity(const G4double restMass, const G4double charg
   //  no E-field: G4ThreeVector u = velocity + qd*E;
 
   // Try Tom's implementation
-  G4double u_n = velocity * gamma0;
+  G4ThreeVector u_n = velocity * gamma0;
   G4double gamma_minus = sqrt(1.0+u_n.mag2()/(c_l*c_l));
   G4double Bnorm = B.mag();
   G4double thetahalf = hstep*Bnorm*(charge/(2*mass_SI*gamma_minus));
