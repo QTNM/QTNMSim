@@ -107,7 +107,7 @@ void QTBorisScheme::UpdateVelocity(const G4double restMass, const G4double charg
   
   G4double gamma0 = std::sqrt(sqr(momentum_mag) + sqr(restMass))/restMass;  
   
-  G4double mass_SI = (restMass/(c_l*c_l))/CLHEP::kg;
+  G4double mass_SI = (restMass/c_squared)/CLHEP::kg;
 
   //Obtaining velocity; SI unit, not beta
   G4double velocity_mag = momentum_mag*(c_l)/(std::sqrt(sqr(momentum_mag) +sqr(restMass)));
