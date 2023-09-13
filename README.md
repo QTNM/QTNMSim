@@ -37,5 +37,5 @@ the trajectory.
 
 The number density (atoms/cm3) of the tritium material is printed to screen for validation (defined in default g/cm3 units). 
 Also, the lower energy limit of the tritium decay generator now stands at 1.5 keV, avoiding too low energy electrons with 
-cyclotron radii to small to sample by realistic maximum step lengths, say 0.1mm.
+cyclotron radii too small to sample by realistic maximum step lengths, say 0.3mm.
 
