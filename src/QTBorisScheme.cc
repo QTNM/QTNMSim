@@ -147,7 +147,7 @@ void QTBorisScheme::UpdateVelocity(const G4double restMass, const G4double charg
 
   // Try Tom's implementation
   G4ThreeVector u_n = velocity * gamma0;
-  G4double gamma_minus = sqrt(1.0+u_n.mag2()/(c_l*c_l));
+  G4double gamma_minus = 1.0/sqrt(1.0-u_n.mag2()/(c_l*c_l));
   G4double Bnorm = B.mag();
   G4double thetahalf = hstep*Bnorm*(charge/(2*mass_SI*gamma_minus));
   G4ThreeVector h = tan(thetahalf) * B/Bnorm;
@@ -159,7 +159,7 @@ void QTBorisScheme::UpdateVelocity(const G4double restMass, const G4double charg
   G4ThreeVector ud = u + (u + u.cross(h)).cross(s_1);
   radAcc = pEqn->CalcRadiationAcceleration(B, ud/c_l); // for next half-step, beta in call
   G4ThreeVector u_plus = ud + (hstep/2.0)*radAcc; // half-time step acceleration
-  G4double gamma_plus = sqrt(1.0+u_plus.mag2()/(c_l*c_l));
+  G4double gamma_plus = 1.0/sqrt(1.0-u_plus.mag2()/(c_l*c_l));
   //  G4ThreeVector v_fi = ud; // no loss
   G4ThreeVector v_fi = u_plus/gamma_plus; // no loss
   G4double v_mag = v_fi.mag();
