@@ -15,7 +15,6 @@ QTDetectorConstruction::QTDetectorConstruction(const G4GDMLParser& p)
   : G4VUserDetectorConstruction(),
     fUserLimit(nullptr),
     fMessenger(nullptr),
-    fMaxStep(1.0*CLHEP::mm),       // default max step 1 mm
     fMaxTime(100.0*CLHEP::ns),     // default max time 100 ns
     fparser(p)
 {
@@ -32,7 +31,7 @@ QTDetectorConstruction::~QTDetectorConstruction()
 
 G4VPhysicalVolume* QTDetectorConstruction::Construct()
 {
-  fUserLimit = new G4UserLimits(fMaxStep,DBL_MAX,fMaxTime,0.,0.); // max time limit
+  fUserLimit = new G4UserLimits(DBL_MAX,DBL_MAX,fMaxTime,0.,0.); // max time limit only
   
   auto* worldLV = fparser.GetVolume("worldLV");
   auto* targetLV = fparser.GetVolume("Gas_log");
@@ -96,10 +95,5 @@ void QTDetectorConstruction::DefineCommands()
 					      "Set maximum electron transport time in [ns].");
   timeCmd.SetParameterName("time", true);
   timeCmd.SetDefaultValue("100 ns");
-
-  auto& stepCmd = fMessenger->DeclarePropertyWithUnit("maxstep", "mm", fMaxStep,
-					      "Set maximum electron transport step in [mm].");
-  stepCmd.SetParameterName("step", true);
-  stepCmd.SetDefaultValue("1 mm");
 
 }

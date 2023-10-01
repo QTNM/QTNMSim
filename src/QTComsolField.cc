@@ -121,5 +121,8 @@ void QTComsolField::GetFieldValue (const G4double yIn[7],
   B[0] = weightedvec.x();
   B[1] = weightedvec.y();
   B[2] = weightedvec.z();
+  B[3] = 0.0;
+  B[4] = 0.0;
+  B[5] = 0.0;
 
 }

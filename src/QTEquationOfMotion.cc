@@ -1,7 +1,7 @@
 #include "QTEquationOfMotion.hh"
 
-QTEquationOfMotion::QTEquationOfMotion(G4MagneticField *magField)
-  : G4Mag_UsualEqRhs(magField)
+QTEquationOfMotion::QTEquationOfMotion(QTLarmorEMField *magField)
+  : G4EqMagElectricField(magField)
 {
 }
 
@@ -16,13 +16,6 @@ void QTEquationOfMotion::SetChargeMomentumMass(G4ChargeState particleCharge,
   fCof_val = particleCharge.GetCharge()*eplus*c_light ;
   fMass = mass;
   fCharge = particleCharge.GetCharge();
-}
-
-
-G4ThreeVector QTEquationOfMotion::GetCachedFieldValue()
-{
-  // not used currently
-  return G4ThreeVector(0.,0.,0.);
 }
 
 

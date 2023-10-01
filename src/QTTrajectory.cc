@@ -5,8 +5,9 @@
 #include "G4TwoVector.hh"
 #include "G4TrajectoryPoint.hh"
 #include "G4ChordFinder.hh"
-#include "G4ChargeState.hh"
+#include "G4TransportationManager.hh"
 #include "G4PropagatorInField.hh"
+#include "G4ChargeState.hh"
 #include "G4UserLimits.hh"
 
 
@@ -34,10 +35,6 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
   pfieldManager = G4TransportationManager::GetTransportationManager()->GetFieldManager();
   pEqn = dynamic_cast<QTEquationOfMotion*>(pfieldManager->GetChordFinder()->GetIntegrationDriver()->GetEquationOfMotion());
 
-  // avoid large first step
-  G4double maxStep = G4LogicalVolumeStore::GetInstance()->GetVolume("worldLV")->GetUserLimits()->GetMaxAllowedStep(*aTrack);
-  G4TransportationManager::GetTransportationManager()->GetPropagatorInField()->SetLargestAcceptableStep(maxStep-1.0*micrometer); // just below the user limit by 1 mum.
-
   // set up charge info on particle at start of trajectory
   G4ChargeState chargeState(aTrack->GetDynamicParticle()->GetCharge(),0.,0.,0.,0.);
   pEqn->SetChargeMomentumMass(chargeState, aTrack->GetDynamicParticle()->GetTotalMomentum(),
@@ -64,26 +61,25 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
 
   // take care of units [time] [distance]
   // observed steps with equal time values -> prevent; time must be larger than previous
+  // appear to be boundary steps
   if (gltime>=aStep->GetTrack()->GetGlobalTime()) return; // avoid equal time storage
-  else 
+  else
     gltime = aStep->GetTrack()->GetGlobalTime(); // [ns] default
+  // G4cout << ">> Traj app step: global time [G4]: " << gltime << G4endl;;
+
+  // info
+  // G4cout << ">> Traj: pre  step KE: " << aStep->GetPreStepPoint()->GetKineticEnergy()/eV << G4endl;;
+  // G4cout << ">> Traj: post step KE: " << aStep->GetPostStepPoint()->GetKineticEnergy()/eV << G4endl;;
+
   pos  = aStep->GetPostStepPoint()->GetPosition(); // [mm] default
 
   // only source beta=v/c enters radiation formulae
   beta = aStep->GetPostStepPoint()->GetMomentumDirection() * aStep->GetPostStepPoint()->GetBeta();
 
-  // for all antenna
-  G4double pos_[3];
-  G4double B[3];
-  pos_[0] = pos[0];pos_[1] = pos[1];pos_[2] = pos[2]; // [mm] default
-  pfieldManager->GetDetectorField()->GetFieldValue(pos_, B);
-  G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] ) / tesla; // [Tesla] explicitly
-
   for (unsigned int i=0;i<fAngles.size();++i) {
     fAntennaID.push_back((G4int)i);            // which antenna
     fVT.push_back(convertToVT(i));
     fKE.push_back(aStep->GetPostStepPoint()->GetKineticEnergy());
-    //    fKE.push_back(pEqn->CalcPowerGivenB(Bfield, beta));
   }
 }
 
@@ -115,8 +111,8 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   // collect required values
   // DONE - this would be better done using the actual field object
   G4double pos_[3];
-  pos_[0] = pos[0];pos_[1] = pos[1];pos_[2] = pos[2]; // [mm] default
-  G4double B[3]; // interface needs array pointer
+  pos_[0] = pos[0]; pos_[1] = pos[1]; pos_[2] = pos[2]; // [mm] default
+  G4double B[6]; // interface needs array pointer
   pfieldManager->GetDetectorField()->GetFieldValue(pos_, B);
   G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] ) / tesla; // [Tesla] explicitly
   // G4cout << "b-field from eqn: " << Bfield.x() << ", " << Bfield.y() << ", " 

@@ -30,6 +30,8 @@ add_executable(qtnmSim
   src/QTBorisScheme.cc
   src/QTBorisDriver.cc
   src/QTFieldMessenger.cc
+  src/QTLarmorEMField.cc
+  src/QTLarmorUniField.cc
   src/QTMagneticFieldSetup.cc
   src/QTMagneticTrap.cc
   src/QTComsolField.cc

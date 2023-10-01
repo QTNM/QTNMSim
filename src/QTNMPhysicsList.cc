@@ -157,10 +157,10 @@ void QTNMPhysicsList::ConstructProcess()
   ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
 
   // ionisation
-  G4eIonisation* eioni = new G4eIonisation();
-  G4VEmModel* theIoniLiv = new G4LivermoreIonisationModel();
-  theIoniLiv->SetHighEnergyLimit(0.1*CLHEP::MeV); 
-  eioni->AddEmModel(0, theIoniLiv, new G4UniversalFluctuation() );
+  // G4eIonisation* eioni = new G4eIonisation();
+  // G4VEmModel* theIoniLiv = new G4LivermoreIonisationModel();
+  // theIoniLiv->SetHighEnergyLimit(0.1*CLHEP::MeV); 
+  // eioni->AddEmModel(0, theIoniLiv, new G4UniversalFluctuation() );
 
   // bremsstrahlung
   G4eBremsstrahlung* brem = new G4eBremsstrahlung();
@@ -173,7 +173,7 @@ void QTNMPhysicsList::ConstructProcess()
   br1->SetHighEnergyLimit(CLHEP::GeV);
 
   // register processes
-  ph->RegisterProcess(eioni, particle);
+  // ph->RegisterProcess(eioni, particle);
   ph->RegisterProcess(brem, particle);
   ph->RegisterProcess(ee, particle);
   ph->RegisterProcess(ss, particle);
@@ -186,10 +186,10 @@ void QTNMPhysicsList::ConstructProcess()
   ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
 
   // ionisation
-  eioni = new G4eIonisation();
-  G4VEmModel* pen = new G4PenelopeIonisationModel();
-  pen->SetHighEnergyLimit(0.1*CLHEP::MeV);
-  eioni->AddEmModel(0, pen, new G4UniversalFluctuation());
+  // eioni = new G4eIonisation();
+  // G4VEmModel* pen = new G4PenelopeIonisationModel();
+  // pen->SetHighEnergyLimit(0.1*CLHEP::MeV);
+  // eioni->AddEmModel(0, pen, new G4UniversalFluctuation());
 
   // bremsstrahlung
   brem = new G4eBremsstrahlung();
@@ -202,7 +202,7 @@ void QTNMPhysicsList::ConstructProcess()
   br1->SetHighEnergyLimit(CLHEP::GeV);
 
   // register processes
-  ph->RegisterProcess(eioni, particle);
+  // ph->RegisterProcess(eioni, particle);
   ph->RegisterProcess(brem, particle);
   ph->RegisterProcess(ee, particle);
   ph->RegisterProcess(new G4eplusAnnihilation(), particle);
