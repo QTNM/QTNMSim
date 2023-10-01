@@ -49,7 +49,7 @@ public:
   QTBorisScheme() = default;
   QTBorisScheme( // G4EqMagElectricField
 		G4EquationOfMotion* equation,
-		G4int nvar = 6);
+		G4int nvar = 8);
   ~QTBorisScheme() = default;
   
   void DoStep( G4double restMass, G4double charge, const G4double yIn[], 

@@ -34,6 +34,7 @@
 // Supervision: John Apostolakis,Renee Fatemi, Soon Yung Jun 
 // --------------------------------------------------------------------
 #include <cassert>
+#include <cmath>
 
 #include "QTBorisDriver.hh"
 
@@ -144,7 +145,6 @@ G4bool QTBorisDriver::AccurateAdvance( G4FieldTrack& track,
       G4double hdid= 0.0, hnext=0.0;
         
       OneGoodStep(yCurrent, curveLength, htry, epsilon, restMass, charge, hdid, hnext);
-      //*********
 
       // Simple check: move (distance of displacement) is smaller than length along curve!
       const G4ThreeVector StartPos = field_utils::makeVector(yCurrent, field_utils::Value3D::Position);      
@@ -275,8 +275,9 @@ QuickAdvance( G4FieldTrack& track, const G4double /*dydx*/[],
 void QTBorisDriver::
 GetDerivatives( const G4FieldTrack& yTrack, G4double dydx[]) const
 {
-   G4double  EBfieldValue[6];
-   GetDerivatives(yTrack, dydx, EBfieldValue);
+  return;
+   // G4double  EBfieldValue[6];
+   // GetDerivatives(yTrack, dydx, EBfieldValue);
 }
 
 // --------------------------------------------------------------------------------
@@ -285,11 +286,12 @@ void QTBorisDriver::
 GetDerivatives( const G4FieldTrack& yTrack, G4double dydx[],
                 G4double EBfieldValue[]) const
 {
+  return;
    // G4Exception("QTBorisDriver::GetDerivatives()",
    //             "GeomField0003", FatalException, "This method is not implemented.");
-   G4double ytemp[G4FieldTrack::ncompSVEC];
-   yTrack.DumpToArray(ytemp);
-   GetEquationOfMotion()->EvaluateRhsReturnB(ytemp, dydx, EBfieldValue);
+   // G4double ytemp[G4FieldTrack::ncompSVEC];
+   // yTrack.DumpToArray(ytemp);
+   // GetEquationOfMotion()->EvaluateRhsReturnB(ytemp, dydx, EBfieldValue);
 }
 
 // --------------------------------------------------------------------------------

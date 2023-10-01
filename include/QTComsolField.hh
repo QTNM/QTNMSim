@@ -1,7 +1,7 @@
 #ifndef QTComsolField_h
 #define QTComsolField_h 1
 
-#include "G4MagneticField.hh"
+#include "QTLarmorEMField.hh"
 #include "G4ThreeVector.hh"
 #include "kdtree.hh"
 
@@ -9,7 +9,7 @@
 typedef point<double, 3> point3d;
 typedef kdtree<double, 3> tree3d;
 
-class QTComsolField : public G4MagneticField
+class QTComsolField : public QTLarmorEMField
 {
 public:  // with description
   

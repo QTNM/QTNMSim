@@ -35,7 +35,7 @@
 #ifndef QTMagneticFieldSetup_h
 #define QTMagneticFieldSetup_h 1
 
-#include "G4MagneticField.hh"
+#include "QTLarmorEMField.hh"
 #include "G4ThreeVector.hh"
 
 class G4FieldManager;
@@ -45,6 +45,7 @@ class QTBorisScheme;
 class QTEquationOfMotion;
 class QTMagneticTrap;
 class QTComsolField;
+class QTLarmorUniField;
 class QTFieldMessenger;
 
 /// A class for control of the Magnetic Field of the detector.
@@ -110,7 +111,7 @@ private:
 
   QTEquationOfMotion*     fEquation;
 
-  G4MagneticField*        fEMfield;
+  QTLarmorUniField*       fEMfield;
   QTMagneticTrap*         fTrapfield;
   QTComsolField*          fCMfield;
  

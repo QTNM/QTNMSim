@@ -1,25 +1,25 @@
 #ifndef QTEquationOfMotion_HH
 #define QTEquationOfMotion_HH
 
-#include "G4Mag_UsualEqRhs.hh"
+#include "G4EqMagElectricField.hh"
+#include "QTLarmorEMField.hh"
 #include "G4ThreeVector.hh"
 #include "G4ChargeState.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
 
-class QTEquationOfMotion : public G4Mag_UsualEqRhs
+class QTEquationOfMotion : public G4EqMagElectricField
 {
 public:
 
-  QTEquationOfMotion(G4MagneticField *magField);
+  QTEquationOfMotion(QTLarmorEMField *Field);
   ~QTEquationOfMotion() override;
 
   void SetChargeMomentumMass(G4ChargeState particleCharge,
 			     G4double MomentumXc,
 			     G4double mass);
 
-  G4ThreeVector GetCachedFieldValue();
   G4ThreeVector CalcRadiationAcceleration(G4ThreeVector, G4ThreeVector);
   G4ThreeVector CalcOmegaGivenB(G4ThreeVector, G4ThreeVector);
   G4ThreeVector CalcAccGivenB(G4ThreeVector, G4ThreeVector);

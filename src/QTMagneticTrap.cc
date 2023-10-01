@@ -10,6 +10,9 @@ QTMagneticTrap::QTMagneticTrap(const G4ThreeVector& FieldVector )
   fFieldComponents[0] = FieldVector.x();
   fFieldComponents[1] = FieldVector.y();
   fFieldComponents[2] = FieldVector.z();
+  fFieldComponents[3] = 0.0;
+  fFieldComponents[4] = 0.0;
+  fFieldComponents[5] = 0.0;
 
   radius_  = 20.0*mm; // 2cm
   current_ = 1 * ampere; // 1 Amp
@@ -47,7 +50,7 @@ void
 QTMagneticTrap::SetCentralField()
 {
   b_central_ = current_ * CLHEP::mu0 / radius_ / 2.0;
-  G4cout << "set central field [T] at " << b_central_/tesla << G4endl;
+  G4cout << "set trap coil central field [T] at " << b_central_/tesla << G4endl;
 }
 
 void QTMagneticTrap::GetFieldValue (const G4double yIn[7],
@@ -58,9 +61,12 @@ void QTMagneticTrap::GetFieldValue (const G4double yIn[7],
   // coil at zpos_, can be 0.0 for single coil harmonic trap
   EvaluateCoils(yIn, 1.0, field);
   
-  B[0]= fFieldComponents[0] + field[0] ;
-  B[1]= fFieldComponents[1] + field[1] ;
-  B[2]= fFieldComponents[2] + field[2] ;
+  B[0] = fFieldComponents[0] + field[0] ;
+  B[1] = fFieldComponents[1] + field[1] ;
+  B[2] = fFieldComponents[2] + field[2] ;
+  B[3] = 0.0 ;
+  B[4] = 0.0 ;
+  B[5] = 0.0 ;
 
   // coil at -zpos_
   if (zpos_!=0.0) {

@@ -3,6 +3,7 @@
 
 #include "G4UserRunAction.hh"
 #include "globals.hh"
+#include "G4GenericMessenger.hh"
 
 class G4Run;
 class G4Timer;
@@ -22,8 +23,12 @@ public:
   virtual void EndOfRunAction(const G4Run*);
 
 private:
-  QTOutputManager* fOutput = nullptr; // outsource output file storage
-  G4Timer*         fTimer  = nullptr;
+  void DefineCommand();
+
+  QTOutputManager*    fOutput = nullptr; // outsource output file storage
+  G4Timer*            fTimer  = nullptr;
+  G4GenericMessenger* fMessenger = nullptr;
+  G4double            fMaxStep; // for transport
 
 };
 

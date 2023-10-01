@@ -40,7 +40,6 @@ private:
   G4UserLimits*       fUserLimit = nullptr; // max time and max step limit
   G4GenericMessenger* fMessenger = nullptr;
   G4double            fMaxTime;
-  G4double            fMaxStep;
 
   const G4GDMLParser& fparser;
   G4Cache<QTGasSD*>   fSD = nullptr;

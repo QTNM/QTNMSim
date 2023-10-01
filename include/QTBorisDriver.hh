@@ -48,7 +48,7 @@ class QTBorisDriver : public G4VIntegrationDriver,
 
     QTBorisDriver( G4double hminimum,
                    QTBorisScheme* Boris,
-                   G4int numberOfComponents = 6,
+                   G4int numberOfComponents = 8,
                    G4bool verbosity = false);
    
     inline ~QTBorisDriver() override = default;

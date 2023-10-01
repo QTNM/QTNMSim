@@ -37,7 +37,6 @@
 #include "QTMagneticFieldSetup.hh"
 #include "QTFieldMessenger.hh"
 
-#include "G4UniformMagField.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
 #include "G4ChordFinder.hh"
@@ -45,6 +44,7 @@
 #include "QTEquationOfMotion.hh"
 #include "QTBorisScheme.hh"
 #include "QTBorisDriver.hh"
+#include "QTLarmorUniField.hh"
 #include "QTMagneticTrap.hh"
 #include "QTComsolField.hh"
 
@@ -77,7 +77,7 @@ QTMagneticFieldSetup::QTMagneticFieldSetup()
   G4ThreeVector fieldVector( 0.0, 0.0, 1.0 * CLHEP::tesla);
   fFieldVector = fieldVector; // initialize
 
-  fEMfield = new G4UniformMagField(fieldVector); // set default
+  fEMfield = new QTLarmorUniField(fieldVector); // set default
   fEquation = new QTEquationOfMotion(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
@@ -108,7 +108,7 @@ QTMagneticFieldSetup::QTMagneticFieldSetup(G4ThreeVector fieldVector)
   fTrapZPos    = 20.0*mm; // +- 2cm
   fFileName    = "";
   fFieldVector = fieldVector;
-  fEMfield = new G4UniformMagField(fieldVector); // default
+  fEMfield = new QTLarmorUniField(fieldVector); // default
 
   fEquation = new QTEquationOfMotion(fEMfield);
 
@@ -160,14 +160,17 @@ void QTMagneticFieldSetup::SetUpBorisDriver()
 
   //  G4cout  << "  4. Updating Field Manager (with ChordFinder, field)."  << G4endl;
   fFieldManager->SetChordFinder( fChordFinder );
-  // field switches are unique
-  if (fTest)
-    fFieldManager->SetDetectorField(fEMfield );
-  else if (fBathTub)
-    fFieldManager->SetDetectorField(fTrapfield );
-  else
-    fFieldManager->SetDetectorField(fCMfield );
 
+  // field switches are unique
+  if (fTest) {
+    fFieldManager->SetDetectorField(fEMfield );
+  }
+  else if (fBathTub) {
+    fFieldManager->SetDetectorField(fTrapfield );
+  }
+  else {
+    fFieldManager->SetDetectorField(fCMfield );
+  }
 }
 
 
@@ -256,7 +259,7 @@ void QTMagneticFieldSetup::UpdateBField()
   if (fTest) {
     if (fFieldVector != G4ThreeVector(0.,0.,0.)) // set zero on purpose
       {
-	fEMfield = new G4UniformMagField(fFieldVector);
+	fEMfield = new QTLarmorUniField(fFieldVector);
       }
     else
       {

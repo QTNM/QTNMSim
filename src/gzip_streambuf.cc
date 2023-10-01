@@ -7,6 +7,7 @@
 #include <cassert>
 #include <cstring>
 #include <unistd.h>
+#include "sys/wait.h"
 
 void fd_streambuf::init()
 {
@@ -68,7 +69,7 @@ process_streambuf::process_streambuf(std::string const &program_name, std::vecto
 	assert(0 == pipestatus);
 	int const parent_read_fd = readpipe[0];
 	int const child_write_fd = readpipe[1];
-	int childpid = fork();
+	const int childpid = fork();
 	if (childpid == 0)  /* in the child */
 		{
 			close(parent_read_fd);
@@ -101,8 +102,8 @@ process_streambuf::process_streambuf(std::string const &program_name, std::vecto
 		{
 			close(child_write_fd);
 			int status;
-			//			wait(childpid, &status, 0);
-			wait();
+			waitpid(childpid, &status, 0);
+			//std::atomic_wait(&childpid, &status);
 			if(status)
 				fprintf(stderr, "Child process failed to create a %s process\n", program_name.c_str());
 			// fd is ready now

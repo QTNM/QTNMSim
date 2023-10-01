@@ -3,7 +3,7 @@
 
 #include "G4Types.hh"
 #include "G4ThreeVector.hh"
-#include "G4MagneticField.hh"
+#include "QTLarmorEMField.hh"
 
 #ifdef HAVE_BOOST
 #include <boost/math/special_functions/ellint_1.hpp>
@@ -12,7 +12,7 @@
 #define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
 #endif
 
-class QTMagneticTrap : public G4MagneticField
+class QTMagneticTrap : public QTLarmorEMField
 {
 public:  // with description
   
@@ -21,7 +21,7 @@ public:  // with description
   ~QTMagneticTrap() override;
 
   void GetFieldValue(const G4double yTrack[4],
-		     G4double *MagField) const override;
+		     G4double *Field) const override;
 
   void SetFieldValue(const G4ThreeVector& newFieldValue);
 
@@ -33,7 +33,7 @@ public:  // with description
 
 private:
 
-  G4double fFieldComponents[3] ;
+  G4double fFieldComponents[6] ;
   G4double radius_;
   G4double current_;
   G4double zpos_;
