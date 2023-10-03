@@ -1,17 +1,19 @@
 # minimal test macro
 # verbose
 /run/verbose 0
-/tracking/verbose 2
+/tracking/verbose 1
 
 # apply limit to transport before run init
 /QT/transport/maxtime 0.5 ns
-/QT/transport/maxstep 0.5 mm
 
 # store trajectories in Signal ntuple
 /tracking/storeTrajectory 1
 
 # run init
 /run/initialize
+
+# max step after init
+/QT/run/maxstep 0.3 mm
 
 # set field Z value
 /field/comsolFileName test.csv.gz
