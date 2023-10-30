@@ -29,7 +29,7 @@ tests of functionality.
 The branch version 'noAntennaInfo' is kept separate as special purpose implementation. In this version, 
 all calculations of antenna responses have been removed. Consequently, the output information has been greatly
 increased. Significantly larger output files for containing trajectory information must be expected. The benefit
-of this version is that any antenna response calculation can proceed independent of the Monte-Carlo run. The output file
+of this version is that any antenna response calculation can proceed independently of the Monte-Carlo run. The output file
 for this version then contains as trajectory information the full position 3-vector in SI units, the velocity vector
 as dimensionless relativistic beta vector and the acceleration 3-vector in SI units. These three vectors fully characterise
 the source trajectory information for EM-radiation field calculations. The time points array in nanoseconds and the

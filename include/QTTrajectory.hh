@@ -24,10 +24,8 @@
 
 class QTTrajectory : public G4VTrajectory
 {
-  using VTcontainer = std::vector<std::pair<double,double>>;
-
 public:
-  QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang);
+  QTTrajectory(const G4Track* aTrack);
   ~QTTrajectory() override;
 
   virtual void ShowTrajectory(std::ostream& os = G4cout) const;
@@ -42,9 +40,17 @@ public:
   inline int   operator==(const QTTrajectory& right) const { return (this == &right); }
 
   // access
-  VTcontainer&           getVT() {return fVT;};
-  std::vector<G4int>&    getAntennaID() {return fAntennaID;};
   std::vector<G4double>& getKE() {return fKE;};
+  std::vector<G4double>& getTime()  {return ft;};
+  std::vector<G4double>& getXpos()  {return xp;};
+  std::vector<G4double>& getYpos()  {return yp;};
+  std::vector<G4double>& getZpos()  {return zp;};
+  std::vector<G4double>& getBetaX() {return betax;};
+  std::vector<G4double>& getBetaY() {return betay;};
+  std::vector<G4double>& getBetaZ() {return betaz;};
+  std::vector<G4double>& getAccX()  {return accx;};
+  std::vector<G4double>& getAccY()  {return accy;};
+  std::vector<G4double>& getAccZ()  {return accz;};
 
   inline G4int GetTrackID() const
     { return fTrackID; }
@@ -64,17 +70,24 @@ public:
     { return initialMomentum; }
 
 private:
-  std::pair<double,double> convertToVT(unsigned int which);
+  G4ThreeVector          getAcceleration();
   G4double               gltime;  // global time
-  G4double               fAntennaRad; // antenna radial distance from origin
   G4ThreeVector          pos;     // trajectory position
   G4ThreeVector          beta;    // trajectory velocity
   G4ThreeVector          acc;     // trajectory acceleration
 
-  std::vector<G4double>  fAngles;    // from geometry
-  std::vector<G4int>     fAntennaID; // antenna ID parallel to VTcontainer entries
-  std::vector<G4double>  fKE;        // KE parallel to VTcontainer entries
-  VTcontainer            fVT;        // container, Cyclotron radiation pairs, time, voltage
+  std::vector<G4double>  fKE;        // KE 
+  std::vector<G4double>  ft;         // time 
+  std::vector<G4double>  xp;         // pos.x
+  std::vector<G4double>  yp;         // pos.y
+  std::vector<G4double>  zp;         // pos.z
+  std::vector<G4double>  betax;      // beta.x
+  std::vector<G4double>  betay;      // beta.y
+  std::vector<G4double>  betaz;      // beta.z
+  std::vector<G4double>  accx;       // acc.x
+  std::vector<G4double>  accy;       // acc.y
+  std::vector<G4double>  accz;       // acc.z
+
 
   G4FieldManager*        pfieldManager; // singleton for info
   QTEquationOfMotion*    pEqn;          // info on particle
@@ -87,10 +100,6 @@ private:
   G4double                    initialEnergy = 0.0;
   G4ThreeVector               initialMomentum;
   G4ThreeVector               initialPos;
-
-  // explicit SI units here transparent
-  static constexpr G4double c_SI    = c_light/(m/s);
-  static constexpr G4double eps0_SI = epsilon0 / farad * m;
 
 };
 

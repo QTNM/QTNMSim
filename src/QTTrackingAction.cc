@@ -4,9 +4,8 @@
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
 
-QTTrackingAction::QTTrackingAction(std::vector<G4double> ang)
+QTTrackingAction::QTTrackingAction()
   : G4UserTrackingAction()
-  , angles(ang)
 {}
 
 
@@ -19,7 +18,7 @@ void QTTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   // fpTrackingManager->SetStoreTrajectory(true);
   if(fpTrackingManager->GetStoreTrajectory() > 0)
   {
-    fpTrackingManager->SetTrajectory(new QTTrajectory(aTrack, angles));
+    fpTrackingManager->SetTrajectory(new QTTrajectory(aTrack));
   }
 }
 

@@ -1,7 +1,6 @@
 #include "QTTrajectory.hh"
 
 #include "G4LogicalVolumeStore.hh"
-#include "G4Tubs.hh"
 #include "G4TwoVector.hh"
 #include "G4TrajectoryPoint.hh"
 #include "G4ChordFinder.hh"
@@ -18,9 +17,8 @@ G4Allocator<QTTrajectory>*& myTrajectoryAllocator()
 }
 
 
-QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
+QTTrajectory::QTTrajectory(const G4Track* aTrack)
 : G4VTrajectory()
-, fAngles(ang)
 , initialPos(aTrack->GetPosition()) // set all constant starter values
 , initialEnergy(aTrack->GetKineticEnergy())
 , gltime(aTrack->GetGlobalTime())
@@ -40,17 +38,21 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
   pEqn->SetChargeMomentumMass(chargeState, aTrack->GetDynamicParticle()->GetTotalMomentum(),
 			      aTrack->GetDynamicParticle()->GetMass());
 
-  // geometry
-  G4Tubs*  Tubs = dynamic_cast<G4Tubs*>(G4LogicalVolumeStore::GetInstance()->GetVolume("AntennaLV")->GetSolid());
-  fAntennaRad   = Tubs->GetInnerRadius(); // [mm] default
-  
 }
 
 QTTrajectory::~QTTrajectory()
 {
   fKE.clear();
-  fVT.clear();
-  fAntennaID.clear();
+  ft.clear();
+  xp.clear();
+  yp.clear();
+  zp.clear();
+  betax.clear();
+  betay.clear();
+  betaz.clear();
+  accx.clear();
+  accy.clear();
+  accz.clear();
 }
 
 void QTTrajectory::AppendStep(const G4Step* aStep)
@@ -75,42 +77,26 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
 
   // only source beta=v/c enters radiation formulae
   beta = aStep->GetPostStepPoint()->GetMomentumDirection() * aStep->GetPostStepPoint()->GetBeta();
+  acc = getAcceleration();
 
-  for (unsigned int i=0;i<fAngles.size();++i) {
-    fAntennaID.push_back((G4int)i);            // which antenna
-    fVT.push_back(convertToVT(i));
-    fKE.push_back(aStep->GetPostStepPoint()->GetKineticEnergy());
-  }
+  fKE.push_back(aStep->GetPostStepPoint()->GetKineticEnergy());
+  ft.push_back(gltime);
+  xp.push_back(pos.x());
+  yp.push_back(pos.y());
+  zp.push_back(pos.z());
+  betax.push_back(beta.x());
+  betay.push_back(beta.y());
+  betaz.push_back(beta.z());
+  accx.push_back(acc.x());
+  accy.push_back(acc.y());
+  accz.push_back(acc.z());
 }
 
-std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
+G4ThreeVector QTTrajectory::getAcceleration()
 {
-  // parameter which as index to antenna array with angles
-  // make use of data members, position, velocity, acceleration
-  // return pair of time (already known in gltime), voltage
-  // return std::make_pair(gltime, voltage);
-  
-  // retrieve required info from outside, propose EqnOfMotion object.
-  // need frequency and acceleration
-  // both known at every point by EqnOfMotion - store and offer for access.
-
-  G4ThreeVector antennaPos;
-  antennaPos.setRThetaPhi(fAntennaRad, halfpi, fAngles[which]/360.0 * twopi); // [mm]
-  // G4cout << "antenna pos: " << antennaPos.x()/CLHEP::mm 
-  // 	 << ", " << antennaPos.y()/CLHEP::mm << ", " 
-  // 	 << antennaPos.z()/CLHEP::mm << G4endl;
-
-  G4ThreeVector antennaNormal = (-antennaPos).unit(); // inward direction; to origin, not used yet
-  G4TwoVector   antennaArm(antennaPos); // discard z-component
-  
-  G4ThreeVector antennaPolarisation = G4ThreeVector(antennaArm.orthogonal()).unit(); // along the dipole
-  // G4cout << "antenna polarisation: " << antennaPolarisation.x() 
-  // 	 << ", " << antennaPolarisation.y() << ", " 
-  // 	 << antennaPolarisation.z() << G4endl;
-
   // collect required values
-  // DONE - this would be better done using the actual field object
-  G4double pos_[3];
+  // note that pEqn returns values in SI units 
+  G4double pos_[3]; // interface needs array pointer
   pos_[0] = pos[0]; pos_[1] = pos[1]; pos_[2] = pos[2]; // [mm] default
   G4double B[6]; // interface needs array pointer
   pfieldManager->GetDetectorField()->GetFieldValue(pos_, B);
@@ -118,40 +104,7 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
   // G4cout << "b-field from eqn: " << Bfield.x() << ", " << Bfield.y() << ", " 
   // 	 << Bfield.z() << G4endl;
 
-  G4double omega = pEqn->CalcOmegaGivenB(Bfield, beta).mag();
-  //  G4cout << "Omega magn. = " << omega << G4endl; // needed in [Hz]
-
-  acc = pEqn->CalcAccGivenB(Bfield, beta);
-  // G4cout << "acceleration= (" << acc.x()
-  // 	 << ", " << acc.y() << ", " 
-  // 	 << acc.z() << ")" << G4endl;
-
-  G4double wvlg  = c_SI / (omega / twopi);
-  //  G4cout << "wavelength [m] = " << wvlg << G4endl;
-
-  G4double fac   = electron_charge*e_SI / (4.0*pi*eps0_SI*c_SI);
-  G4double dist  = (antennaPos - pos).mag() / m; // [m] SI explicit
-  //  G4cout << "antenna - charge distance [m] = " << dist << G4endl;
-
-  G4ThreeVector Runit = (antennaPos - pos).unit();
-  G4double dummy = 1.0 - Runit.dot(beta);
-  // modify prefactor
-  fac /= dummy*dummy*dummy;
-
-  G4ThreeVector relFarEField = fac*(Runit.cross((Runit-beta).cross(acc/c_SI))) / dist;
-  // G4cout << "E-field far= (" << relFarEField.x() 
-  // 	 << ", " << relFarEField.y() << ", " 
-  // 	 << relFarEField.z() << ")" << G4endl;
-
-  G4ThreeVector relNearEField = fac*c_SI*((1.0-beta.mag2())*(Runit-beta)) / (dist*dist);
-  // G4cout << "E-field near= (" << relNearEField.x() 
-  // 	 << ", " << relNearEField.y() << ", " 
-  // 	 << relNearEField.z() << ")" << G4endl;
-
-  // assume half wave dipole eff length as wvlg/pi
-  G4double voltage = wvlg/pi * (relFarEField+relNearEField).dot(antennaPolarisation);
-  
-  return std::make_pair(gltime, voltage);
+  return pEqn->CalcAccGivenB(Bfield, beta);
 }
 
 void QTTrajectory::ShowTrajectory(std::ostream& os) const

@@ -6,10 +6,9 @@
 #include "QTOutputManager.hh"
 
 
-QTActionInitialization::QTActionInitialization(G4String name, std::vector<G4double> ang)
+QTActionInitialization::QTActionInitialization(G4String name)
 : G4VUserActionInitialization()
 , foutname(std::move(name))
-, angles(std::move(ang))
 {}
 
 QTActionInitialization::~QTActionInitialization() = default;
@@ -24,10 +23,10 @@ void QTActionInitialization::Build() const
 {
   // forward detector
   SetUserAction(new QTPrimaryGeneratorAction());
-  SetUserAction(new QTTrackingAction(angles));
+  SetUserAction(new QTTrackingAction());
 
   auto output = new QTOutputManager(foutname);
-  auto event = new QTEventAction((G4int)angles.size(), output);
+  auto event = new QTEventAction(output);
   SetUserAction(event);
 
   SetUserAction(new QTRunAction(output));

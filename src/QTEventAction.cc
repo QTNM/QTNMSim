@@ -14,10 +14,9 @@
 #include "G4AnalysisManager.hh"
 
 
-QTEventAction::QTEventAction(G4int na, QTOutputManager* out)
+QTEventAction::QTEventAction(QTOutputManager* out)
   : G4UserEventAction()
   , fOutput(out)
-  , nAntenna(na)
 {
 }
 
@@ -124,11 +123,18 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     for(auto* entry : *(trajectoryContainer->GetVector())) {  // vector<G4VTrajectory*>*
       QTTrajectory* trj = dynamic_cast<QTTrajectory*>(entry);
       G4int counter = 0;
-      for (auto values : trj->getVT()) {  // std::pair<double,double>
-	fOutput->FillAntennaVec((trj->getAntennaID()).at(counter));
-	fOutput->FillKEVec((trj->getKE()).at(counter)); // same size as
-	fOutput->FillTimeVec(values.first);             // VT container
-	fOutput->FillVoltageVec(values.second);
+      for (auto value : trj->getKE()) {
+	fOutput->FillKEVec(value);
+	fOutput->FillTimeVec((trj->getTime()).at(counter));
+	fOutput->FillXVec((trj->getXpos()).at(counter));
+	fOutput->FillYVec((trj->getYpos()).at(counter));
+	fOutput->FillZVec((trj->getZpos()).at(counter));
+	fOutput->FillBetaXVec((trj->getBetaX()).at(counter));
+	fOutput->FillBetaYVec((trj->getBetaY()).at(counter));
+	fOutput->FillBetaZVec((trj->getBetaZ()).at(counter));
+	fOutput->FillAccXVec((trj->getAccX()).at(counter));
+	fOutput->FillAccYVec((trj->getAccY()).at(counter));
+	fOutput->FillAccZVec((trj->getAccZ()).at(counter));
 	counter++;
       }
         

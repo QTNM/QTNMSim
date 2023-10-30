@@ -82,25 +82,27 @@ int main(int argc, char** argv)
   parser.SetOverlapCheck(true);
   parser.Read(gdmlFileName); // const G4String&
 
+  // IGNORE for noAntennaInfo branch
+  //
   // retrieve antenna information
-  std::vector<double> angles;
-  const G4GDMLAuxMapType* auxmap = parser.GetAuxMap();
-  for(G4GDMLAuxMapType::const_iterator iter=auxmap->begin();
-      iter!=auxmap->end(); iter++)
-    {
-      G4LogicalVolume* lv = (*iter).first;
-      G4String nam = lv->GetName();
-      // in name of logical volume, even for CAD input, assume 'Antenna'
-      // since that should receive a list of auxiliaries.
-      if (G4StrUtil::contains(nam, "Antenna")) {
-	for (auto entry : (*iter).second) { // G4GDMLAuxStructType in std::vector
-	  if (entry.type=="angle") { // assume radians
-	    std::string theta = entry.value;
-	    angles.push_back(std::stod(theta)); // convert string to double
-	  }
-	}
-      }
-    }
+  // std::vector<double> angles;
+  // const G4GDMLAuxMapType* auxmap = parser.GetAuxMap();
+  // for(G4GDMLAuxMapType::const_iterator iter=auxmap->begin();
+  //     iter!=auxmap->end(); iter++)
+  //   {
+  //     G4LogicalVolume* lv = (*iter).first;
+  //     G4String nam = lv->GetName();
+  //     // in name of logical volume, even for CAD input, assume 'Antenna'
+  //     // since that should receive a list of auxiliaries.
+  //     if (G4StrUtil::contains(nam, "Antenna")) {
+  // 	for (auto entry : (*iter).second) { // G4GDMLAuxStructType in std::vector
+  // 	  if (entry.type=="angle") { // assume radians
+  // 	    std::string theta = entry.value;
+  // 	    angles.push_back(std::stod(theta)); // convert string to double
+  // 	  }
+  // 	}
+  //     }
+  //   }
 
   // -- Set mandatory initialization classes
   runManager->SetUserInitialization(new QTDetectorConstruction(parser));
@@ -122,7 +124,8 @@ int main(int argc, char** argv)
 
 
   // -- Set user action initialization class.
-  auto* actions = new QTActionInitialization(outputFileName, angles);
+  //  auto* actions = new QTActionInitialization(outputFileName, angles);
+  auto* actions = new QTActionInitialization(outputFileName);
   runManager->SetUserInitialization(actions);
 
 
