@@ -124,11 +124,11 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       QTTrajectory* trj = dynamic_cast<QTTrajectory*>(entry);
       G4int counter = 0;
       for (auto value : trj->getKE()) {
-	fOutput->FillKEVec(value);
+	fOutput->FillKEVec(value / G4Analysis::GetUnitValue("keV"));
 	fOutput->FillTimeVec((trj->getTime()).at(counter));
-	fOutput->FillXVec((trj->getXpos()).at(counter));
-	fOutput->FillYVec((trj->getYpos()).at(counter));
-	fOutput->FillZVec((trj->getZpos()).at(counter));
+	fOutput->FillXVec((trj->getXpos()).at(counter) / G4Analysis::GetUnitValue("m"));
+	fOutput->FillYVec((trj->getYpos()).at(counter) / G4Analysis::GetUnitValue("m"));
+	fOutput->FillZVec((trj->getZpos()).at(counter) / G4Analysis::GetUnitValue("m"));
 	fOutput->FillBetaXVec((trj->getBetaX()).at(counter));
 	fOutput->FillBetaYVec((trj->getBetaY()).at(counter));
 	fOutput->FillBetaZVec((trj->getBetaZ()).at(counter));

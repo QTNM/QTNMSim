@@ -33,7 +33,7 @@ of this version is that any antenna response calculation can proceed independent
 for this version then contains as trajectory information the full position 3-vector in SI units, the velocity vector
 as dimensionless relativistic beta vector and the acceleration 3-vector in SI units. These three vectors fully characterise
 the source trajectory information for EM-radiation field calculations. The time points array in nanoseconds and the
-kinetic energy array in MeV (G4 unit) remain as in QTNMSim, together with other trajectory information, see below.
+kinetic energy array in keV remain as in QTNMSim, together with other trajectory information, see below.
 
 The flexible primary particle event generator, the GPS, was implemented. Pre-defined primary particle event generators 
 remain, i.e a test generator 
