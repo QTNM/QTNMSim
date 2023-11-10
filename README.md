@@ -22,6 +22,17 @@ and run in the build directory.
 
 ### Status update
 
+Version v0.4-beta: repaired hit scoring bug. The standard filtering for deposited energy misses a large number of
+Coulomb scatter hits. Two new hit filters were imlemented in QTGasSD: first on process name, score all
+non-transportation process steps; second, require a change of momentum pitch angle (theta to z-axis) of more than
+1.e-3 radians or 0.057 degrees. Likewise, the unnecessary scoring from the maximum time limit process, i.e. at the
+final step without any scattering process involved, has been removed.
+
+Observation was that no hits were produced even in artificially increased Tritum gas densities. Inspection of tracking
+log output shows that scattering does occur as expected but the predominant scattering outcome at relevant energies
+is dominated by momentum changes rather than deposited energy. The momentum vector changes direction post-step and
+that leads quite often to electrons leaving the trap hence is significant and should be stored as a hit.
+
 The tagged version v0.3-beta is feature complete and tested. It remains a pre-release version since important
 input data like a realistic geometry and corresponding field map are missing. Examples provided only permit
 tests of functionality.
