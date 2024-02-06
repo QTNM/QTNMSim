@@ -44,11 +44,6 @@ G4bool QTGasSD::ProcessHits(G4Step* aStep,
   G4ThreeVector postmom = aStep->GetPostStepPoint()->GetMomentumDirection();
   if (fabs(premom.theta()-postmom.theta()) < 1.0e-3) return false;
   
-  G4double postkine = aStep->GetPostStepPoint()->GetKineticEnergy();
-  if (postkine/CLHEP::eV < 1.0) {
-    G4cout << ">>>SD >>> no post step kinetic energy left, not stored" << G4endl;
-    return false; // stopped electron by max time cut, not interested
-  }
   QTGasHit* newHit = new QTGasHit();
   G4ThreeVector preloc = aStep->GetPreStepPoint()->GetPosition();
 
