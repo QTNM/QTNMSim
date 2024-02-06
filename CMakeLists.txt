@@ -12,7 +12,7 @@ set(CMAKE_BUILD_TYPE Release)
 # include(CTest)
 
 # Dependencies
-find_package(Geant4 11.1 REQUIRED gdml)
+find_package(Geant4 11.2 REQUIRED gdml)
 
 # Look for Boost
 #TODO This should be a required package if using clang
