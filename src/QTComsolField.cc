@@ -53,31 +53,38 @@ QTComsolField::readGzipCSV()
   
   while(is.getline(buff, BUFFSIZE)) {
     value = strtok(buff, ", "); // can be , or space here
-
     // header ignore, COMSOL specific
     if (value=="%") {
       //      std::cout << "header line " << std::endl;
       continue;
     }
     else {
-      // convert to double, structure from COMSOL csv line
-      // coordinates
-      x = std::stod(value);
-      value = strtok(NULL, ","); // next
-      y = std::stod(value);
-      value = strtok(NULL, ","); // next
-      z = std::stod(value);
-      coords.push_back(point3d({x,y,z}));
-      //      cdummy.push_back(G4ThreeVector(x*m,y*m,z*m));
-      // B-field values
-      value = strtok(NULL, ","); // next
-      bx= std::stod(value);
-      value = strtok(NULL, ","); // next
-      by = std::stod(value);
-      value = strtok(NULL, ","); // next
-      bz = std::stod(value);
-      // set to Tesla for G4 internal units
-      fBfieldMap.push_back(G4ThreeVector(bx*tesla,by*tesla,bz*tesla));
+      try {
+	// convert to double, structure from COMSOL csv line
+	// coordinates
+	x = std::stod(value);
+	value = strtok(NULL, ","); // next
+	y = std::stod(value);
+	value = strtok(NULL, ","); // next
+	z = std::stod(value);
+	coords.push_back(point3d({x,y,z}));
+	//      cdummy.push_back(G4ThreeVector(x*m,y*m,z*m));
+	// B-field values
+	value = strtok(NULL, ","); // next
+	bx= std::stod(value);
+	value = strtok(NULL, ","); // next
+	by = std::stod(value);
+	value = strtok(NULL, ","); // next
+	bz = std::stod(value);
+	// set to Tesla for G4 internal units
+	fBfieldMap.push_back(G4ThreeVector(bx*tesla,by*tesla,bz*tesla));
+      }
+
+      catch (...) {
+	G4String error_msg = "Unable to parse document: " + fname;
+	G4Exception("QTComsolField::readGzipCSV()", "InvalidFile", FatalException, error_msg);
+	return;
+      }
     }
   }
   delete [] buff;
