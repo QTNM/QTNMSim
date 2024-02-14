@@ -25,8 +25,8 @@ class QTGasHit : public G4VHit
     inline void  operator delete(void*);
 
     // methods from base class
-    virtual void Draw();
-    virtual void Print();
+    virtual void Draw() override;
+    virtual void Print() override;
 
     // Set methods
     void SetTrackID     (G4int id)     { fTrackID = id; };

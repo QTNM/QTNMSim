@@ -19,8 +19,8 @@ public:
   QTRunAction(QTOutputManager*);
   ~QTRunAction() override;
 
-  virtual void BeginOfRunAction(const G4Run*);
-  virtual void EndOfRunAction(const G4Run*);
+  virtual void BeginOfRunAction(const G4Run*) override;
+  virtual void EndOfRunAction(const G4Run*) override;
 
 private:
   void DefineCommand();

@@ -11,8 +11,8 @@ public:
   QTTrackingAction(std::vector<G4double> ang);
   ~QTTrackingAction() override;
 
-  virtual void PreUserTrackingAction(const G4Track*);
-  virtual void PostUserTrackingAction(const G4Track*);
+  virtual void PreUserTrackingAction(const G4Track*) override;
+  virtual void PostUserTrackingAction(const G4Track*) override;
 
 private:
   std::vector<G4double> angles;
