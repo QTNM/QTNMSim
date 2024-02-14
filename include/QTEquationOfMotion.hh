@@ -18,7 +18,7 @@ public:
 
   void SetChargeMomentumMass(G4ChargeState particleCharge,
 			     G4double MomentumXc,
-			     G4double mass);
+			     G4double mass) override;
 
   G4ThreeVector CalcRadiationAcceleration(G4ThreeVector, G4ThreeVector);
   G4ThreeVector CalcOmegaGivenB(G4ThreeVector, G4ThreeVector);

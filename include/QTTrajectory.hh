@@ -28,12 +28,12 @@ public:
   QTTrajectory(const G4Track* aTrack);
   ~QTTrajectory() override;
 
-  virtual void ShowTrajectory(std::ostream& os = G4cout) const;
-  virtual void DrawTrajectory() const;
-  virtual G4VTrajectoryPoint* GetPoint(G4int) const;
-  virtual G4int GetPointEntries() const;
-  virtual void AppendStep(const G4Step* aStep);
-  virtual void MergeTrajectory(G4VTrajectory* secondTrajectory);
+  virtual void ShowTrajectory(std::ostream& os = G4cout) const override;
+  virtual void DrawTrajectory() const override;
+  virtual G4VTrajectoryPoint* GetPoint(G4int) const override;
+  virtual G4int GetPointEntries() const override;
+  virtual void AppendStep(const G4Step* aStep) override;
+  virtual void MergeTrajectory(G4VTrajectory* secondTrajectory) override;
 
   inline void* operator new(size_t);
   inline void  operator delete(void*);
@@ -52,21 +52,21 @@ public:
   std::vector<G4double>& getAccY()  {return accy;};
   std::vector<G4double>& getAccZ()  {return accz;};
 
-  inline G4int GetTrackID() const
+  inline G4int GetTrackID() const override
     { return fTrackID; }
-  inline G4int GetParentID() const
+  inline G4int GetParentID() const override
     { return fParentID; }
-  inline G4String GetParticleName() const
+  inline G4String GetParticleName() const override
     { return ParticleName; }
-  inline G4double GetCharge() const
+  inline G4double GetCharge() const override
     { return PDGCharge; }
-  inline G4int GetPDGEncoding() const
+  inline G4int GetPDGEncoding() const override
     { return PDGEncoding; }
   inline G4double GetInitialEnergy() const
     { return initialEnergy; }
   inline G4ThreeVector GetInitialPosition() const
     { return initialPos; }
-  inline G4ThreeVector GetInitialMomentum() const
+  inline G4ThreeVector GetInitialMomentum() const override
     { return initialMomentum; }
 
 private:

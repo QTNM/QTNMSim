@@ -22,9 +22,9 @@ class QTGasSD : public G4VSensitiveDetector
     ~QTGasSD() override;
   
     // methods from base class
-    virtual void   Initialize(G4HCofThisEvent* hitCollection);
-    virtual G4bool ProcessHits(G4Step* step, G4TouchableHistory* history);
-    virtual void   EndOfEvent(G4HCofThisEvent* hitCollection);
+    virtual void   Initialize(G4HCofThisEvent* hitCollection) override;
+    virtual G4bool ProcessHits(G4Step* step, G4TouchableHistory* history) override;
+    virtual void   EndOfEvent(G4HCofThisEvent* hitCollection) override;
 
   private:
     QTGasHitsCollection* fHitsCollection;
