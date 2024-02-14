@@ -14,8 +14,8 @@ public:
   QTActionInitialization(G4String, std::vector<G4double>);
   ~QTActionInitialization() override;
 
-  virtual void BuildForMaster() const;
-  virtual void Build() const;
+  virtual void BuildForMaster() const override;
+  virtual void Build() const override;
 
 private:
   std::vector<G4double> angles;

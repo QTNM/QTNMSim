@@ -26,7 +26,7 @@ public:
   QTPrimaryGeneratorAction();
   ~QTPrimaryGeneratorAction() override;
 
-  virtual void GeneratePrimaries(G4Event*);
+  virtual void GeneratePrimaries(G4Event*) override;
 
 private:
 

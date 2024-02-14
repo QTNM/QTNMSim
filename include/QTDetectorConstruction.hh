@@ -26,9 +26,9 @@ public:
   QTDetectorConstruction(const G4GDMLParser&);
   ~QTDetectorConstruction() override;
   
-  virtual G4VPhysicalVolume* Construct();
+  virtual G4VPhysicalVolume* Construct() override;
 
-  virtual void               ConstructSDandField();
+  virtual void               ConstructSDandField() override;
   
   // access for questions
   const G4GDMLParser&        GetParserRef() {return fparser;}

@@ -52,7 +52,7 @@ class QTFieldMessenger: public G4UImessenger
     QTFieldMessenger(QTMagneticFieldSetup* );
     ~QTFieldMessenger() override;
 
-    virtual void SetNewValue(G4UIcommand*, G4String);
+    virtual void SetNewValue(G4UIcommand*, G4String) override;
  
   private:
 
