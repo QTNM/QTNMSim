@@ -14,7 +14,7 @@ Anyone using CentOS7 can source the following environment:
 
 source /cvmfs/sft.cern.ch/lcg/views/LCG_105/x86_64-centos7-gcc12-opt/setup.sh
 
-which sets up Geant4 11.2 and GCC13(12) on a CentOS9(7) background. ROOT 6.30 and cmake 3.23 will also be available. Just create a 'build' directory, then 
+which sets up Geant4 11.2 and GCC13(12) on a CentOS9(7) background. ROOT 6.30 and cmake 3.26 will also be available. Just create a 'build' directory, then 
 
 cd build; cmake ..; make
 
