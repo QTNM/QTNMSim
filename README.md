@@ -8,13 +8,13 @@ Collect requirements in issue tracker and start populating code base.
 
 At Warwick, SCRTP, use cvmfs as the easiest environment setup (with bash):
 
-source /cvmfs/sft.cern.ch/lcg/views/LCG_104/x86_64-el9-gcc13-opt/setup.sh
+source /cvmfs/sft.cern.ch/lcg/views/LCG_105/x86_64-el9-gcc13-opt/setup.sh
 
 Anyone using CentOS7 can source the following environment:
 
-source /cvmfs/sft.cern.ch/lcg/views/LCG_103/x86_64-centos7-gcc11-opt/setup.sh
+source /cvmfs/sft.cern.ch/lcg/views/LCG_105/x86_64-centos7-gcc12-opt/setup.sh
 
-which sets up Geant4 11.1 and GCC13(11) on a CentOS9(7) background. ROOT 6.28 and cmake 3.23 will also be available. Just create a 'build' directory, then 
+which sets up Geant4 11.2 and GCC13(12) on a CentOS9(7) background. ROOT 6.30 and cmake 3.23 will also be available. Just create a 'build' directory, then 
 
 cd build; cmake ..; make
 
