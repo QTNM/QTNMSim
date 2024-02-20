@@ -40,8 +40,8 @@ G4bool QTGasSD::ProcessHits(G4Step* aStep,
   if (vprocess->GetProcessName()=="Transportation") return false;
 
   // pitch angle change condition < 0.057 degrees
-  // G4ThreeVector premom  = aStep->GetPreStepPoint()->GetMomentumDirection();
-  // G4ThreeVector postmom = aStep->GetPostStepPoint()->GetMomentumDirection();
+  G4ThreeVector premom  = aStep->GetPreStepPoint()->GetMomentumDirection();
+  G4ThreeVector postmom = aStep->GetPostStepPoint()->GetMomentumDirection();
   // if (fabs(premom.theta()-postmom.theta()) < 1.0e-3) return false;
   
   QTGasHit* newHit = new QTGasHit();
