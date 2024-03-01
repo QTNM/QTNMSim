@@ -29,6 +29,7 @@ private:
   // hit data
   QTOutputManager*      fOutput  = nullptr;
   G4int                 fGID     = -1;
+  G4int                 fVID     = -1;
   G4int                 nAntenna = -1;
 
 };

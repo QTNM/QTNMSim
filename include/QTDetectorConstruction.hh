@@ -42,7 +42,7 @@ private:
   G4double            fMaxTime;
 
   const G4GDMLParser& fparser;
-  G4Cache<QTGasSD*>   fSD = nullptr;
+  G4VectorCache<QTGasSD*>         fSD;
   G4Cache<QTMagneticFieldSetup*>  fEmFieldSetup = nullptr;
 
 };
