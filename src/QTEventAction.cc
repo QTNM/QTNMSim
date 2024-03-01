@@ -76,6 +76,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   // fill Hits output from SD
   G4int GnofHits = GasHC->entries();
   G4cout << "EVENT>>> number of hits: " << GnofHits << G4endl;
+
   // Gas detector
   for ( G4int i=0; i<GnofHits; i++ ) 
   {
@@ -104,9 +105,32 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
     posz.push_back(lz);
   }
 
+  // Vac stopped e- detector
+  for ( G4int i=0; i<VacHC->entries(); i++ ) 
+  {
+    auto hh = dynamic_cast<QTGasHit*>(VacHC->GetHit(i));
+
+    int    id = (hh->GetTrackID());
+    double tt = (hh->GetTime()) / G4Analysis::GetUnitValue("ns");
+    double lx = (hh->GetPosx()); // interaction location
+    double ly = (hh->GetPosy());
+    double lz = (hh->GetPosz());
+
+    tid.push_back(id);
+    tedep.push_back(0.0);
+    ttime.push_back(tt); // stop time
+    tkine1.push_back(0.0);
+    tkine2.push_back(0.0);
+    px.push_back(0.0);
+    py.push_back(0.0);
+    posx.push_back(lx); // stop location
+    posy.push_back(ly);
+    posz.push_back(lz);
+  }
+
   // fill the ntuple - check column id?
   G4int eventID = event->GetEventID();
-  for (unsigned int i=0;i<tedep.size();i++)
+  for (unsigned int i=0;i<tid.size();i++)
   {
     fOutput->FillNtupleI(0, 0, eventID); // repeat all rows
     fOutput->FillNtupleI(0, 1, tid.at(i));
