@@ -48,7 +48,8 @@ void QTDetectorConstruction::ConstructSDandField()
   G4SDManager::GetSDMpointer()->SetVerboseLevel(1);
   
   // Only need to construct the (per-thread) SD once
-  if(!fSD.Get()) {
+  if(!fSD.Size()) {
+    G4String collname;
     const G4GDMLAuxMapType* auxmap = fparser.GetAuxMap();
     for(G4GDMLAuxMapType::const_iterator iter=auxmap->begin();
 	iter!=auxmap->end(); iter++) 
@@ -56,20 +57,23 @@ void QTDetectorConstruction::ConstructSDandField()
 	G4LogicalVolume* lv = (*iter).first;
 	// sensitive volume should be defined separately to
 	// CAD input volume since for Gas Hits it is the atom cloud.
-	if (lv->GetName() == "Gas_log") {
+        // make two sensitive detectors, cloud and vac.
+	if (lv->GetName() == "Gas_log")
+          collname = "Gas";
+	else if (lv->GetName() == "worldLV")
+	  collname = "Vac";
 	  // must be only one(!) auxiliary, otherwise need G4VectorCache
-	  auto entry = (*iter).second.front(); // G4GDMLAuxStructType in std::vector
-	  if (entry.type=="SensDet") {
-	    G4String SDname = entry.value;;
-	    QTGasSD* aGasSD = new QTGasSD(SDname,
-					  "GasHitsCollection");
-	    fSD.Put(aGasSD); // fSD is a single entry cache
+	auto entry = (*iter).second.front(); // G4GDMLAuxListType is std::vector
+	if (entry.type=="SensDet") {
+	  G4String SDname = entry.value; // sensdet by name
+	  QTGasSD* aGasSD = new QTGasSD(SDname,
+				  collname+"HitsCollection");
+	  fSD.Push_back(aGasSD); // fSD is now a vector entry cache
 	    
-	    // Also only add it once to the SD manager!
-	    G4SDManager::GetSDMpointer()->AddNewDetector(fSD.Get());
+	  // Also only add it once to the SD manager!
+	  G4SDManager::GetSDMpointer()->AddNewDetector(aGasSD);
 	    
-	    lv->SetSensitiveDetector(fSD.Get());
-	  }
+	  lv->SetSensitiveDetector(aGasSD);
 	}
       }
   }
