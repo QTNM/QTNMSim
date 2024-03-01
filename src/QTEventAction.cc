@@ -59,6 +59,15 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   //
   auto GasHC     = GetGasHitsCollection(fGID, event);
 
+  // Get VAC hits collections IDs
+  if(fVID < 0) 
+    fVID = G4SDManager::GetSDMpointer()->GetCollectionID("VacHitsCollection");
+
+  // Get entries from hits collections
+  //
+  auto VacHC     = GetGasHitsCollection(fVID, event);
+  G4cout << "EVENT>>> number of vacuum stopped hits: " << VacHC->entries() << G4endl;
+
   // dummy hit storage
   std::vector<double> tedep, ttime, tkine1, tkine2, px, py, posx, posy, posz;
   std::vector<int> tid;

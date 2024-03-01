@@ -62,6 +62,7 @@
 		<volume name="worldLV">
 			<materialref ref="G4_Galactic"/>
 			<solidref ref="ws"/>
+			<auxiliary auxtype="SensDet" auxvalue="vac"/>
 			<physvol name="pipePV">
 				<volumeref ref="pipeLV"/>
 			</physvol>
@@ -83,6 +84,7 @@
 		<auxiliary auxtype="angle" auxvalue="0.0"/>
 		<auxiliary auxtype="angle" auxvalue="90.0"/>
 		<auxiliary auxtype="SensDet" auxvalue="cloud"/>
+		<auxiliary auxtype="SensDet" auxvalue="vac"/>
 	</userinfo>
 	<setup name="Default" version="1.0">
 		<world ref="worldLV"/>
