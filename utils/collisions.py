@@ -80,10 +80,11 @@ def summary(density=5e-9, fname="qtnm.root"):
 
     sigma_cm2 = sigma * 1e4
     print('Observed cross section = %e, +/- %e cm^2' % (sigma_cm2, dsigma * 1e4))
-    plt.plot(bin_c, decay(bin_c, popt[0]), label='%.3e' % (sigma_cm2) + r'$\;\mathrm{cm}^2$')
+    plt.plot(bin_c, decay(bin_c, popt[0]), label=r'$\sigma_\mathrm{obs} = $%.3e' % (sigma_cm2) + r'$\;\mathrm{cm}^2$')
 
     plt.xlabel('x(m)')
     plt.ylabel('Intensity')
+    plt.xlim(left=0)
     plt.legend()
     plt.savefig('test.png')
 
