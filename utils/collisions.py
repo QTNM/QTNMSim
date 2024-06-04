@@ -9,7 +9,7 @@ import ROOT
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description="""Electron gun analysis tool
+        description="""QTNMSim collision frequency analysis tool
         """,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
