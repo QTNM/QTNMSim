@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+	<define/>
+	<materials>
+		<material name="H" Z="1">
+			<D value="5e-9"/>
+			<atom value="1.008"/>
+		</material>
+		<isotope name="D" Z="1" N="2">
+			<atom value="2.0141"/>
+		</isotope>
+		<element name="Deuterium" formula="D">
+			<fraction ref="D" n="1.0"/>
+		</element>
+		<material name="matD">
+			<D value="5e-9"/>
+			<fraction ref="Deuterium" n="1"/>
+		</material>
+		<isotope name="T" Z="1" N="3">
+			<atom value="3.016"/>
+		</isotope>
+		<element name="Tritium" formula="T">
+			<fraction ref="T" n="1.0"/>
+		</element>
+		<material name="matT">
+			<D value="5e-9"/>
+			<fraction ref="Tritium" n="1"/>
+		</material>
+	</materials>
+	<solids>
+		<tube name="ws" rmin="0.0" rmax="40.0" z="201.0" startphi="0" deltaphi="6.283185307179586" lunit="mm" aunit="rad"/>
+		<tube name="dn63" rmin="38.0" rmax="39.0" z="200.0" startphi="0" deltaphi="6.283185307179586" lunit="mm" aunit="rad"/>
+		<tube name="30K" rmin="33.0" rmax="33.5" z="199.0" startphi="0" deltaphi="6.283185307179586" lunit="mm" aunit="rad"/>
+		<tube name="4K" rmin="28.0" rmax="28.5" z="198.0" startphi="0" deltaphi="6.283185307179586" lunit="mm" aunit="rad"/>
+		<tube name="AntennaRing" rmin="27.0" rmax="27.5" z="10.0" startphi="0" deltaphi="6.283185307179586" lunit="mm" aunit="rad"/>
+		<tube name="Gas" rmin="0.0" rmax="2.0" z="100.0" startphi="0" deltaphi="6.283185307179586" lunit="mm" aunit="rad"/>
+	</solids>
+	<structure>
+		<volume name="pipeLV">
+			<materialref ref="G4_STAINLESS-STEEL"/>
+			<solidref ref="dn63"/>
+		</volume>
+		<volume name="hs30kLV">
+			<materialref ref="G4_Cu"/>
+			<solidref ref="30K"/>
+		</volume>
+		<volume name="hs4kLV">
+			<materialref ref="G4_Cu"/>
+			<solidref ref="4K"/>
+		</volume>
+		<volume name="AntennaLV">
+			<materialref ref="G4_Galactic"/>
+			<solidref ref="AntennaRing"/>
+			<auxiliary auxtype="angle" auxvalue="0.0"/>
+			<auxiliary auxtype="angle" auxvalue="90.0"/>
+		</volume>
+		<volume name="Gas_log">
+			<materialref ref="matT"/>
+			<solidref ref="Gas"/>
+			<auxiliary auxtype="SensDet" auxvalue="cloud"/>
+		</volume>
+		<volume name="worldLV">
+			<materialref ref="G4_Galactic"/>
+			<solidref ref="ws"/>
+			<auxiliary auxtype="SensDet" auxvalue="vac"/>
+			<physvol name="pipePV">
+				<volumeref ref="pipeLV"/>
+			</physvol>
+			<physvol name="hs30kPV">
+				<volumeref ref="hs30kLV"/>
+			</physvol>
+			<physvol name="hs4kPV">
+				<volumeref ref="hs4kLV"/>
+			</physvol>
+			<physvol name="AntennaPV">
+				<volumeref ref="AntennaLV"/>
+			</physvol>
+			<physvol name="gasPV">
+				<volumeref ref="Gas_log"/>
+			</physvol>
+		</volume>
+	</structure>
+	<userinfo>
+		<auxiliary auxtype="angle" auxvalue="0.0"/>
+		<auxiliary auxtype="angle" auxvalue="90.0"/>
+		<auxiliary auxtype="SensDet" auxvalue="cloud"/>
+		<auxiliary auxtype="SensDet" auxvalue="vac"/>
+	</userinfo>
+	<setup name="Default" version="1.0">
+		<world ref="worldLV"/>
+	</setup>
+</gdml>
