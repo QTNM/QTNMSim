@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
+import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.constants as const
 from scipy.optimize import curve_fit
-import argparse
 import ROOT
 
 
@@ -63,12 +63,12 @@ def summary(density=5e-9, fname="qtnm.root"):
     v0 = beta(18.575) * const.c
     paths = times * v0
 
-    (counts, bins, patches) = plt.hist(paths, bins=1000, cumulative=-1)
+    (counts, bins, _) = plt.hist(paths, bins=1000, cumulative=-1)
     d_g4 = density #g/cm^3
     n_SI = d_g4 * 1e3 / const.atomic_mass / 3.014 # Assume atomic Tritium
 
     def decay(x, mfp):
-       return n * np.exp(-x/mfp)
+        return n * np.exp(-x/mfp)
 
     bin_c = 0.5 * (bins[1:] + bins[:-1])
     popt, pcov = curve_fit(decay, bin_c, counts)
