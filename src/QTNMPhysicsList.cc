@@ -163,19 +163,19 @@ void QTNMPhysicsList::ConstructProcess()
   // eioni->AddEmModel(0, theIoniLiv, new G4UniversalFluctuation() );
 
   // bremsstrahlung
-  G4eBremsstrahlung* brem = new G4eBremsstrahlung();
-  G4SeltzerBergerModel* br1 = new G4SeltzerBergerModel();
-  G4eBremsstrahlungRelModel* br2 = new G4eBremsstrahlungRelModel();
-  br1->SetAngularDistribution(new G4Generator2BS());
-  br2->SetAngularDistribution(new G4Generator2BS());
-  brem->SetEmModel(br1);
-  brem->SetEmModel(br2);
-  br1->SetHighEnergyLimit(CLHEP::GeV);
+  // G4eBremsstrahlung* brem = new G4eBremsstrahlung();
+  // G4SeltzerBergerModel* br1 = new G4SeltzerBergerModel();
+  // G4eBremsstrahlungRelModel* br2 = new G4eBremsstrahlungRelModel();
+  // br1->SetAngularDistribution(new G4Generator2BS());
+  // br2->SetAngularDistribution(new G4Generator2BS());
+  // brem->SetEmModel(br1);
+  // brem->SetEmModel(br2);
+  // br1->SetHighEnergyLimit(CLHEP::GeV);
 
-  // register processes
-  // ph->RegisterProcess(eioni, particle);
-  ph->RegisterProcess(brem, particle);
-  ph->RegisterProcess(ee, particle);
+  // // register processes
+  // // ph->RegisterProcess(eioni, particle);
+  // ph->RegisterProcess(brem, particle);
+  // ph->RegisterProcess(ee, particle);
   ph->RegisterProcess(ss, particle);
 
   // e+
@@ -192,20 +192,20 @@ void QTNMPhysicsList::ConstructProcess()
   // eioni->AddEmModel(0, pen, new G4UniversalFluctuation());
 
   // bremsstrahlung
-  brem = new G4eBremsstrahlung();
-  br1 = new G4SeltzerBergerModel();
-  br2 = new G4eBremsstrahlungRelModel();
-  br1->SetAngularDistribution(new G4Generator2BS());
-  br2->SetAngularDistribution(new G4Generator2BS());
-  brem->SetEmModel(br1);
-  brem->SetEmModel(br2);
-  br1->SetHighEnergyLimit(CLHEP::GeV);
+  // brem = new G4eBremsstrahlung();
+  // br1 = new G4SeltzerBergerModel();
+  // br2 = new G4eBremsstrahlungRelModel();
+  // br1->SetAngularDistribution(new G4Generator2BS());
+  // br2->SetAngularDistribution(new G4Generator2BS());
+  // brem->SetEmModel(br1);
+  // brem->SetEmModel(br2);
+  // br1->SetHighEnergyLimit(CLHEP::GeV);
 
-  // register processes
-  // ph->RegisterProcess(eioni, particle);
-  ph->RegisterProcess(brem, particle);
-  ph->RegisterProcess(ee, particle);
-  ph->RegisterProcess(new G4eplusAnnihilation(), particle);
+  // // register processes
+  // // ph->RegisterProcess(eioni, particle);
+  // ph->RegisterProcess(brem, particle);
+  // ph->RegisterProcess(ee, particle);
+  // ph->RegisterProcess(new G4eplusAnnihilation(), particle);
   ph->RegisterProcess(ss, particle);
 
   // generic ion
