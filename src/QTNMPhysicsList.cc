@@ -18,7 +18,7 @@
 #include "G4LivermorePhotoElectricModel.hh"
 
 // e+-
-#include "G4eDPWACoulombScatteringModel.hh"
+#include "QTeDPWACoulombScatteringModel.hh"
 #include "G4CoulombScattering.hh"
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
@@ -64,7 +64,7 @@ QTNMPhysicsList::QTNMPhysicsList(G4int ver,
   param->SetVerbose(verbose);
   param->SetMinEnergy(100*CLHEP::eV);
   param->SetLowestElectronEnergy(100*CLHEP::eV);
-  param->SetNumberOfBinsPerDecade(20);
+  param->SetNumberOfBinsPerDecade(200);
   param->ActivateAngularGeneratorForIonisation(true);
   param->SetStepFunction(0.2, 10*CLHEP::um);
   param->SetStepFunctionMuHad(0.1, 50*CLHEP::um);
@@ -154,7 +154,7 @@ void QTNMPhysicsList::ConstructProcess()
  
   // single scattering
   G4CoulombScattering* ss = new G4CoulombScattering();
-  ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
+  ss->AddEmModel(0, new QTeDPWACoulombScatteringModel(false, false, 0.0));
 
   // ionisation
   // G4eIonisation* eioni = new G4eIonisation();
@@ -183,7 +183,7 @@ void QTNMPhysicsList::ConstructProcess()
 
   // single scattering  
   ss = new G4CoulombScattering();
-  ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
+  ss->AddEmModel(0, new QTeDPWACoulombScatteringModel(false, false, 0.0));
 
   // ionisation
   // eioni = new G4eIonisation();
