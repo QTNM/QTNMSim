@@ -225,8 +225,18 @@ QTeDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>
    cdf[i] /= cdf[nESpace-1];
   }
 
-  // sample cosine of the polar scattering angle in (hard) elastic insteraction
   CLHEP::HepRandomEngine* rndmEngine = G4Random::getTheEngine();
+  G4double rndm = rndmEngine->flat();
+
+  auto lower = std::lower_bound(cdf.begin(), cdf.end(), rndm);
+
+  G4double fac1 = (*lower - rndm) / (*lower - *(lower-1));
+  G4double fac2 = 1.0 - fac1;
+
+  G4int i2 = std::distance(cdf.begin(), lower);
+  G4double enew = fac1 * secondary_energy[i2-1] + fac2 * secondary_energy[i2];
+
+  // sample cosine of the polar scattering angle in (hard) elastic insteraction
   G4double cost = 1.0;
   if (!fIsMixedModel) {
     G4double rndm[3];
