@@ -40,7 +40,7 @@ public:
   inline int   operator==(const QTTrajectory& right) const { return (this == &right); }
 
   // access
-  std::vector<G4double>& getKE() {return fKE;};
+  std::vector<G4double>& getOm()    {return fOm;};
   std::vector<G4double>& getTime()  {return ft;};
   std::vector<G4double>& getXpos()  {return xp;};
   std::vector<G4double>& getYpos()  {return yp;};
@@ -71,12 +71,13 @@ public:
 
 private:
   G4ThreeVector          getAcceleration();
+  G4ThreeVector          getOmega();
   G4double               gltime;  // global time
   G4ThreeVector          pos;     // trajectory position
   G4ThreeVector          beta;    // trajectory velocity
   G4ThreeVector          acc;     // trajectory acceleration
 
-  std::vector<G4double>  fKE;        // KE 
+  std::vector<G4double>  fOm;        // Omega
   std::vector<G4double>  ft;         // time 
   std::vector<G4double>  xp;         // pos.x
   std::vector<G4double>  yp;         // pos.y

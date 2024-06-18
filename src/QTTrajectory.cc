@@ -42,7 +42,7 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack)
 
 QTTrajectory::~QTTrajectory()
 {
-  fKE.clear();
+  fOm.clear();
   ft.clear();
   xp.clear();
   yp.clear();
@@ -78,8 +78,9 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   // only source beta=v/c enters radiation formulae
   beta = aStep->GetPostStepPoint()->GetMomentumDirection() * aStep->GetPostStepPoint()->GetBeta();
   acc = getAcceleration();
+  
 
-  fKE.push_back(aStep->GetPostStepPoint()->GetKineticEnergy());
+  fOm.push_back(getOmega().mag()); // angular frequency magnitude
   ft.push_back(gltime);
   xp.push_back(pos.x());
   yp.push_back(pos.y());
@@ -90,6 +91,21 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   accx.push_back(acc.x());
   accy.push_back(acc.y());
   accz.push_back(acc.z());
+}
+
+G4ThreeVector QTTrajectory::getOmega()
+{
+  // collect required values
+  // note that pEqn returns values in SI units 
+  G4double pos_[3]; // interface needs array pointer
+  pos_[0] = pos[0]; pos_[1] = pos[1]; pos_[2] = pos[2]; // [mm] default
+  G4double B[6]; // interface needs array pointer
+  pfieldManager->GetDetectorField()->GetFieldValue(pos_, B);
+  G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] ) / tesla; // [Tesla] explicitly
+  // G4cout << "b-field from eqn: " << Bfield.x() << ", " << Bfield.y() << ", " 
+  // 	 << Bfield.z() << G4endl;
+
+  return pEqn->CalcOmegaGivenB(Bfield, beta);
 }
 
 G4ThreeVector QTTrajectory::getAcceleration()
