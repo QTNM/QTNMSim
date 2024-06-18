@@ -159,7 +159,7 @@ QTeDPWACoulombScatteringModel::ComputeCrossSectionPerAtom(const G4ParticleDefini
 
   G4double sigma = (mbell_a * std::log(U) + bsum) / (bind * T_ev); // cm^2
 
-  G4cout<< T_ev <<  ", " << sigma * f_ion * gr << G4endl;
+  // G4cout<< T_ev <<  ", " << sigma * f_ion * gr << G4endl;
   return sigma * f_ion * gr * CLHEP::cm * CLHEP:: cm;
 }
 
@@ -174,6 +174,57 @@ QTeDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>
   const G4double    lekin  = dp->GetLogKineticEnergy();
   const G4Element*  target = SelectTargetAtom(cp, dp->GetParticleDefinition(), ekin, lekin);
   const G4int       izet   = target->GetZasInt();
+
+  const G4double T_ev = ekin / CLHEP::eV;
+  const G4double bind = 13.6; // eV - binding energy
+  // Maximum energy of secondary particle
+  const G4double emax = 0.5 * (T_ev / bind - 1.0) * bind;
+  // G4cout << emax << G4endl;
+  secondary_energy = logspace(std::log10(1e-6*T_ev), std::log10(emax), nESpace);
+
+  // Incident energy dependent terms
+  const G4double mc2_ev = 511e3;
+  const G4double t_prime = T_ev / mc2_ev;
+  const G4double beta_t2 = 1 - 1 / pow(1 + t_prime,2);
+
+  // Physical constants
+  const G4double alpha = 1.0 / 137.0; // TODO
+  const G4double aB = 5.29e-11;
+
+  // Number of shells
+  const G4int N = 1;
+
+  std::vector<G4double> cdf;
+  cdf.reserve(nESpace);
+
+  for (int i = 0; i < nESpace; i++) {
+    //RBEB terms
+    G4double b_prime = bind / mc2_ev;
+    G4double t = T_ev / bind;
+    G4double w = secondary_energy[i] / bind;
+    G4double beta_b2 = 1 - 1./ pow(1 + b_prime, 2);
+    G4double beta2 = beta_t2 + 2*beta_b2;
+
+    // Pre-factor terms which depend on B or N
+    G4double pre_fac = 0.5 * (1 + beta2 / beta_t2);
+    G4double fac = 2 * CLHEP::pi * pow(aB,2) * pow(alpha,4) * N / (beta2 * b_prime);
+
+    // Calculate CDF contribution from this shell for this W
+    G4double A1 = 0.5 * (pow(t - w,-2) - pow(w + 1,-2) - pow(t,-2) + 1);
+    G4double A2 = std::log(beta_t2 / (1 - beta_t2)) - beta_t2 - std::log(2*b_prime);
+    G4double A3 = 1/(t - w) - 1/(w + 1) - 1/t + 1;
+    G4double A4 = pow(b_prime,2) / pow(1 + 0.5*t_prime,2) * w;
+    G4double A5 = std::log((w + 1)/(t - w)) - std::log(1/t);
+    G4double A6 = (1 + 2*t_prime) / pow(1 + 0.5*t_prime, 2) / (t+1);
+
+    cdf.push_back(pre_fac * fac * (A1*A2 + A3 + A4 - A5*A6));
+  }
+
+  // Normalise
+  for (int i = 0; i < nESpace; i++) {
+   cdf[i] /= cdf[nESpace-1];
+  }
+
   // sample cosine of the polar scattering angle in (hard) elastic insteraction
   CLHEP::HepRandomEngine* rndmEngine = G4Random::getTheEngine();
   G4double cost = 1.0;
@@ -216,6 +267,14 @@ QTeDPWACoulombScatteringModel::mbell_f_ion(G4int el_no, G4int nu, G4double U, G4
 }
 
 
-
-
-
+std::vector<G4double>
+QTeDPWACoulombScatteringModel::logspace(const G4double a, const G4double b, const G4int n)
+{
+  std::vector<G4double> _logspace;
+  _logspace.reserve(nESpace);
+  const G4double fac = (b - a) / (n - 1);
+  for (int i = 0; i < n; i++) {
+    _logspace.push_back(pow(10, i * fac + a));
+  }
+  return _logspace;
+}
