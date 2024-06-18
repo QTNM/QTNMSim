@@ -142,7 +142,11 @@ private:
   G4eDPWAElasticDCS*         fTheDCS;
   // particle change
   G4ParticleChangeForGamma*  fParticleChange;
-
+  // Energy space for secondary CDF
+  std::vector<G4double> secondary_energy;
+  // Theis could be made variable
+  static const G4int nESpace = 200;
+  std::vector<G4double> logspace(const G4double a, const G4double b, const G4int n);
 };
 
 #endif
