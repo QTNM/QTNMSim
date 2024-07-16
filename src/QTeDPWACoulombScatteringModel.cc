@@ -60,10 +60,8 @@
 
 #include "G4AnalysisManager.hh"
 
-QTeDPWACoulombScatteringModel::QTeDPWACoulombScatteringModel(G4bool ismixed, G4bool isscpcor, G4double mumin)
+QTeDPWACoulombScatteringModel::QTeDPWACoulombScatteringModel(G4double mumin)
 : G4VEmModel("eDPWACoulombScattering"),
-  fIsMixedModel(ismixed),
-  fIsScpCorrection(isscpcor),
   fMuMin(mumin),
   fTheDCS(nullptr),
   fParticleChange(nullptr)
@@ -84,15 +82,12 @@ QTeDPWACoulombScatteringModel::~QTeDPWACoulombScatteringModel()
 void QTeDPWACoulombScatteringModel::Initialise(const G4ParticleDefinition* pdef,
                                                const G4DataVector& prodcuts)
 {
-  if(!fParticleChange) {
-    fParticleChange = GetParticleChangeForGamma();
-  }
+  fParticleChange = GetParticleChangeForGamma();
   fMuMin        = 0.5*(1.0-std::cos(PolarAngleLimit()));
-  fIsMixedModel = (fMuMin > 0.0);
   if(IsMaster()) {
     // clean the G4eDPWAElasticDCS object if any
     delete fTheDCS;
-    fTheDCS = new G4eDPWAElasticDCS(pdef==G4Electron::Electron(), fIsMixedModel);
+    fTheDCS = new G4eDPWAElasticDCS(pdef==G4Electron::Electron(), false);
     // init only for the elements that are used in the geometry
     G4ProductionCutsTable* theCpTable = G4ProductionCutsTable::GetProductionCutsTable();
     G4int numOfCouples = (G4int)theCpTable->GetTableSize();
@@ -103,10 +98,6 @@ void QTeDPWACoulombScatteringModel::Initialise(const G4ParticleDefinition* pdef,
       for (std::size_t ie = 0; ie < numOfElem; ++ie) {
         fTheDCS->InitialiseForZ((*elV)[ie]->GetZasInt());
       }
-    }
-    // init scattering power correction
-    if (fIsScpCorrection) {
-      fTheDCS->InitSCPCorrection(LowEnergyLimit(), HighEnergyLimit());
     }
     // will make use of the cross sections so the above needs to be done before
     InitialiseElementSelectors(pdef, prodcuts);
@@ -243,7 +234,7 @@ QTeDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>
   G4ThreeVector dir = dp->GetMomentumDirection();
   // set new direction
   // fParticleChange->ProposeMomentumDirection(theNewDirection);
-  G4cout << T_ev << ", " << enew << G4endl;
+  // G4cout << T_ev << ", " << enew << G4endl;
   // New electron
   auto newp = new G4DynamicParticle (G4Electron::Electron(),dir,enew * CLHEP::eV);
   fvect->push_back(newp);
