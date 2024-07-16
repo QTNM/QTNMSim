@@ -154,7 +154,7 @@ void QTNMPhysicsList::ConstructProcess()
  
   // single scattering
   G4CoulombScattering* ss = new G4CoulombScattering();
-  ss->AddEmModel(0, new QTeDPWACoulombScatteringModel(false, false, 0.0));
+  ss->AddEmModel(0, new QTeDPWACoulombScatteringModel(0.0));
 
   // ionisation
   // G4eIonisation* eioni = new G4eIonisation();
@@ -183,7 +183,7 @@ void QTNMPhysicsList::ConstructProcess()
 
   // single scattering  
   ss = new G4CoulombScattering();
-  ss->AddEmModel(0, new QTeDPWACoulombScatteringModel(false, false, 0.0));
+  ss->AddEmModel(0, new QTeDPWACoulombScatteringModel(0.0));
 
   // ionisation
   // eioni = new G4eIonisation();

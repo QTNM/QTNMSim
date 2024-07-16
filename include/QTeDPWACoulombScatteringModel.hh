@@ -72,17 +72,6 @@ public:
   /**
    * Constructor.
    *
-   * @param[in] ismixed  Indicates if the model is for mixed or for pure single
-   *                     Coulomb scattering. Different type of tables are pre-
-   *                     pared for sampling polar angle of Coulomb scattering
-   *                     for mixed and for pure single scattering models: cosine
-   *                     of the polar scattering angle can be sampled in a
-   *                     restriced inteval (see mumin input parameter below).
-   * @param[in] isscpcor Indicates if scattering power correction should be used.
-   *                     Note, scattering power correction accounts the effects
-   *                     angular deflections due to sub-threshold ionisations
-   *                     when ionisation is described by using condensed history
-   *                     model (should be active only in this case).
    * @param[in] mumin    When the model is used for mixed simulation, Coulomb
    *                     scatterings, resulting in a minimum t_c polar angular
    *                     deflection, modelled explicitly. Therefore, cross
@@ -92,8 +81,7 @@ public:
    *                     parameter as:
    *                     \mu_{min} = \mu(\theta_c)=0.5[1-\cos(\theta_c)]
    */
-  QTeDPWACoulombScatteringModel(G4bool ismixed=false, G4bool isscpcor=true,
-                                G4double mumin=0.0);
+  QTeDPWACoulombScatteringModel(G4double mumin=0.0);
 
   ~QTeDPWACoulombScatteringModel() override;
 
@@ -126,16 +114,6 @@ private:
 
   G4double mbell_gr(G4double U, G4double J);
   G4double mbell_f_ion(G4int el_no, G4int nu, G4double U, G4double m_lambda);
-  // Indicates if the model is mixed: MSC for soft (theta<theta_c), Singe
-  // Scattering(SS) for hard scatterings(theta>theta_c). SS otherwise.
-  // Note, that while the model provides restricted (elastic and transport)
-  // cross sections, it's responsible to handle, i.e. provide final state,
-  // only for the Singe Scattering part in case of a mixed model.
-  G4bool                     fIsMixedModel;
-  // indicates if scattering power correction should be applied: correction due
-  // to deflection in case of sub-threshold, inelastic interactions -> only in
-  // case of condensed history simulation of inonisation!
-  G4bool                     fIsScpCorrection;
   // mu(theta)=0.5[1-cos(theta)]: the model porvides final states \in [fMuMin,1]
   G4double                   fMuMin;
   // the object that provides cross sections and polar angle of scattering
