@@ -165,7 +165,7 @@ QTeDPWACoulombScatteringModel::ComputeCrossSectionPerAtom(const G4ParticleDefini
 
 
 void
-QTeDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>*,
+QTeDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
                                                  const G4MaterialCutsCouple* cp,
                                                  const G4DynamicParticle* dp,
                                                  G4double, G4double)
@@ -177,6 +177,9 @@ QTeDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>
 
   const G4double T_ev = ekin / CLHEP::eV;
   const G4double bind = 13.6; // eV - binding energy
+
+  if(T_ev < bind) return;
+
   // Maximum energy of secondary particle
   const G4double emax = 0.5 * (T_ev / bind - 1.0) * bind;
   // G4cout << emax << G4endl;
@@ -236,29 +239,17 @@ QTeDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>
   G4int i2 = std::distance(cdf.begin(), lower);
   G4double enew = fac1 * secondary_energy[i2-1] + fac2 * secondary_energy[i2];
 
-  // sample cosine of the polar scattering angle in (hard) elastic insteraction
-  G4double cost = 1.0;
-  if (!fIsMixedModel) {
-    G4double rndm[3];
-    rndmEngine->flatArray(3, rndm);
-    cost = fTheDCS->SampleCosineTheta(izet, lekin, rndm[0], rndm[1], rndm[2]);
-  } else {
-    //sample cost between costMax,costMin where costMax = 1-2xfMuMin;
-    const G4double costMax = 1.0-2.0*fMuMin;
-    const G4double costMin = -1.0;
-    G4double rndm[2];
-    rndmEngine->flatArray(2, rndm);
-    cost = fTheDCS->SampleCosineThetaRestricted(izet, lekin, rndm[0], rndm[1], costMin, costMax);
-  }
-  // compute the new direction in the scattering frame
-  const G4double sint = std::sqrt((1.0-cost)*(1.0+cost));
-  const G4double phi  = CLHEP::twopi*rndmEngine->flat();
-  G4ThreeVector theNewDirection(sint*std::cos(phi), sint*std::sin(phi), cost);
-  // get original direction in lab frame and rotate new direction to lab frame
-  G4ThreeVector theOrgDirectionLab = dp->GetMomentumDirection();
-  theNewDirection.rotateUz(theOrgDirectionLab);
+  // Original direction of particle
+  G4ThreeVector dir = dp->GetMomentumDirection();
   // set new direction
-  fParticleChange->ProposeMomentumDirection(theNewDirection);
+  // fParticleChange->ProposeMomentumDirection(theNewDirection);
+  G4cout << T_ev << ", " << enew << G4endl;
+  // New electron
+  auto newp = new G4DynamicParticle (G4Electron::Electron(),dir,enew * CLHEP::eV);
+  fvect->push_back(newp);
+
+  fParticleChange->SetProposedKineticEnergy((T_ev - enew - bind) * CLHEP::eV);
+  fParticleChange->ProposeLocalEnergyDeposit(bind * CLHEP::eV);
 }
 
 G4double
