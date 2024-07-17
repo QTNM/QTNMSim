@@ -16,6 +16,7 @@ QTDetectorConstruction::QTDetectorConstruction(const G4GDMLParser& p)
     fUserLimit(nullptr),
     fMessenger(nullptr),
     fMaxTime(100.0*CLHEP::ns),     // default max time 100 ns
+    fMinEnergy(10.0*CLHEP::eV),
     fparser(p)
 {
   DefineCommands();
@@ -31,7 +32,7 @@ QTDetectorConstruction::~QTDetectorConstruction()
 
 G4VPhysicalVolume* QTDetectorConstruction::Construct()
 {
-  fUserLimit = new G4UserLimits(DBL_MAX,DBL_MAX,fMaxTime,0.,0.); // max time limit only
+  fUserLimit = new G4UserLimits(DBL_MAX,DBL_MAX,fMaxTime,fMinEnergy,0.); // max time limit, min energy
   
   auto* worldLV = fparser.GetVolume("worldLV");
   auto* targetLV = fparser.GetVolume("Gas_log");
@@ -99,5 +100,10 @@ void QTDetectorConstruction::DefineCommands()
 					      "Set maximum electron transport time in [ns].");
   timeCmd.SetParameterName("time", true);
   timeCmd.SetDefaultValue("100 ns");
+
+  auto& energyCmd = fMessenger->DeclarePropertyWithUnit("minenergy", "eV", fMinEnergy,
+					      "Set minimum electron transport energy in [eV].");
+  energyCmd.SetParameterName("energy", true);
+  energyCmd.SetDefaultValue("10 eV");
 
 }
