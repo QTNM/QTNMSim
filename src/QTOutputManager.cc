@@ -68,7 +68,7 @@ void QTOutputManager::Book()
     G4String aidname  = "AntennaID";
     G4String tvecname = "TimeVec";
     G4String vvecname = "VoltageVec";
-    G4String kvecname = "KEVec";
+    G4String ovecname = "OmVec";
     analysisManager->CreateNtuple("Signal", "Time-series");
     analysisManager->CreateNtupleIColumn("EventID");
     analysisManager->CreateNtupleIColumn("TrackID");
@@ -82,7 +82,7 @@ void QTOutputManager::Book()
     analysisManager->CreateNtupleIColumn(aidname, GetAntennaID());
     analysisManager->CreateNtupleDColumn(tvecname, GetTimeVec());
     analysisManager->CreateNtupleDColumn(vvecname, GetVoltageVec());
-    analysisManager->CreateNtupleDColumn(kvecname, GetKEVec());
+    analysisManager->CreateNtupleDColumn(ovecname, GetOmVec());
     analysisManager->FinishNtuple();
 
     fFactoryOn = true;
@@ -132,5 +132,5 @@ void QTOutputManager::AddNtupleRow(G4int which)
   avec.clear();
   tvec.clear();
   vvec.clear();
-  kvec.clear();
+  ovec.clear();
 }

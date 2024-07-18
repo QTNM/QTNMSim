@@ -48,7 +48,7 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 
 QTTrajectory::~QTTrajectory()
 {
-  fKE.clear();
+  fOm.clear();
   fVT.clear();
   fAntennaID.clear();
 }
@@ -76,10 +76,17 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   // only source beta=v/c enters radiation formulae
   beta = aStep->GetPostStepPoint()->GetMomentumDirection() * aStep->GetPostStepPoint()->GetBeta();
 
+  // low-cost request, repeated here for omega
+  G4double pos_[3];
+  pos_[0] = pos[0]; pos_[1] = pos[1]; pos_[2] = pos[2]; // [mm] default
+  G4double B[6]; // interface needs array pointers
+  pfieldManager->GetDetectorField()->GetFieldValue(pos_, B);
+  G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] ) / tesla; // [Tesla] explicitly
+  fOm.push_back(pEqn->CalcOmegaGivenB(Bfield, beta).mag());
+
   for (unsigned int i=0;i<fAngles.size();++i) {
     fAntennaID.push_back((G4int)i);            // which antenna
     fVT.push_back(convertToVT(i));
-    fKE.push_back(aStep->GetPostStepPoint()->GetKineticEnergy());
   }
 }
 
