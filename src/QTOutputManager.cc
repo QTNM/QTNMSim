@@ -69,6 +69,7 @@ void QTOutputManager::Book()
     G4String tvecname = "TimeVec";
     G4String vvecname = "VoltageVec";
     G4String ovecname = "OmVec";
+    G4String kvecname = "KEVec";
     analysisManager->CreateNtuple("Signal", "Time-series");
     analysisManager->CreateNtupleIColumn("EventID");
     analysisManager->CreateNtupleIColumn("TrackID");
@@ -83,6 +84,7 @@ void QTOutputManager::Book()
     analysisManager->CreateNtupleDColumn(tvecname, GetTimeVec());
     analysisManager->CreateNtupleDColumn(vvecname, GetVoltageVec());
     analysisManager->CreateNtupleDColumn(ovecname, GetOmVec());
+    analysisManager->CreateNtupleDColumn(kvecname, GetKEVec());
     analysisManager->FinishNtuple();
 
     fFactoryOn = true;

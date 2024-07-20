@@ -48,6 +48,7 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 
 QTTrajectory::~QTTrajectory()
 {
+  fKE.clear();
   fOm.clear();
   fVT.clear();
   fAntennaID.clear();
@@ -83,6 +84,7 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   pfieldManager->GetDetectorField()->GetFieldValue(pos_, B);
   G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] ) / tesla; // [Tesla] explicitly
   fOm.push_back(pEqn->CalcOmegaGivenB(Bfield, beta).mag());
+  fKE.push_back(aStep->GetPostStepPoint()->GetKineticEnergy());
 
   for (unsigned int i=0;i<fAngles.size();++i) {
     fAntennaID.push_back((G4int)i);            // which antenna

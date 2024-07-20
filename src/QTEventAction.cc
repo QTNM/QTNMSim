@@ -158,6 +158,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       QTTrajectory* trj = dynamic_cast<QTTrajectory*>(entry);
       G4int counter = 0;
       for (auto val : trj->getOm()) fOutput->FillOmVec(val);
+      for (auto val : trj->getKE()) fOutput->FillKEVec(val);
       for (auto values : trj->getVT()) {  // std::pair<double,double>
 	fOutput->FillAntennaVec((trj->getAntennaID()).at(counter)); // same size as
 	fOutput->FillTimeVec(values.first);             // VT container
