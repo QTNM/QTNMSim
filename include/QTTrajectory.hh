@@ -45,6 +45,7 @@ public:
   VTcontainer&           getVT() {return fVT;};
   std::vector<G4int>&    getAntennaID() {return fAntennaID;};
   std::vector<G4double>& getOm() {return fOm;};
+  std::vector<G4double>& getKE() {return fKE;};
 
   inline G4int GetTrackID() const override
     { return fTrackID; }
@@ -74,6 +75,7 @@ private:
   std::vector<G4double>  fAngles;    // from geometry
   std::vector<G4int>     fAntennaID; // antenna ID parallel to VTcontainer entries
   std::vector<G4double>  fOm;        // Omega parallel to VTcontainer entries
+  std::vector<G4double>  fKE;        // Kinetic energy parallel to VTcontainer entries
   VTcontainer            fVT;        // container, Cyclotron radiation pairs, time, voltage
 
   G4FieldManager*        pfieldManager; // singleton for info
