@@ -157,7 +157,8 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       QTTrajectory* trj = dynamic_cast<QTTrajectory*>(entry);
       G4int counter = 0;
       for (auto value : trj->getOm()) {
-	fOutput->FillOmVec(value);
+ 	fOutput->FillOmVec(value);
+ 	fOutput->FillKEVec(trj->getKE().at(counter) / G4Analysis::GetUnitValue("keV"));
 	fOutput->FillTimeVec((trj->getTime()).at(counter));
 	fOutput->FillXVec((trj->getXpos()).at(counter) / G4Analysis::GetUnitValue("m"));
 	fOutput->FillYVec((trj->getYpos()).at(counter) / G4Analysis::GetUnitValue("m"));

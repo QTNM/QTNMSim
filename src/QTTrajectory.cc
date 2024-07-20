@@ -43,6 +43,7 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack)
 QTTrajectory::~QTTrajectory()
 {
   fOm.clear();
+  fKE.clear();
   ft.clear();
   xp.clear();
   yp.clear();
@@ -81,6 +82,7 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   
 
   fOm.push_back(getOmega().mag()); // angular frequency magnitude
+  fKE.push_back(aStep->GetPostStepPoint()->GetKineticEnergy());
   ft.push_back(gltime);
   xp.push_back(pos.x());
   yp.push_back(pos.y());

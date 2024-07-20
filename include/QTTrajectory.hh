@@ -41,6 +41,7 @@ public:
 
   // access
   std::vector<G4double>& getOm()    {return fOm;};
+  std::vector<G4double>& getKE()    {return fKE;};
   std::vector<G4double>& getTime()  {return ft;};
   std::vector<G4double>& getXpos()  {return xp;};
   std::vector<G4double>& getYpos()  {return yp;};
@@ -78,6 +79,7 @@ private:
   G4ThreeVector          acc;     // trajectory acceleration
 
   std::vector<G4double>  fOm;        // Omega
+  std::vector<G4double>  fKE;        // KE
   std::vector<G4double>  ft;         // time 
   std::vector<G4double>  xp;         // pos.x
   std::vector<G4double>  yp;         // pos.y

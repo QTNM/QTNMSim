@@ -65,7 +65,8 @@ void QTOutputManager::Book()
     
     // Creating ntuple 1 with vector entries
     //
-    G4String kvecname = "OmVec";
+    G4String ovecname = "OmVec";
+    G4String kvecname = "KEVec";
     G4String tvecname = "TimeVec";
     G4String xpname = "PosxVec";
     G4String ypname = "PosyVec";
@@ -86,7 +87,8 @@ void QTOutputManager::Book()
     analysisManager->CreateNtupleDColumn("KinEnergy"); // kinetic energy
     // These need passing a reference to the vector
     // filled by AddNtupleRow() assumed
-    analysisManager->CreateNtupleDColumn(kvecname, GetOmVec());
+    analysisManager->CreateNtupleDColumn(ovecname, GetOmVec());
+    analysisManager->CreateNtupleDColumn(kvecname, GetKEVec());
     analysisManager->CreateNtupleDColumn(tvecname, GetTimeVec());
     analysisManager->CreateNtupleDColumn(xpname, GetXVec());
     analysisManager->CreateNtupleDColumn(ypname, GetYVec());

@@ -22,6 +22,7 @@ public:
   void FillNtupleI(G4int which, G4int col, G4int val);
   void FillNtupleD(G4int which, G4int col, G4double val);
   inline void FillOmVec(G4double val)      { ovec.push_back(val); }
+  inline void FillKEVec(G4double val)      { kvec.push_back(val); }
   inline void FillTimeVec(G4double val)    { tvec.push_back(val); }
   inline void FillXVec(G4double val)       { xvec.push_back(val); }
   inline void FillYVec(G4double val)       { yvec.push_back(val); }
@@ -39,6 +40,7 @@ public:
 private:
   // internal methods for booking
   std::vector<G4double>& GetOmVec()        { return ovec; }
+  std::vector<G4double>& GetKEVec()        { return kvec; }
   std::vector<G4double>& GetTimeVec()      { return tvec; }
   std::vector<G4double>& GetXVec()         { return xvec; }
   std::vector<G4double>& GetYVec()         { return yvec; }
@@ -53,6 +55,7 @@ private:
   G4bool    fFactoryOn = false;
   G4String  fout;
   std::vector<G4double> ovec;    // Omega vector
+  std::vector<G4double> kvec;    // Kinteic energy vector
   std::vector<G4double> tvec;    // time vector
   std::vector<G4double> xvec;    // x vector
   std::vector<G4double> yvec;    // y vector

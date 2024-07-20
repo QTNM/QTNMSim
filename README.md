@@ -22,6 +22,9 @@ and run in the build directory.
 
 ### Status update
 
+Added storage of omega values and kinetic energy values. The former permits to determine the truth value for the
+beat frequency (side-bands), the latter yields the truth value for the chirp-rate.
+
 Version v0.4-beta: repaired hit scoring bug. The standard filtering for deposited energy misses a large number of
 Coulomb scatter hits. Two new hit filters were imlemented in QTGasSD: first on process name, score all
 non-transportation process steps; second, require a change of momentum pitch angle (theta to z-axis) of more than
