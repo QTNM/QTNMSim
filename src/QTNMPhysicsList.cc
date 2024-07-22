@@ -18,6 +18,7 @@
 #include "G4LivermorePhotoElectricModel.hh"
 
 // e+-
+#include "G4eDPWACoulombScatteringModel.hh"
 #include "QTeDPWACoulombScatteringModel.hh"
 #include "G4CoulombScattering.hh"
 #include "G4eIonisation.hh"
@@ -64,7 +65,7 @@ QTNMPhysicsList::QTNMPhysicsList(G4int ver,
   param->SetVerbose(verbose);
   param->SetMinEnergy(100*CLHEP::eV);
   param->SetLowestElectronEnergy(100*CLHEP::eV);
-  param->SetNumberOfBinsPerDecade(200);
+  param->SetNumberOfBinsPerDecade(20);
   param->ActivateAngularGeneratorForIonisation(true);
   param->SetStepFunction(0.2, 10*CLHEP::um);
   param->SetStepFunctionMuHad(0.1, 50*CLHEP::um);
@@ -152,61 +153,52 @@ void QTNMPhysicsList::ConstructProcess()
   // e-
   particle = G4Electron::Electron();
  
-  // single scattering
+  // single scattering - disabled for now
   G4CoulombScattering* ss = new G4CoulombScattering();
-  ss->AddEmModel(0, new QTeDPWACoulombScatteringModel());
+  // ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
 
-  // ionisation
-  // G4eIonisation* eioni = new G4eIonisation();
-  // G4VEmModel* theIoniLiv = new G4LivermoreIonisationModel();
-  // theIoniLiv->SetHighEnergyLimit(0.1*CLHEP::MeV); 
-  // eioni->AddEmModel(0, theIoniLiv, new G4UniversalFluctuation() );
+  // Impact Ionisation
+  G4CoulombScattering* eioni = new G4CoulombScattering();
+  eioni->AddEmModel(0, new QTeDPWACoulombScatteringModel());
 
   // bremsstrahlung
-  // G4eBremsstrahlung* brem = new G4eBremsstrahlung();
-  // G4SeltzerBergerModel* br1 = new G4SeltzerBergerModel();
-  // G4eBremsstrahlungRelModel* br2 = new G4eBremsstrahlungRelModel();
-  // br1->SetAngularDistribution(new G4Generator2BS());
-  // br2->SetAngularDistribution(new G4Generator2BS());
-  // brem->SetEmModel(br1);
-  // brem->SetEmModel(br2);
-  // br1->SetHighEnergyLimit(CLHEP::GeV);
+  G4eBremsstrahlung* brem = new G4eBremsstrahlung();
+  G4SeltzerBergerModel* br1 = new G4SeltzerBergerModel();
+  G4eBremsstrahlungRelModel* br2 = new G4eBremsstrahlungRelModel();
+  br1->SetAngularDistribution(new G4Generator2BS());
+  br2->SetAngularDistribution(new G4Generator2BS());
+  brem->SetEmModel(br1);
+  brem->SetEmModel(br2);
+  br1->SetHighEnergyLimit(CLHEP::GeV);
 
   // // register processes
-  // // ph->RegisterProcess(eioni, particle);
-  // ph->RegisterProcess(brem, particle);
-  // ph->RegisterProcess(ee, particle);
-  ph->RegisterProcess(ss, particle);
+  ph->RegisterProcess(brem, particle);
+  ph->RegisterProcess(ee, particle);
+  // ph->RegisterProcess(ss, particle);
+  ph->RegisterProcess(eioni, particle);
 
   // e+
   particle = G4Positron::Positron();
 
-  // single scattering  
-  //ss = new G4CoulombScattering();
-  //ss->AddEmModel(0, new QTeDPWACoulombScatteringModel(0.0));
-
-  // ionisation
-  // eioni = new G4eIonisation();
-  // G4VEmModel* pen = new G4PenelopeIonisationModel();
-  // pen->SetHighEnergyLimit(0.1*CLHEP::MeV);
-  // eioni->AddEmModel(0, pen, new G4UniversalFluctuation());
+  // single scattering
+  ss = new G4CoulombScattering();
+  ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
 
   // bremsstrahlung
-  // brem = new G4eBremsstrahlung();
-  // br1 = new G4SeltzerBergerModel();
-  // br2 = new G4eBremsstrahlungRelModel();
-  // br1->SetAngularDistribution(new G4Generator2BS());
-  // br2->SetAngularDistribution(new G4Generator2BS());
-  // brem->SetEmModel(br1);
-  // brem->SetEmModel(br2);
-  // br1->SetHighEnergyLimit(CLHEP::GeV);
+  brem = new G4eBremsstrahlung();
+  br1 = new G4SeltzerBergerModel();
+  br2 = new G4eBremsstrahlungRelModel();
+  br1->SetAngularDistribution(new G4Generator2BS());
+  br2->SetAngularDistribution(new G4Generator2BS());
+  brem->SetEmModel(br1);
+  brem->SetEmModel(br2);
+  br1->SetHighEnergyLimit(CLHEP::GeV);
 
   // // register processes
-  // // ph->RegisterProcess(eioni, particle);
-  // ph->RegisterProcess(brem, particle);
-  // ph->RegisterProcess(ee, particle);
-  // ph->RegisterProcess(new G4eplusAnnihilation(), particle);
-  // ph->RegisterProcess(ss, particle);
+  ph->RegisterProcess(brem, particle);
+  ph->RegisterProcess(ee, particle);
+  ph->RegisterProcess(new G4eplusAnnihilation(), particle);
+  ph->RegisterProcess(ss, particle);
 
   // generic ion
   particle = G4GenericIon::GenericIon();
