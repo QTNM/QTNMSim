@@ -72,16 +72,8 @@ public:
   /**
    * Constructor.
    *
-   * @param[in] mumin    When the model is used for mixed simulation, Coulomb
-   *                     scatterings, resulting in a minimum t_c polar angular
-   *                     deflection, modelled explicitly. Therefore, cross
-   *                     sections are computed, and angular deflections are
-   *                     sampled ina resricted [\theta_c,\pi] interval. The
-   *                     minimum of this interval is determined by the mumin
-   *                     parameter as:
-   *                     \mu_{min} = \mu(\theta_c)=0.5[1-\cos(\theta_c)]
    */
-  QTeDPWACoulombScatteringModel(G4double mumin=0.0);
+  QTeDPWACoulombScatteringModel();
 
   ~QTeDPWACoulombScatteringModel() override;
 
@@ -114,8 +106,6 @@ private:
 
   G4double mbell_gr(G4double U, G4double J);
   G4double mbell_f_ion(G4int el_no, G4int nu, G4double U, G4double m_lambda);
-  // mu(theta)=0.5[1-cos(theta)]: the model porvides final states \in [fMuMin,1]
-  G4double                   fMuMin;
   // the object that provides cross sections and polar angle of scattering
   G4eDPWAElasticDCS*         fTheDCS;
   // particle change
