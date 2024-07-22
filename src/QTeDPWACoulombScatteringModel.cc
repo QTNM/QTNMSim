@@ -60,9 +60,8 @@
 
 #include "G4AnalysisManager.hh"
 
-QTeDPWACoulombScatteringModel::QTeDPWACoulombScatteringModel(G4double mumin)
+QTeDPWACoulombScatteringModel::QTeDPWACoulombScatteringModel()
 : G4VEmModel("eDPWACoulombScattering"),
-  fMuMin(mumin),
   fTheDCS(nullptr),
   fParticleChange(nullptr)
 {
@@ -83,7 +82,6 @@ void QTeDPWACoulombScatteringModel::Initialise(const G4ParticleDefinition* pdef,
                                                const G4DataVector& prodcuts)
 {
   fParticleChange = GetParticleChangeForGamma();
-  fMuMin        = 0.5*(1.0-std::cos(PolarAngleLimit()));
   if(IsMaster()) {
     // clean the G4eDPWAElasticDCS object if any
     delete fTheDCS;
