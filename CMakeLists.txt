@@ -46,7 +46,7 @@ add_executable(qtnmSim
   src/QTGasSD.cc
   src/QTPrimaryGeneratorAction.cc
   src/QTTrajectory.cc
-  src/QTeDPWACoulombScatteringModel.cc
+  src/QTNMeImpactIonisation.cc
   src/QTNMPhysicsList.cc)
 target_include_directories(qtnmSim PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
 target_link_libraries(qtnmSim PRIVATE ${Geant4_LIBRARIES})
