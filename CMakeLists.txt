@@ -45,7 +45,7 @@ add_library(qtnmSimlib
   src/QTGasSD.cc
   src/QTPrimaryGeneratorAction.cc
   src/QTTrajectory.cc
-  src/QTeDPWACoulombScatteringModel.cc)
+  src/QTNMeImpactIonisation.cc)
 target_include_directories(qtnmSimlib PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
 target_link_libraries(qtnmSimlib PRIVATE ${Geant4_LIBRARIES})
 
