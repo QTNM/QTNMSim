@@ -153,9 +153,9 @@ void QTNMPhysicsList::ConstructProcess()
   // e-
   particle = G4Electron::Electron();
  
-  // single scattering - disabled for now
+  // single scattering
   G4CoulombScattering* ss = new G4CoulombScattering();
-  // ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
+  ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
 
   // Impact Ionisation
   G4CoulombScattering* eioni = new G4CoulombScattering();
@@ -174,7 +174,7 @@ void QTNMPhysicsList::ConstructProcess()
   // // register processes
   ph->RegisterProcess(brem, particle);
   ph->RegisterProcess(ee, particle);
-  // ph->RegisterProcess(ss, particle);
+  ph->RegisterProcess(ss, particle);
   ph->RegisterProcess(eioni, particle);
 
   // e+
