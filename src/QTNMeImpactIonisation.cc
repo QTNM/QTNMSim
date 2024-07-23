@@ -39,7 +39,7 @@
 //
 // -------------------------------------------------------------------
 
-#include "QTeDPWACoulombScatteringModel.hh"
+#include "QTNMeImpactIonisation.hh"
 
 #include "G4eDPWAElasticDCS.hh"
 #include "G4ParticleChangeForGamma.hh"
@@ -60,7 +60,7 @@
 
 #include "G4AnalysisManager.hh"
 
-QTeDPWACoulombScatteringModel::QTeDPWACoulombScatteringModel()
+QTNMeImpactIonisation::QTNMeImpactIonisation()
 : G4VEmModel("eDPWACoulombScattering"),
   fTheDCS(nullptr),
   fParticleChange(nullptr)
@@ -70,7 +70,7 @@ QTeDPWACoulombScatteringModel::QTeDPWACoulombScatteringModel()
 }
 
 
-QTeDPWACoulombScatteringModel::~QTeDPWACoulombScatteringModel()
+QTNMeImpactIonisation::~QTNMeImpactIonisation()
 {
   if (IsMaster()) {
     delete fTheDCS;
@@ -78,7 +78,7 @@ QTeDPWACoulombScatteringModel::~QTeDPWACoulombScatteringModel()
 }
 
 
-void QTeDPWACoulombScatteringModel::Initialise(const G4ParticleDefinition* pdef,
+void QTNMeImpactIonisation::Initialise(const G4ParticleDefinition* pdef,
                                                const G4DataVector& prodcuts)
 {
   fParticleChange = GetParticleChangeForGamma();
@@ -103,16 +103,16 @@ void QTeDPWACoulombScatteringModel::Initialise(const G4ParticleDefinition* pdef,
 }
 
 
-void QTeDPWACoulombScatteringModel::InitialiseLocal(const G4ParticleDefinition*,
+void QTNMeImpactIonisation::InitialiseLocal(const G4ParticleDefinition*,
                                                     G4VEmModel* masterModel)
 {
   SetElementSelectors(masterModel->GetElementSelectors());
-  SetTheDCS(static_cast<QTeDPWACoulombScatteringModel*>(masterModel)->GetTheDCS());
+  SetTheDCS(static_cast<QTNMeImpactIonisation*>(masterModel)->GetTheDCS());
 }
 
 
 G4double
-QTeDPWACoulombScatteringModel::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
+QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
                                                           G4double ekin,
                                                           G4double Z,
                                                           G4double /*A*/,
@@ -154,7 +154,7 @@ QTeDPWACoulombScatteringModel::ComputeCrossSectionPerAtom(const G4ParticleDefini
 
 
 void
-QTeDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
+QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
                                                  const G4MaterialCutsCouple* cp,
                                                  const G4DynamicParticle* dp,
                                                  G4double, G4double)
@@ -242,7 +242,7 @@ QTeDPWACoulombScatteringModel::SampleSecondaries(std::vector<G4DynamicParticle*>
 }
 
 G4double
-QTeDPWACoulombScatteringModel::mbell_gr(G4double U, G4double J)
+QTNMeImpactIonisation::mbell_gr(G4double U, G4double J)
 {
   G4double a = (1.0 + 2.0*J) / (U + 2.0*J);
   G4double b = pow( (U + J) / (1.0 + J), 2);
@@ -251,14 +251,14 @@ QTeDPWACoulombScatteringModel::mbell_gr(G4double U, G4double J)
 }
 
 G4double
-QTeDPWACoulombScatteringModel::mbell_f_ion(G4int el_no, G4int nu, G4double U, G4double m_lambda)
+QTNMeImpactIonisation::mbell_f_ion(G4int el_no, G4int nu, G4double U, G4double m_lambda)
 {
   return 1 + 3*pow( (el_no - nu)/(U*el_no), m_lambda);
 }
 
 
 std::vector<G4double>
-QTeDPWACoulombScatteringModel::logspace(const G4double a, const G4double b, const G4int n)
+QTNMeImpactIonisation::logspace(const G4double a, const G4double b, const G4int n)
 {
   std::vector<G4double> _logspace;
   _logspace.reserve(nESpace);
