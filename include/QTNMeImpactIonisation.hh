@@ -54,8 +54,8 @@
 
 
 
-#ifndef QTeDPWACoulombScatteringModel_h
-#define QTeDPWACoulombScatteringModel_h 1
+#ifndef QTNMeImpactIonisation_h
+#define QTNMeImpactIonisation_h 1
 
 #include "G4VEmModel.hh"
 #include "globals.hh"
@@ -65,7 +65,7 @@ class G4ParticleChangeForGamma;
 class G4ParticleDefinition;
 class G4DataVector;
 
-class QTeDPWACoulombScatteringModel : public G4VEmModel {
+class QTNMeImpactIonisation : public G4VEmModel {
 
 public:
 
@@ -73,9 +73,9 @@ public:
    * Constructor.
    *
    */
-  QTeDPWACoulombScatteringModel();
+  QTNMeImpactIonisation();
 
-  ~QTeDPWACoulombScatteringModel() override;
+  ~QTNMeImpactIonisation() override;
 
   //
   // Interface methods:

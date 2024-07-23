@@ -19,7 +19,7 @@
 
 // e+-
 #include "G4eDPWACoulombScatteringModel.hh"
-#include "QTeDPWACoulombScatteringModel.hh"
+#include "QTNMeImpactIonisation.hh"
 #include "G4CoulombScattering.hh"
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
@@ -159,7 +159,7 @@ void QTNMPhysicsList::ConstructProcess()
 
   // Impact Ionisation
   G4CoulombScattering* eioni = new G4CoulombScattering();
-  eioni->AddEmModel(0, new QTeDPWACoulombScatteringModel());
+  eioni->AddEmModel(0, new QTNMeImpactIonisation());
 
   // bremsstrahlung
   G4eBremsstrahlung* brem = new G4eBremsstrahlung();
