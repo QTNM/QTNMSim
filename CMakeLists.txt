@@ -24,8 +24,7 @@ if(Boost_FOUND)
 endif()
 
 # Build
-add_executable(qtnmSim
-  qtnmSim.cc
+add_library(qtnmSimlib
   src/QTDetectorConstruction.cc
   src/QTBorisScheme.cc
   src/QTBorisDriver.cc
@@ -45,10 +44,17 @@ add_executable(qtnmSim
   src/QTEventAction.cc
   src/QTGasSD.cc
   src/QTPrimaryGeneratorAction.cc
-  src/QTTrajectory.cc
+  src/QTTrajectory.cc)
+target_include_directories(qtnmSimlib PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
+target_link_libraries(qtnmSimlib PRIVATE ${Geant4_LIBRARIES})
+
+add_executable(qtnmSim
+  qtnmSim.cc
   src/QTNMPhysicsList.cc)
 target_include_directories(qtnmSim PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
-target_link_libraries(qtnmSim PRIVATE ${Geant4_LIBRARIES})
+target_link_libraries(qtnmSim
+  PRIVATE ${Geant4_LIBRARIES}
+  PUBLIC qtnmSimlib)
 
 # Test
 #if(BUILD_TESTING)
