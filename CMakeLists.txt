@@ -57,8 +57,9 @@ target_link_libraries(qtnmSim
   PUBLIC qtnmSimlib)
 
 add_executable(Scattering
+  examples/src/SCDetectorConstruction.cc
   examples/scattering.cc)
-target_include_directories(Scattering PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
+target_include_directories(Scattering PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/examples/include ${PROJECT_SOURCE_DIR}/include/utils)
 target_link_libraries(Scattering
   PRIVATE ${Geant4_LIBRARIES}
   PUBLIC qtnmSimlib)
