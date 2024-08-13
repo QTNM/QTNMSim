@@ -6,19 +6,23 @@
 #include "globals.hh"
 
 # include <vector>
+
+class SCDetectorConstruction;
+
 /// Action initialization class.
 
 class SCActionInitialization : public G4VUserActionInitialization
 {
 public:
-  SCActionInitialization(G4String);
+  SCActionInitialization(G4String, SCDetectorConstruction*);
   ~SCActionInitialization() override;
 
   virtual void BuildForMaster() const override;
   virtual void Build() const override;
 
 private:
-  G4String              foutname;
+  G4String                foutname;
+  SCDetectorConstruction* fDetector = nullptr;
 };
 
 #endif

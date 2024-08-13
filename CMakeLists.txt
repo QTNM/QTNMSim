@@ -59,6 +59,9 @@ target_link_libraries(qtnmSim
 add_executable(Scattering
   examples/src/SCDetectorConstruction.cc
   examples/src/SCActionInitialization.cc
+  examples/src/SCRunAction.cc
+  examples/src/SCRun.cc
+  examples/src/SCPrimaryGeneratorAction.cc
   examples/scattering.cc)
 target_include_directories(Scattering PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/examples/include ${PROJECT_SOURCE_DIR}/include/utils)
 target_link_libraries(Scattering
