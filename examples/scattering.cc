@@ -27,7 +27,7 @@
 // us
 #include "CLI11.hpp"  // c++17 safe; https://github.com/CLIUtils/CLI11
 #include "SCDetectorConstruction.hh"
-#include "QTActionInitialization.hh"
+#include "SCActionInitialization.hh"
 
 int main(int argc, char** argv)
 {
@@ -94,8 +94,8 @@ int main(int argc, char** argv)
 
 
   // -- Set user action initialization class.
-  //auto* actions = new QTActionInitialization(outputFileName, angles);
-  //runManager->SetUserInitialization(actions);
+  auto* actions = new SCActionInitialization(outputFileName);
+  runManager->SetUserInitialization(actions);
 
 
   // Batch mode only - no visualisation
