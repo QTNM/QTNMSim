@@ -2,6 +2,7 @@
 #include "SCDetectorConstruction.hh"
 #include "SCPrimaryGeneratorAction.hh"
 #include "SCRunAction.hh"
+#include "SCSteppingAction.hh"
 #include "QTOutputManager.hh"
 
 
@@ -26,6 +27,8 @@ void SCActionInitialization::Build() const
 
   SCRunAction* run = new SCRunAction(fDetector,prim);
   SetUserAction(run);
+
+  SetUserAction(new SCSteppingAction());
 
   auto output = new QTOutputManager(foutname);
 }
