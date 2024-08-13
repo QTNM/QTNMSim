@@ -75,7 +75,8 @@ int main(int argc, char** argv)
 #endif
 
   // -- Set mandatory initialization classes
-  runManager->SetUserInitialization(new SCDetectorConstruction());
+  SCDetectorConstruction* det = new SCDetectorConstruction;
+  runManager->SetUserInitialization(det);
 
   // -- set user physics list
   // Physics list factory
@@ -92,9 +93,8 @@ int main(int argc, char** argv)
   // finish physics list
   runManager->SetUserInitialization(physList);
 
-
   // -- Set user action initialization class.
-  auto* actions = new SCActionInitialization(outputFileName);
+  auto* actions = new SCActionInitialization(outputFileName, det);
   runManager->SetUserInitialization(actions);
 
 

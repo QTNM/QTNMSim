@@ -28,8 +28,11 @@ public:
   ~SCDetectorConstruction() override;
 
   virtual G4VPhysicalVolume* Construct() override;
-  void SetMaterial (G4String);
   virtual void               ConstructSDandField() override;
+
+  void               SetMaterial (G4String);
+  G4double           GetSize()       {return fBoxSize;};
+  G4Material*        GetMaterial()   {return fMaterial;};
 
 private:
 
