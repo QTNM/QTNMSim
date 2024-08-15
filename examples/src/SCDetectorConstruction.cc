@@ -34,7 +34,7 @@ SCDetectorConstruction::SCDetectorConstruction()
     fBoxSize(1.0*CLHEP::cm)
 {
   DefineMaterials();
-  SetMaterial("Hydrogen");
+  SetMaterial("HydrogenGas");
   DefineCommands();
 }
 
@@ -91,13 +91,13 @@ G4VPhysicalVolume* SCDetectorConstruction::ConstructVolumes()
 void SCDetectorConstruction::ConstructSDandField()
 {
   G4SDManager::GetSDMpointer()->SetVerboseLevel(1);
-  
+
   // // Only need to construct the (per-thread) SD once
   // if(!fSD.Size()) {
   //   G4String collname;
   //   const G4GDMLAuxMapType* auxmap = fparser.GetAuxMap();
   //   for(G4GDMLAuxMapType::const_iterator iter=auxmap->begin();
-  // 	iter!=auxmap->end(); iter++) 
+  // 	iter!=auxmap->end(); iter++)
   //     {
   // 	G4LogicalVolume* lv = (*iter).first;
   // 	// sensitive volume should be defined separately to
@@ -114,10 +114,10 @@ void SCDetectorConstruction::ConstructSDandField()
   // 	  QTGasSD* aGasSD = new QTGasSD(SDname,
   // 				  collname+"HitsCollection");
   // 	  fSD.Push_back(aGasSD); // fSD is now a vector entry cache
-	    
+
   // 	  // Also only add it once to the SD manager!
   // 	  G4SDManager::GetSDMpointer()->AddNewDetector(aGasSD);
-	    
+
   // 	  lv->SetSensitiveDetector(aGasSD);
   // 	}
   //     }
@@ -134,7 +134,7 @@ void SCDetectorConstruction::ConstructSDandField()
     msg->SetVerboseLevel(1);
     G4AutoDelete::Register(msg);
     fFieldMessenger.Put( msg );
-  }  
+  }
 }
 
 void SCDetectorConstruction::DefineMaterials()
@@ -142,9 +142,17 @@ void SCDetectorConstruction::DefineMaterials()
   //
   // define Materials
   //
-  G4double z,a;
+  G4Element* H     = new G4Element("Hydrogen", "H", 1., 1.008 * g / mole);
+  G4Material* HMat = new G4Material("HydrogenGas", 1e-8 * g/cm3, 1);
+  HMat->AddElement(H, 1);
 
-  G4Element* H  = new G4Element("Hydrogen" ,"H" , z= 1., a=   1.01*g/mole);
+  G4Element* D     = new G4Element("Deuterium", "D", 1., 2.0141 * g / mole);
+  G4Material* DMat = new G4Material("DeuteriumGas", 1e-8 * g/cm3, 1);
+  DMat->AddElement(D, 1);
+
+  G4Element* T     = new G4Element("Tritium", "T", 1., 3.016 * g / mole);
+  G4Material* TMat = new G4Material("TritiumGas", 1e-8 * g/cm3, 1);
+  TMat->AddElement(T, 1);
 
   // Add others as appropriate
 }
