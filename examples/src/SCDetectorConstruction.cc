@@ -31,7 +31,7 @@ SCDetectorConstruction::SCDetectorConstruction()
     fUserLimit(nullptr),
     fMessenger(nullptr),
     fMaxTime(100.0*CLHEP::ns),     // default max time 100 ns
-    fBoxSize(1.0*CLHEP::cm)
+    fBoxSize(1.0*CLHEP::m)
 {
   DefineMaterials();
   SetMaterial("HydrogenGas");

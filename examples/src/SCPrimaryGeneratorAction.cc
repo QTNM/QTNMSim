@@ -46,7 +46,7 @@ SCPrimaryGeneratorAction::SCPrimaryGeneratorAction(SCDetectorConstruction* det)
 {
   fParticleGun  = new G4ParticleGun(1);
   G4ParticleDefinition* particle
-           = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
+           = G4ParticleTable::GetParticleTable()->FindParticle("e-");
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleEnergy(18.575*keV);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.,0.,0.));
