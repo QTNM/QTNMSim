@@ -26,7 +26,7 @@
 /// \file electromagnetic/TestEm13/src/PrimaryGeneratorAction.cc
 /// \brief Implementation of the PrimaryGeneratorAction class
 //
-// 
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -48,7 +48,7 @@ SCPrimaryGeneratorAction::SCPrimaryGeneratorAction(SCDetectorConstruction* det)
   G4ParticleDefinition* particle
            = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
   fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleEnergy(1*MeV);    
+  fParticleGun->SetParticleEnergy(18.575*keV);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.,0.,0.));
 }
 
@@ -67,16 +67,15 @@ void SCPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   //
   G4double halfSize = 0.5*(fDetector->GetSize());
   G4double x0 = - halfSize;
-  
+
   //randomize (y0,z0)
   //
-  G4double beam = 0.8*halfSize; 
+  G4double beam = 0.8*halfSize;
   G4double y0 = (2*G4UniformRand()-1.)*beam;
   G4double z0 = (2*G4UniformRand()-1.)*beam;
-  
+
   fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
