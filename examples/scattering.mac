@@ -1,0 +1,10 @@
+# minimal test macro
+# verbose
+#/run/verbose 0
+#/tracking/verbose 0
+
+# run init
+/run/initialize
+
+# start
+/run/beamOn 100000
