@@ -26,7 +26,7 @@
 /// \file electromagnetic/TestEm13/src/RunAction.cc
 /// \brief Implementation of the RunAction class
 //
-// 
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -50,20 +50,20 @@ SCRunAction::SCRunAction(SCDetectorConstruction* det, SCPrimaryGeneratorAction* 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4Run* SCRunAction::GenerateRun()
-{ 
-  fRun = new SCRun(fDetector); 
+{
+  fRun = new SCRun(fDetector);
   return fRun;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void SCRunAction::BeginOfRunAction(const G4Run*)
-{    
+{
   // show Rndm status
   if (isMaster)  G4Random::showEngineStatus();
-     
+
   // keep run condition
-  if ( fPrimary ) { 
-    G4ParticleDefinition* particle 
+  if ( fPrimary ) {
+    G4ParticleDefinition* particle
       = fPrimary->GetParticleGun()->GetParticleDefinition();
     G4double energy = fPrimary->GetParticleGun()->GetParticleEnergy();
     fRun->SetPrimary(particle, energy);
@@ -74,11 +74,11 @@ void SCRunAction::BeginOfRunAction(const G4Run*)
 
 void SCRunAction::EndOfRunAction(const G4Run*)
 {
-  // compute and print statistic 
+  // compute and print statistic
   if (isMaster) fRun->EndOfRun();
 
   // show Rndm status
-  if (isMaster)  G4Random::showEngineStatus(); 
+  if (isMaster)  G4Random::showEngineStatus();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
