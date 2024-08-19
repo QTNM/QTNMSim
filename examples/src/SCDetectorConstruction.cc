@@ -30,7 +30,7 @@ SCDetectorConstruction::SCDetectorConstruction()
   : G4VUserDetectorConstruction(),
     fUserLimit(nullptr),
     fMessenger(nullptr),
-    fMaxTime(100.0*CLHEP::ns),     // default max time 100 ns
+    fMaxTime(DBL_MAX),
     fBoxSize(1.0*CLHEP::m)
 {
   DefineMaterials();
