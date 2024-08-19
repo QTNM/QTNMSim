@@ -119,6 +119,9 @@ private:
   std::vector<G4double> logspace(const G4double a, const G4double b, const G4int n);
   // Ionisation energies
   std::vector<G4double> _bind = { 13.6 }; // eV - binding energy
+  // Parameters for MBELL model
+  const G4int mbell_m = 3; // Fixed upto 3P
+  const G4double mbell_lambda[3] = {1.270, 0.542, 0.950};  // Function of l. MBELL beyond l=1 unwise
 };
 
 #endif
