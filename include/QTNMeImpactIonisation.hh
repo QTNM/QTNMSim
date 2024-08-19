@@ -104,10 +104,10 @@ public:
 
 private:
 
-  void          load_ionisation_energies(G4int Z);
-  G4double*     get_ionisation_energies(G4int Z) { return _bind; };
-  G4double mbell_gr(G4double U, G4double J);
-  G4double mbell_f_ion(G4int el_no, G4int nu, G4double U, G4double m_lambda);
+  void                      load_ionisation_energies(G4int Z);
+  std::vector<G4double>     get_ionisation_energies(G4int Z) { return _bind; };
+  G4double                  mbell_gr(G4double U, G4double J);
+  G4double                  mbell_f_ion(G4int el_no, G4int nu, G4double U, G4double m_lambda);
   // the object that provides cross sections and polar angle of scattering
   G4eDPWAElasticDCS*         fTheDCS;
   // particle change
@@ -118,7 +118,7 @@ private:
   static const G4int nESpace = 200;
   std::vector<G4double> logspace(const G4double a, const G4double b, const G4int n);
   // Ionisation energies
-  G4double _bind[1] = { 13.6 }; // eV - binding energy
+  std::vector<G4double> _bind = { 13.6 }; // eV - binding energy
 };
 
 #endif

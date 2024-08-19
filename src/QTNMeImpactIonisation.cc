@@ -124,37 +124,40 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
 {
   G4double T_ev = ekin / CLHEP::eV;
 
-  // Potentially dangerous conversion to int?
-  G4double bind = get_ionisation_energies((int) Z)[0];
-
-  // Set elsewhere?
-  const G4int el_no = 1; // Number of electrons
-  G4double U = T_ev / bind;
-  G4double J = 512375 / bind; // Assumes units of eV
-
   // MBell constants. Units of eV^2 cm^2
   const G4double mbell_a = 0.525e-13;
   const G4double mbell_b[7] = {-0.510e-13, 0.2000e-13, 0.0500e-13, -0.025e-13, -0.100e-13, 0.00e-13, 0.00e-13};
   const G4int mbell_m = 3;
   const G4double mbell_lambda[3] = {1.270, 0.542, 0.950};
 
-  // These should be shell dependent
-  const G4int nu = 1;
-  const G4int n = 1;
-  const G4int l = 0;
+  // Potentially dangerous conversion to int?
+  std::vector<G4double> bind_vals = get_ionisation_energies((int) Z);
 
-  G4double gr = mbell_gr(U, J);
-  G4double f_ion = mbell_f_ion(el_no, nu, U, mbell_lambda[l]);
+  G4double sigma = 0;
+  for (G4double bind : bind_vals) {
+    // Set elsewhere?
+    const G4int el_no = 1; // Number of electrons
+    G4double U = T_ev / bind;
+    G4double J = 512375 / bind; // Assumes units of eV
 
-  G4double bsum = 0.0;
-  for (int i=0; i<7; i++) {
-    bsum += mbell_b[i] * pow(1.0 - 1.0 / U, i+1);
+    // These should be shell dependent
+    const G4int nu = 1;
+    const G4int n = 1;
+    const G4int l = 0;
+
+    G4double gr = mbell_gr(U, J);
+    G4double f_ion = mbell_f_ion(el_no, nu, U, mbell_lambda[l]);
+
+    G4double bsum = 0.0;
+    for (int i=0; i<7; i++) {
+      bsum += mbell_b[i] * pow(1.0 - 1.0 / U, i+1);
+    }
+
+    sigma += f_ion * gr * (mbell_a * std::log(U) + bsum) / (bind * T_ev); // cm^2
   }
 
-  G4double sigma = (mbell_a * std::log(U) + bsum) / (bind * T_ev); // cm^2
-
   // G4cout<< T_ev <<  ", " << sigma * f_ion * gr << G4endl;
-  return sigma * f_ion * gr * CLHEP::cm * CLHEP:: cm;
+  return sigma * CLHEP::cm * CLHEP:: cm;
 }
 
 
