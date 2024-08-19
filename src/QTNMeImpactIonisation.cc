@@ -94,7 +94,10 @@ void QTNMeImpactIonisation::Initialise(const G4ParticleDefinition* pdef,
       const G4ElementVector* elV = mat->GetElementVector();
       std::size_t numOfElem = mat->GetNumberOfElements();
       for (std::size_t ie = 0; ie < numOfElem; ++ie) {
-        fTheDCS->InitialiseForZ((*elV)[ie]->GetZasInt());
+	G4int Z = (*elV)[ie]->GetZasInt();
+        fTheDCS->InitialiseForZ(Z);
+	// Load the ionisation energies
+	load_ionisation_energies(Z);
       }
     }
     // will make use of the cross sections so the above needs to be done before
@@ -121,8 +124,10 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
 {
   G4double T_ev = ekin / CLHEP::eV;
 
-  // These values should be set elsewhere
-  const G4double bind = 13.6; // eV - binding energy
+  // Potentially dangerous conversion to int?
+  G4double bind = get_ionisation_energies((int) Z)[0];
+
+  // Set elsewhere?
   const G4int el_no = 1; // Number of electrons
   G4double U = T_ev / bind;
   G4double J = 512375 / bind; // Assumes units of eV
@@ -165,7 +170,8 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
   const G4int       izet   = target->GetZasInt();
 
   const G4double T_ev = ekin / CLHEP::eV;
-  const G4double bind = 13.6; // eV - binding energy
+
+  G4double bind = get_ionisation_energies(izet)[0];
 
   if(T_ev < bind) return;
 
@@ -267,4 +273,17 @@ QTNMeImpactIonisation::logspace(const G4double a, const G4double b, const G4int 
     _logspace.push_back(pow(10, i * fac + a));
   }
   return _logspace;
+}
+
+void
+QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
+{
+  if (Z != 0) {
+    std::ostringstream msg;
+    msg << "Invalid material with Z  = "
+	<< Z
+	<< " used for QTNM Impact Ionisation ";
+    G4Exception("QTNMeImpactIonisation::load_ionisation_energies:",
+		"InvalidMaterial", FatalException, msg);
+  }
 }
