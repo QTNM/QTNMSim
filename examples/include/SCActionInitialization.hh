@@ -5,8 +5,6 @@
 
 #include "globals.hh"
 
-# include <vector>
-
 class SCDetectorConstruction;
 
 /// Action initialization class.

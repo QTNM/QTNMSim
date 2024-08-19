@@ -23,7 +23,7 @@
 /// \file electromagnetic/TestEm13/include/PrimaryGeneratorAction.hh
 /// \brief Definition of the PrimaryGeneratorAction class
 //
-// 
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -42,7 +42,7 @@ class SCDetectorConstruction;
 class SCPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
-    SCPrimaryGeneratorAction(SCDetectorConstruction*);    
+    SCPrimaryGeneratorAction(SCDetectorConstruction*);
    ~SCPrimaryGeneratorAction() override;
 
   public:
@@ -57,5 +57,3 @@ class SCPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
