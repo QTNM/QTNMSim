@@ -189,7 +189,7 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
   const G4double beta_t2 = 1 - 1 / pow(1 + t_prime,2);
 
   // Physical constants
-  const G4double alpha = 1.0 / 137.0; // TODO
+  const G4double alpha = CLHEP::fine_structure_const;
   const G4double aB = 5.29e-11;
 
   // Number of shells
