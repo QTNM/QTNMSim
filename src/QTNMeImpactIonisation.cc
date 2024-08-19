@@ -127,8 +127,6 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
   // MBell constants. Units of eV^2 cm^2
   const G4double mbell_a = 0.525e-13;
   const G4double mbell_b[7] = {-0.510e-13, 0.2000e-13, 0.0500e-13, -0.025e-13, -0.100e-13, 0.00e-13, 0.00e-13};
-  const G4int mbell_m = 3;
-  const G4double mbell_lambda[3] = {1.270, 0.542, 0.950};
 
   // Potentially dangerous conversion to int?
   std::vector<G4double> bind_vals = get_ionisation_energies((int) Z);
