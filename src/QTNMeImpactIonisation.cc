@@ -138,6 +138,10 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
     // Set elsewhere?
     const G4int el_no = 1; // Number of electrons
     G4double U = T_ev / bind;
+
+    if (U < 1.0) {
+      continue;
+    }
     G4double J = 512375 / bind; // Assumes units of eV
 
     // These should be shell dependent
