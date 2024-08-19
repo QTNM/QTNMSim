@@ -26,7 +26,7 @@
 /// \file electromagnetic/TestEm13/src/SteppingAction.cc
 /// \brief Implementation of the SteppingAction class
 //
-// 
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -41,16 +41,14 @@ void SCSteppingAction::UserSteppingAction(const G4Step* aStep)
 {
   G4StepPoint* endPoint = aStep->GetPostStepPoint();
   G4String procName = endPoint->GetProcessDefinedStep()->GetProcessName();
-  
+
   SCRun* run = static_cast<SCRun*>(
-             G4RunManager::GetRunManager()->GetNonConstCurrentRun()); 
-  run->CountProcesses(procName);  
-           
+             G4RunManager::GetRunManager()->GetNonConstCurrentRun());
+  run->CountProcesses(procName);
+
   // kill event after first interaction
   //
-  G4RunManager::GetRunManager()->AbortEvent();  
+  G4RunManager::GetRunManager()->AbortEvent();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-

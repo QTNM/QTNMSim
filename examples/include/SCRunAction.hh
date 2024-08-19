@@ -54,14 +54,13 @@ class SCRunAction : public G4UserRunAction
     G4Run* GenerateRun() override;
     void BeginOfRunAction(const G4Run*) override;
     void   EndOfRunAction(const G4Run*) override;
-                                  
+
   private:
-    SCDetectorConstruction*   fDetector = nullptr;
+    SCDetectorConstruction*     fDetector = nullptr;
     SCPrimaryGeneratorAction*   fPrimary  = nullptr;
-    SCRun*                    fRun      = nullptr;
+    SCRun*                      fRun      = nullptr;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

@@ -65,4 +65,3 @@ class SCRun : public G4Run
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
