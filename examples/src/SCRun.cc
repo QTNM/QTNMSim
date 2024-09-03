@@ -34,60 +34,53 @@
 #include "SCDetectorConstruction.hh"
 #include "SCPrimaryGeneratorAction.hh"
 
-#include "G4UnitsTable.hh"
-#include "G4SystemOfUnits.hh"
 #include "G4EmCalculator.hh"
 #include "G4Gamma.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UnitsTable.hh"
 
 #include <iomanip>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-SCRun::SCRun(SCDetectorConstruction* det)
-: fDetector(det)
-{ }
+SCRun::SCRun(SCDetectorConstruction *det) : fDetector(det) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void SCRun::SetPrimary(G4ParticleDefinition* particle, G4double energy)
-{
+void SCRun::SetPrimary(G4ParticleDefinition *particle, G4double energy) {
   fParticle = particle;
   fEkin = energy;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void SCRun::CountProcesses(G4String procName)
-{
-  std::map<G4String,G4int>::iterator it = fProcCounter.find(procName);
-  if ( it == fProcCounter.end()) {
+void SCRun::CountProcesses(G4String procName) {
+  std::map<G4String, G4int>::iterator it = fProcCounter.find(procName);
+  if (it == fProcCounter.end()) {
     fProcCounter[procName] = 1;
-  }
-  else {
+  } else {
     fProcCounter[procName]++;
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void SCRun::Merge(const G4Run* run)
-{
-  const SCRun* localRun = static_cast<const SCRun*>(run);
+void SCRun::Merge(const G4Run *run) {
+  const SCRun *localRun = static_cast<const SCRun *>(run);
 
   // pass information about primary particle
   fParticle = localRun->fParticle;
-  fEkin     = localRun->fEkin;
+  fEkin = localRun->fEkin;
 
-  //map: processes count
-  std::map<G4String,G4int>::const_iterator it;
-  for (it = localRun->fProcCounter.begin();
-       it !=localRun->fProcCounter.end(); ++it) {
+  // map: processes count
+  std::map<G4String, G4int>::const_iterator it;
+  for (it = localRun->fProcCounter.begin(); it != localRun->fProcCounter.end();
+       ++it) {
 
     G4String procName = it->first;
-    G4int localCount  = it->second;
-    if ( fProcCounter.find(procName) == fProcCounter.end()) {
+    G4int localCount = it->second;
+    if (fProcCounter.find(procName) == fProcCounter.end()) {
       fProcCounter[procName] = localCount;
-    }
-    else {
+    } else {
       fProcCounter[procName] += localCount;
     }
   }
@@ -97,63 +90,66 @@ void SCRun::Merge(const G4Run* run)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void SCRun::EndOfRun()
-{
+void SCRun::EndOfRun() {
   G4int prec = 5;
   G4int dfprec = G4cout.precision(prec);
 
-  //run condition
+  // run condition
   //
-  G4String partName    = fParticle->GetParticleName();
-  G4Material* material = fDetector->GetMaterial();
-  G4double density     = material->GetDensity();
+  G4String partName = fParticle->GetParticleName();
+  G4Material *material = fDetector->GetMaterial();
+  G4double density = material->GetDensity();
   G4double tickness = fDetector->GetSize();
   G4double ndens = material->GetAtomicNumDensityVector()[0];
   G4double mass_mat = material->GetMassOfMolecule();
 
   G4cout << "\n ======================== run summary ======================\n";
   G4cout << "\n The run is: " << numberOfEvent << " " << partName << " of "
-         << G4BestUnit(fEkin,"Energy") << " through "
-         << G4BestUnit(tickness,"Length") << " of "
-         << material->GetName() << " (density: "
-         << G4BestUnit(density,"Volumic Mass") << ")" << G4endl;
+         << G4BestUnit(fEkin, "Energy") << " through "
+         << G4BestUnit(tickness, "Length") << " of " << material->GetName()
+         << " (density: " << G4BestUnit(density, "Volumic Mass") << ")"
+         << G4endl;
 
-  //frequency of processes
+  // frequency of processes
   G4int totalCount = 0;
   G4int survive = 0;
   G4cout << "\n Process calls frequency --->";
-  std::map<G4String,G4int>::iterator it;
+  std::map<G4String, G4int>::iterator it;
   for (it = fProcCounter.begin(); it != fProcCounter.end(); it++) {
-     G4String procName = it->first;
-     G4int    count    = it->second;
-     totalCount += count;
-     G4cout << "\t" << procName << " = " << count;
-     if (procName == "Transportation") survive = count;
+    G4String procName = it->first;
+    G4int count = it->second;
+    totalCount += count;
+    G4cout << "\t" << procName << " = " << count;
+    if (procName == "Transportation")
+      survive = count;
   }
   G4cout << G4endl;
 
-  if (totalCount == 0) { G4cout.precision(dfprec);   return;};
-  G4double ratio = double(survive)/totalCount;
+  if (totalCount == 0) {
+    G4cout.precision(dfprec);
+    return;
+  };
+  G4double ratio = double(survive) / totalCount;
 
   G4cout << "\n Nb of incident particles unaltered after "
-         << G4BestUnit(tickness,"Length") << " of "
-         << material->GetName() << " : " << survive
-         << " over " << totalCount << " incident particles."
-         << "  Ratio = " << 100*ratio << " %" << G4endl;
+         << G4BestUnit(tickness, "Length") << " of " << material->GetName()
+         << " : " << survive << " over " << totalCount << " incident particles."
+         << "  Ratio = " << 100 * ratio << " %" << G4endl;
 
-  if (ratio == 0.) return;
+  if (ratio == 0.)
+    return;
 
-  //compute cross section and related quantities
+  // compute cross section and related quantities
   //
-  G4double CrossSection = - std::log(ratio)/tickness;
-  G4double massicCS  = CrossSection/density;
+  G4double CrossSection = -std::log(ratio) / tickness;
+  G4double massicCS = CrossSection / density;
 
-  G4cout << " ---> CrossSection per volume:\t" << CrossSection*cm << " cm^-1 "
+  G4cout << " ---> CrossSection per volume:\t" << CrossSection * cm << " cm^-1 "
          << "\tCrossSection per mass: " << G4BestUnit(massicCS, "Surface/Mass")
-	 << "\tCrossSection: " << G4BestUnit(massicCS * mass_mat, "Surface")
+         << "\tCrossSection: " << G4BestUnit(massicCS * mass_mat, "Surface")
          << G4endl;
 
-  //check cross section from G4EmCalculator
+  // check cross section from G4EmCalculator
   //
   G4cout << "\n Verification from G4EmCalculator: \n";
   G4EmCalculator emCalculator;
@@ -161,15 +157,15 @@ void SCRun::EndOfRun()
   G4double sigma;
   for (it = fProcCounter.begin(); it != fProcCounter.end(); it++) {
     G4String procName = it->first;
-    G4double massSigma =
-    emCalculator.GetCrossSectionPerVolume(fEkin,fParticle,
-                                              procName,material)/density;
-    //G4double mfp = emCalculator.GetMeanFreePath(fEkin, fParticle, "CoulombScat", material);
-    //G4cout << G4BestUnit(mfp, "Length") << G4endl;
+    G4double massSigma = emCalculator.GetCrossSectionPerVolume(
+                             fEkin, fParticle, procName, material) /
+                         density;
+    // G4double mfp = emCalculator.GetMeanFreePath(fEkin, fParticle,
+    // "CoulombScat", material); G4cout << G4BestUnit(mfp, "Length") << G4endl;
     if (fParticle == G4Gamma::Gamma())
-       massSigma =
-       emCalculator.ComputeCrossSectionPerVolume(fEkin,fParticle,
-                                              procName,material)/density;
+      massSigma = emCalculator.ComputeCrossSectionPerVolume(
+                      fEkin, fParticle, procName, material) /
+                  density;
     sumc += massSigma;
     if (procName != "Transportation") {
       G4cout << "\t" << procName << "= "
@@ -177,22 +173,20 @@ void SCRun::EndOfRun()
       sigma = massSigma * mass_mat;
       G4cout << ",\t" << G4BestUnit(sigma, "Surface") << G4endl;
     }
-
   }
   sigma = sumc * mass_mat;
-  G4cout << "\ttotal= "
-         << G4BestUnit(sumc, "Surface/Mass");
+  G4cout << "\ttotal= " << G4BestUnit(sumc, "Surface/Mass");
   G4cout << ",\t" << G4BestUnit(sigma, "Surface") << G4endl;
 
-  //expected ratio of transmitted particles
-  G4double Ratio = std::exp(-sumc*density*tickness);
-  G4cout << "\tExpected ratio of transmitted particles= "
-         << 100*Ratio << " %" << G4endl;
+  // expected ratio of transmitted particles
+  G4double Ratio = std::exp(-sumc * density * tickness);
+  G4cout << "\tExpected ratio of transmitted particles= " << 100 * Ratio << " %"
+         << G4endl;
 
   // remove all contents in fProcCounter
   fProcCounter.clear();
 
-  //restore default format
+  // restore default format
   G4cout.precision(dfprec);
 }
 

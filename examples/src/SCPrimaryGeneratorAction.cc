@@ -34,47 +34,42 @@
 #include "SCDetectorConstruction.hh"
 
 #include "G4Event.hh"
-#include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-SCPrimaryGeneratorAction::SCPrimaryGeneratorAction(SCDetectorConstruction* det)
-:fDetector(det)
-{
-  fParticleGun  = new G4ParticleGun(1);
-  G4ParticleDefinition* particle
-           = G4ParticleTable::GetParticleTable()->FindParticle("e-");
+SCPrimaryGeneratorAction::SCPrimaryGeneratorAction(SCDetectorConstruction *det)
+    : fDetector(det) {
+  fParticleGun = new G4ParticleGun(1);
+  G4ParticleDefinition *particle =
+      G4ParticleTable::GetParticleTable()->FindParticle("e-");
   fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleEnergy(18.575*keV);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.,0.,0.));
+  fParticleGun->SetParticleEnergy(18.575 * keV);
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1., 0., 0.));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-SCPrimaryGeneratorAction::~SCPrimaryGeneratorAction()
-{
-  delete fParticleGun;
-}
+SCPrimaryGeneratorAction::~SCPrimaryGeneratorAction() { delete fParticleGun; }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void SCPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
-{
-  //this function is called at the begining of event
+void SCPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
+  // this function is called at the begining of event
   //
-  G4double halfSize = 0.5*(fDetector->GetSize());
-  G4double x0 = - halfSize;
+  G4double halfSize = 0.5 * (fDetector->GetSize());
+  G4double x0 = -halfSize;
 
-  //randomize (y0,z0)
+  // randomize (y0,z0)
   //
-  G4double beam = 0.8*halfSize;
-  G4double y0 = (2*G4UniformRand()-1.)*beam;
-  G4double z0 = (2*G4UniformRand()-1.)*beam;
+  G4double beam = 0.8 * halfSize;
+  G4double y0 = (2 * G4UniformRand() - 1.) * beam;
+  G4double z0 = (2 * G4UniformRand() - 1.) * beam;
 
-  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
+  fParticleGun->SetParticlePosition(G4ThreeVector(x0, y0, z0));
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 

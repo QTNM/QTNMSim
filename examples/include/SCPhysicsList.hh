@@ -18,12 +18,9 @@
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
 
-
-class SCPhysicsList : public G4VPhysicsConstructor
-{
+class SCPhysicsList : public G4VPhysicsConstructor {
 public:
-
-  explicit SCPhysicsList(G4int ver=1, const G4String& name="");
+  explicit SCPhysicsList(G4int ver = 1, const G4String &name = "");
 
   ~SCPhysicsList() override;
 
@@ -31,8 +28,7 @@ public:
   void ConstructProcess() override;
 
 private:
-  G4int  verbose;
+  G4int verbose;
 };
-
 
 #endif

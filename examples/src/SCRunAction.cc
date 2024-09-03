@@ -43,28 +43,27 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-SCRunAction::SCRunAction(SCDetectorConstruction* det, SCPrimaryGeneratorAction* kin)
-:fDetector(det),fPrimary(kin)
-{ }
+SCRunAction::SCRunAction(SCDetectorConstruction *det,
+                         SCPrimaryGeneratorAction *kin)
+    : fDetector(det), fPrimary(kin) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4Run* SCRunAction::GenerateRun()
-{
+G4Run *SCRunAction::GenerateRun() {
   fRun = new SCRun(fDetector);
   return fRun;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void SCRunAction::BeginOfRunAction(const G4Run*)
-{
+void SCRunAction::BeginOfRunAction(const G4Run *) {
   // show Rndm status
-  if (isMaster)  G4Random::showEngineStatus();
+  if (isMaster)
+    G4Random::showEngineStatus();
 
   // keep run condition
-  if ( fPrimary ) {
-    G4ParticleDefinition* particle
-      = fPrimary->GetParticleGun()->GetParticleDefinition();
+  if (fPrimary) {
+    G4ParticleDefinition *particle =
+        fPrimary->GetParticleGun()->GetParticleDefinition();
     G4double energy = fPrimary->GetParticleGun()->GetParticleEnergy();
     fRun->SetPrimary(particle, energy);
   }
@@ -72,13 +71,14 @@ void SCRunAction::BeginOfRunAction(const G4Run*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void SCRunAction::EndOfRunAction(const G4Run*)
-{
+void SCRunAction::EndOfRunAction(const G4Run *) {
   // compute and print statistic
-  if (isMaster) fRun->EndOfRun();
+  if (isMaster)
+    fRun->EndOfRun();
 
   // show Rndm status
-  if (isMaster)  G4Random::showEngineStatus();
+  if (isMaster)
+    G4Random::showEngineStatus();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

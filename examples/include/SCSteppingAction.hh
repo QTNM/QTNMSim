@@ -38,13 +38,12 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class SCSteppingAction : public G4UserSteppingAction
-{
-  public:
-    SCSteppingAction() = default;
-   ~SCSteppingAction() override = default;
+class SCSteppingAction : public G4UserSteppingAction {
+public:
+  SCSteppingAction() = default;
+  ~SCSteppingAction() override = default;
 
-    void UserSteppingAction(const G4Step*) override;
+  void UserSteppingAction(const G4Step *) override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
