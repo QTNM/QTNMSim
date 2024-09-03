@@ -42,24 +42,23 @@ class G4ParticleDefinition;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class SCRun : public G4Run
-{
-  public:
-    SCRun(SCDetectorConstruction*);
-   ~SCRun() override = default;
+class SCRun : public G4Run {
+public:
+  SCRun(SCDetectorConstruction *);
+  ~SCRun() override = default;
 
-  public:
-    void SetPrimary(G4ParticleDefinition* particle, G4double energy);
-    void CountProcesses(G4String procName);
-    void Merge(const G4Run*) override;
-    void EndOfRun();
+public:
+  void SetPrimary(G4ParticleDefinition *particle, G4double energy);
+  void CountProcesses(G4String procName);
+  void Merge(const G4Run *) override;
+  void EndOfRun();
 
-  private:
-    SCDetectorConstruction*  fDetector = nullptr;
-    G4ParticleDefinition*    fParticle = nullptr;
-    G4double  fEkin = 0.;
+private:
+  SCDetectorConstruction *fDetector = nullptr;
+  G4ParticleDefinition *fParticle = nullptr;
+  G4double fEkin = 0.;
 
-    std::map<G4String,G4int>  fProcCounter;
+  std::map<G4String, G4int> fProcCounter;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

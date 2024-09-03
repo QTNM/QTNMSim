@@ -30,8 +30,8 @@
 #ifndef SCPrimaryGeneratorAction_h
 #define SCPrimaryGeneratorAction_h 1
 
-#include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4ParticleGun.hh"
+#include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
 
 class G4Event;
@@ -39,19 +39,18 @@ class SCDetectorConstruction;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class SCPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
-{
-  public:
-    SCPrimaryGeneratorAction(SCDetectorConstruction*);
-   ~SCPrimaryGeneratorAction() override;
+class SCPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
+public:
+  SCPrimaryGeneratorAction(SCDetectorConstruction *);
+  ~SCPrimaryGeneratorAction() override;
 
-  public:
-    void GeneratePrimaries(G4Event*) override;
-    G4ParticleGun* GetParticleGun() {return fParticleGun;};
+public:
+  void GeneratePrimaries(G4Event *) override;
+  G4ParticleGun *GetParticleGun() { return fParticleGun; };
 
-  private:
-    G4ParticleGun*        fParticleGun = nullptr;
-    SCDetectorConstruction* fDetector = nullptr;
+private:
+  G4ParticleGun *fParticleGun = nullptr;
+  SCDetectorConstruction *fDetector = nullptr;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

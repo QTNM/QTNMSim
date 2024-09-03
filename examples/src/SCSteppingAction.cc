@@ -37,13 +37,12 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void SCSteppingAction::UserSteppingAction(const G4Step* aStep)
-{
-  G4StepPoint* endPoint = aStep->GetPostStepPoint();
+void SCSteppingAction::UserSteppingAction(const G4Step *aStep) {
+  G4StepPoint *endPoint = aStep->GetPostStepPoint();
   G4String procName = endPoint->GetProcessDefinedStep()->GetProcessName();
 
-  SCRun* run = static_cast<SCRun*>(
-             G4RunManager::GetRunManager()->GetNonConstCurrentRun());
+  SCRun *run = static_cast<SCRun *>(
+      G4RunManager::GetRunManager()->GetNonConstCurrentRun());
   run->CountProcesses(procName);
 
   // kill event after first interaction
