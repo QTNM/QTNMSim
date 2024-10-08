@@ -283,7 +283,7 @@ QTNMeImpactIonisation::logspace(const G4double a, const G4double b, const G4int 
 void
 QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
 {
-  if (Z != 0) {
+  if (Z != 1) {
     std::ostringstream msg;
     msg << "Invalid material with Z  = "
 	<< Z
