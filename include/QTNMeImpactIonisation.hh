@@ -59,6 +59,7 @@
 
 #include "G4VEmModel.hh"
 #include "globals.hh"
+#include <map>
 
 class G4eDPWAElasticDCS;
 class G4ParticleChangeForGamma;
@@ -105,7 +106,7 @@ public:
 private:
 
   void                      load_ionisation_energies(G4int Z);
-  std::vector<G4double>     get_ionisation_energies(G4int Z) { return _bind; };
+  std::vector<G4double>     get_ionisation_energies(G4int Z) { return binding_energies[Z]; };
   G4double                  mbell_gr(G4double U, G4double J);
   G4double                  mbell_f_ion(G4int el_no, G4int nu, G4double U, G4double m_lambda);
   // the object that provides cross sections and polar angle of scattering
@@ -118,7 +119,7 @@ private:
   static const G4int nESpace = 200;
   std::vector<G4double> logspace(const G4double a, const G4double b, const G4int n);
   // Ionisation energies
-  std::vector<G4double> _bind = { 13.6 }; // eV - binding energy
+  std::map<int, std::vector<G4double>> binding_energies;
   // Parameters for MBELL model
   const G4int mbell_m = 3; // Fixed upto 3P
   const G4double mbell_lambda[3] = {1.270, 0.542, 0.950};  // Function of l. MBELL beyond l=1 unwise

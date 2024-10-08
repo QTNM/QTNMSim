@@ -290,5 +290,7 @@ QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
 	<< " used for QTNM Impact Ionisation ";
     G4Exception("QTNMeImpactIonisation::load_ionisation_energies:",
 		"InvalidMaterial", FatalException, msg);
+  } else {
+    binding_energies[Z] = { 13.6 };
   }
 }
