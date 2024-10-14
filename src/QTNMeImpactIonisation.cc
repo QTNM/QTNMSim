@@ -133,14 +133,45 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
   const G4double mbell_a = 0.525e-13;
   const G4double mbell_b[7] = {-0.510e-13, 0.2000e-13, 0.0500e-13, -0.025e-13, -0.100e-13, 0.00e-13, 0.00e-13};
 
-  // Potentially dangerous conversion to int?
-  std::vector<G4double> bind_vals = get_ionisation_energies((int) Z);
 
+  // Z, int
+  G4int z_int = (int) Z;
+  std::vector<G4double> bind_vals = get_ionisation_energies(z_int);
+
+  // Number of electrons interior to shell
+  G4int n_ele_int = 0;
   G4double sigma = 0;
   for (G4int i = 0; i < bind_vals.size(); ++i) {
     G4double bind = bind_vals[i];
-    // Set elsewhere?
-    const G4int el_no = 1; // Number of electrons
+
+    // Quantum number n
+    const G4int n = table_n[i];
+    // Quantum number l
+    const G4int l = table_l[i];
+
+    // Effective charge
+    // Z - # electrons internal to this orbit
+    const G4int z_eff = z_int - n_ele_int;
+
+    // Number of electrons in this orbit
+    G4int n_ele;
+    if (l == 0) {
+      // 2 Electrons
+      n_ele = 2;
+      // Always increment n_ele_int in this case
+      n_ele_int += 2;
+    } else {
+      // Number of electrons with distint j
+      n_ele = 2*l + 1;
+      // Only add electrons if subshell above has different n,l
+      // i.e. we have processed j=|l+1/2| and j=|l-1/2|
+      if (table_n[i+1] != n || table_l[i+1] != l) {
+	n_ele_int += 4*l + 2;
+      }
+    }
+    // Not strictly necessary, we shouldn't need if > Z
+    n_ele_int = std::min(z_int, n_ele_int);
+
     G4double U = T_ev / bind;
 
     if (U < 1.0) {
@@ -148,20 +179,15 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
     }
     G4double J = 512375 / bind; // Assumes units of eV
 
-    // These should be shell dependent
-    const G4int nu = 1;
-    const G4int n = table_n[i];
-    const G4int l = table_l[i];
-
     G4double gr = mbell_gr(U, J);
-    G4double f_ion = mbell_f_ion(el_no, nu, U, mbell_lambda[l]);
+    G4double f_ion = mbell_f_ion(z_eff, U, z_int, mbell_lambda[l]);
 
     G4double bsum = 0.0;
     for (int i=0; i<7; i++) {
       bsum += mbell_b[i] * pow(1.0 - 1.0 / U, i+1);
     }
 
-    sigma += f_ion * gr * (mbell_a * std::log(U) + bsum) / (bind * T_ev); // cm^2
+    sigma += n_ele * f_ion * gr * (mbell_a * std::log(U) + bsum) / (bind * T_ev); // cm^2
   }
 
   // G4cout<< T_ev <<  ", " << sigma * f_ion * gr << G4endl;
@@ -268,9 +294,9 @@ QTNMeImpactIonisation::mbell_gr(G4double U, G4double J)
 }
 
 G4double
-QTNMeImpactIonisation::mbell_f_ion(G4int el_no, G4int nu, G4double U, G4double m_lambda)
+QTNMeImpactIonisation::mbell_f_ion(G4int z_eff, G4double U, G4int Z, G4double m_lambda)
 {
-  return 1 + mbell_m * pow( (el_no - nu)/(U*el_no), m_lambda);
+  return 1 + mbell_m * pow( z_eff/(U*Z), m_lambda);
 }
 
 
