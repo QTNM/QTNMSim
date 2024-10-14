@@ -131,6 +131,9 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
 
   // Z, int
   G4int z_int = (int) Z;
+  if (z_int > z_max) return 0.0;
+
+  // Get binding energies for material
   std::vector<G4double> bind_vals = get_ionisation_energies(z_int);
 
   // Number of electrons interior to shell
@@ -328,14 +331,13 @@ QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
       // but break instead
       break;
     }
-  // for (auto e: binding_energies[Z]) G4cout << e << G4endl;
 
   if (Z > z_max) {
     std::ostringstream msg;
-    msg << "Invalid material with Z  = "
+    msg << "Impact ionisation cross section unavailable for Z  = "
 	<< Z
-	<< " used for QTNM Impact Ionisation ";
+	<< ". Cross section will be set to 0.0";
     G4Exception("QTNMeImpactIonisation::load_ionisation_energies:",
-		"InvalidMaterial", FatalException, msg);
+		"No Cross Section", JustWarning, msg);
   }
 }
