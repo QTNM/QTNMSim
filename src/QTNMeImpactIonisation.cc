@@ -270,7 +270,7 @@ QTNMeImpactIonisation::mbell_gr(G4double U, G4double J)
 G4double
 QTNMeImpactIonisation::mbell_f_ion(G4int el_no, G4int nu, G4double U, G4double m_lambda)
 {
-  return 1 + 3*pow( (el_no - nu)/(U*el_no), m_lambda);
+  return 1 + mbell_m * pow( (el_no - nu)/(U*el_no), m_lambda);
 }
 
 
