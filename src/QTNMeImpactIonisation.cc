@@ -137,7 +137,8 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
   std::vector<G4double> bind_vals = get_ionisation_energies((int) Z);
 
   G4double sigma = 0;
-  for (G4double bind : bind_vals) {
+  for (G4int i = 0; i < bind_vals.size(); ++i) {
+    G4double bind = bind_vals[i];
     // Set elsewhere?
     const G4int el_no = 1; // Number of electrons
     G4double U = T_ev / bind;
