@@ -150,8 +150,8 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
 
     // These should be shell dependent
     const G4int nu = 1;
-    const G4int n = 1;
-    const G4int l = 0;
+    const G4int n = table_n[i];
+    const G4int l = table_l[i];
 
     G4double gr = mbell_gr(U, J);
     G4double f_ion = mbell_f_ion(el_no, nu, U, mbell_lambda[l]);
