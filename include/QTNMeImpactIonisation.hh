@@ -136,6 +136,8 @@ private:
   const G4int table_n[29] = {1, 2, 2, 2, 3, 3, 3, 4, 3, 3, 4, 4, 5, 4, 4, 5, 5, 6, 4, 4, 5, 5, 6, 6, 7, 5, 5, 6, 6};
   const G4int table_l[29] = {0, 0, 1, 1, 0, 1, 1, 0, 2, 2, 1, 1, 0, 2, 2, 1, 1, 0, 3, 3, 2, 2, 1, 1, 0, 3, 3, 2, 2};
   std::string project_root = XSTRING(SOURCE_ROOT);
+  // Maximum Z allowable
+  const G4int z_max = 18;
 };
 
 #endif
