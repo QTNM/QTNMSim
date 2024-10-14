@@ -41,6 +41,11 @@
 
 #include "QTNMeImpactIonisation.hh"
 
+#include <fstream>
+#include <sstream>
+#include <iterator>
+#include <algorithm>
+
 #include "G4eDPWAElasticDCS.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4ParticleDefinition.hh"
@@ -283,6 +288,26 @@ QTNMeImpactIonisation::logspace(const G4double a, const G4double b, const G4int 
 void
 QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
 {
+  auto fname = project_root + "/src/tables/binding_energy/be_" + std::to_string(Z);
+  std::ifstream input;
+  input.open(fname);
+  // Skip Header
+  input.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  std::string line;
+  while (std::getline(input >> std::ws, line))
+    {
+      // Skip first character, the ionisation level
+      std::istringstream iss(line.substr(1, line.size()-1));
+      // Convert remaining numbers into a vector, and delete 0 elements.
+      std::vector<G4double> elevels = std::vector<double>{std::istream_iterator<double>(iss), std::istream_iterator<double>()};
+      elevels.erase(std::remove(elevels.begin(), elevels.end(), 0.0), elevels.end());
+      binding_energies[Z] = elevels;
+      // Could at this stage read in levels for ions
+      // but break instead
+      break;
+    }
+  // for (auto e: binding_energies[Z]) G4cout << e << G4endl;
+
   if (Z != 1) {
     std::ostringstream msg;
     msg << "Invalid material with Z  = "
@@ -290,7 +315,5 @@ QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
 	<< " used for QTNM Impact Ionisation ";
     G4Exception("QTNMeImpactIonisation::load_ionisation_energies:",
 		"InvalidMaterial", FatalException, msg);
-  } else {
-    binding_energies[Z] = { 13.6 };
   }
 }
