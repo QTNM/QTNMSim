@@ -51,7 +51,8 @@
 // will be "double counted").
 //
 // -------------------------------------------------------------------
-
+#define STRING(x) #x
+#define XSTRING(x) STRING(x)
 
 
 #ifndef QTNMeImpactIonisation_h
@@ -123,6 +124,7 @@ private:
   // Parameters for MBELL model
   const G4int mbell_m = 3; // Fixed upto 3P
   const G4double mbell_lambda[3] = {1.270, 0.542, 0.950};  // Function of l. MBELL beyond l=1 unwise
+  std::string project_root = XSTRING(SOURCE_ROOT);
 };
 
 #endif

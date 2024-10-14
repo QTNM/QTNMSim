@@ -23,6 +23,9 @@ if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
+# Project ROOT directory for reading data
+add_compile_definitions("SOURCE_ROOT=${CMAKE_SOURCE_DIR}")
+
 # Build
 add_library(qtnmSimlib
   src/QTDetectorConstruction.cc
