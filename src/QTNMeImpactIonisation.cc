@@ -330,7 +330,7 @@ QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
     }
   // for (auto e: binding_energies[Z]) G4cout << e << G4endl;
 
-  if (Z != 1) {
+  if (Z > z_max) {
     std::ostringstream msg;
     msg << "Invalid material with Z  = "
 	<< Z
