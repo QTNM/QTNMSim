@@ -129,11 +129,6 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
 {
   G4double T_ev = ekin / CLHEP::eV;
 
-  // MBell constants. Units of eV^2 cm^2
-  const G4double mbell_a = 0.525e-13;
-  const G4double mbell_b[7] = {-0.510e-13, 0.2000e-13, 0.0500e-13, -0.025e-13, -0.100e-13, 0.00e-13, 0.00e-13};
-
-
   // Z, int
   G4int z_int = (int) Z;
   std::vector<G4double> bind_vals = get_ionisation_energies(z_int);
@@ -184,10 +179,10 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
 
     G4double bsum = 0.0;
     for (int i=0; i<7; i++) {
-      bsum += mbell_b[i] * pow(1.0 - 1.0 / U, i+1);
+      bsum += mbell_b[n-1][l][i] * pow(1.0 - 1.0 / U, i+1);
     }
 
-    sigma += n_ele * f_ion * gr * (mbell_a * std::log(U) + bsum) / (bind * T_ev); // cm^2
+    sigma += n_ele * f_ion * gr * (mbell_a[n-1][l] * std::log(U) + bsum) / (bind * T_ev); // cm^2
   }
 
   // G4cout<< T_ev <<  ", " << sigma * f_ion * gr << G4endl;

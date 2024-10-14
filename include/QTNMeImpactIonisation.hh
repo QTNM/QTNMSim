@@ -96,7 +96,7 @@ public:
                              G4double tmin,
                              G4double maxEnergy) override;
 
-  G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*, 
+  G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*,
                             G4double) override { return 10.0*CLHEP::eV; }
 
   void     SetTheDCS(G4eDPWAElasticDCS* theDCS) { fTheDCS = theDCS; }
@@ -124,6 +124,15 @@ private:
   // Parameters for MBELL model
   const G4int mbell_m = 3; // Fixed upto 3P
   const G4double mbell_lambda[3] = {1.270, 0.542, 0.950};  // Function of l. MBELL beyond l=1 unwise
+  // a, b units of eV^2 cm^2
+  const G4double mbell_a[3][2] = { {0.525e-13, 0.0} , {0.53e-13, 0.6e-13} , {0.13e-13, 0.388e-13}};
+  const G4double mbell_b[3][2][7] =
+    { { {-0.510e-13, 0.2000e-13, 0.0500e-13, -0.025e-13, -0.100e-13, 0.00e-13, 0.00e-13},
+	{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0} },
+      { {-0.410e-13,  0.1500e-13,  0.1500e-13, -0.200e-13, -0.150e-13,  0.00e-13,  0.00e-13},
+	{-0.400e-13, -0.7100e-13,  0.6550e-13,  0.425e-13, -0.750e-13,  0.00e-13,  0.00e-13} },
+      { {0.250e-13, -1.5000e-13,  2.4000e-13,  3.220e-13, -3.667e-13,  0.00e-13,  0.00e-13},
+	{-0.200e-13, -0.2356e-13,  0.5355e-13,  3.150e-13, -8.500e-13,  5.05e-13,  0.37e-13}}};
   const G4int table_n[29] = {1, 2, 2, 2, 3, 3, 3, 4, 3, 3, 4, 4, 5, 4, 4, 5, 5, 6, 4, 4, 5, 5, 6, 6, 7, 5, 5, 6, 6};
   const G4int table_l[29] = {0, 0, 1, 1, 0, 1, 1, 0, 2, 2, 1, 1, 0, 2, 2, 1, 1, 0, 3, 3, 2, 2, 1, 1, 0, 3, 3, 2, 2};
   std::string project_root = XSTRING(SOURCE_ROOT);
