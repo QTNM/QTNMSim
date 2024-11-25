@@ -46,5 +46,5 @@ jobs:
           source /geant4-install/bin/geant4.sh
           source /cern_root/bin/thisroot.sh
           cd build
-          ./qtnmSim -m ../test/test0.mac -g ../test/test.gdml
+          ./qtnmSim -m ../example_input/test0.mac -g ../example_input/test.gdml
           python3 -c "import ROOT; ROOT.TFile('qtnm.root')"
