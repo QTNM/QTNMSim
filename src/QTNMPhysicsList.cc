@@ -158,8 +158,7 @@ void QTNMPhysicsList::ConstructProcess()
   ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
 
   // Impact Ionisation
-  G4CoulombScattering* eioni = new G4CoulombScattering();
-  eioni->AddEmModel(0, new QTNMeImpactIonisation());
+  ss->AddEmModel(0, new QTNMeImpactIonisation());
 
   // bremsstrahlung
   G4eBremsstrahlung* brem = new G4eBremsstrahlung();
@@ -175,7 +174,6 @@ void QTNMPhysicsList::ConstructProcess()
   ph->RegisterProcess(brem, particle);
   ph->RegisterProcess(ee, particle);
   ph->RegisterProcess(ss, particle);
-  ph->RegisterProcess(eioni, particle);
 
   // e+
   particle = G4Positron::Positron();
