@@ -40,7 +40,7 @@ jobs:
           cmake ..
           make
 
-      # Build Package
+      # Run Package
       - name: Run
         run: |
           source /geant4-install/bin/geant4.sh
