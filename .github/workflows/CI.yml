@@ -48,3 +48,9 @@ jobs:
           cd build
           ./qtnmSim -m ../example_input/test0.mac -g ../example_input/test.gdml
           python3 -c "import ROOT; ROOT.TFile('qtnm.root')"
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: root-file
+          path: build/qtnm.root
