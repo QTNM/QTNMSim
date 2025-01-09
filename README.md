@@ -20,6 +20,11 @@ cd build; cmake ..; make
 
 and run in the build directory.
 
+## Test Results
+
+The code is automatically tested upon new pushes. Plots from recent tests can be downloaded from:
+https://github.com/QTNM/QTNMSim/actions?query=workflow%3ABuildandTest
+
 ### Status update
 
 Added storage of omega values and kinetic energy values. The former permits to determine the truth value
