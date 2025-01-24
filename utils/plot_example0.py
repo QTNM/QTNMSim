@@ -10,13 +10,14 @@ def plot_signal():
     TimeArr = np.array(t.TimeVec)
     AntennaIDArr = np.array(t.AntennaID)
     VoltageArr = np.array(t.VoltageVec)
-    plt.plot(TimeArr[AntennaIDArr == 0], VoltageArr[AntennaIDArr == 0], label='Antenna 0')
-    plt.plot(TimeArr[AntennaIDArr == 1], VoltageArr[AntennaIDArr == 1], label='Antenna 1', linestyle='--')
+    for i in set(AntennaIDArr):
+        plt.plot(TimeArr[AntennaIDArr == i], VoltageArr[AntennaIDArr == i], label=f"Antenna {i}")
     plt.legend()
     plt.xlabel('Time (ns)')
     plt.ylabel('Voltage')
+    plt.xlim(left=0)
     plt.tight_layout()
-    plt.savefig('test0.png')
+    plt.savefig('example0.png')
 
 
 if __name__ == "__main__":
