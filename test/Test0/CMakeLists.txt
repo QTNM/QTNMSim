@@ -27,8 +27,6 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #
 add_executable(TestEm0 TestEm0.cc ${sources} ${headers})
 target_link_libraries(TestEm0 ${Geant4_LIBRARIES} )
-add_executable(DirectAccess DirectAccess.cc ${sources} ${headers})
-target_link_libraries(DirectAccess ${Geant4_LIBRARIES} )
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
@@ -51,5 +49,4 @@ endforeach()
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
 install(TARGETS TestEm0 DESTINATION bin)
-install(TARGETS DirectAccess DESTINATION bin)
 
