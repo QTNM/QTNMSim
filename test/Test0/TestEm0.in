@@ -12,13 +12,5 @@
 #
 /run/initialize
 #
-/testem/det/setMat Germanium
-/gun/particle gamma
-/gun/energy 300 keV
-/run/beamOn 
-#
 /testem/det/setMat Water
-/gun/particle e-
-/gun/energy 10 MeV
-/run/setCut 100 um
 /run/beamOn 

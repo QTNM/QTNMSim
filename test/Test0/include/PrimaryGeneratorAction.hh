@@ -45,21 +45,19 @@ class DetectorConstruction;
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
-    PrimaryGeneratorAction(DetectorConstruction*);    
+    PrimaryGeneratorAction(DetectorConstruction*);
    ~PrimaryGeneratorAction() override;
 
   public:
-    void SetDefaultKinematic();
     void GeneratePrimaries(G4Event*) override;
-    
+
     G4ParticleGun* GetParticleGun() {return fParticleGun;}
 
   private:
     G4ParticleGun*             fParticleGun = nullptr;
-    DetectorConstruction*      fDetector    = nullptr;  
+    DetectorConstruction*      fDetector    = nullptr;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
