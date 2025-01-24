@@ -31,6 +31,11 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
+#ifdef G4MULTITHREADED
+#include "G4MTRunManager.hh"
+#else
+#include "G4RunManager.hh"
+#endif
 
 #include "G4RunManagerFactory.hh"
 #include "G4UImanager.hh"
@@ -40,15 +45,46 @@
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
 
-#include "G4UIExecutive.hh"
+//#include "G4UIExecutive.hh"
+
+#include "CLI11.hpp"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
 int main(int argc,char** argv) {
 
-  //detect interactive mode (if no arguments) and define UI session
-  G4UIExecutive* ui = 0;
-  if (argc == 1) ui = new G4UIExecutive(argc,argv);
+  // command line interface
+  CLI::App    app{ "QTNM simulation app" };
+  int         nthreads = 4;
+  int         seed     = 1234;
+  std::string outputFileName("qtnm.root");
+  std::string macroName;
+  std::string gdmlFileName("test.gdml");
+  std::string physListName("QTNMPhysicsList");
+
+  app.add_option("-m,--macro", macroName, "<Geant4 macro filename> Default: None");
+  app.add_option("-g,--gdml", gdmlFileName, "<Geant4 GDML filename> Default: test.gdml");
+  app.add_option("-p,--physlist", physListName, "<Geant4 physics list macro> Default: QTNMPhysicsList");
+  app.add_option("-s,--seed", seed, "<Geant4 random number seed + offset 1234> Default: 1234");
+  app.add_option("-o,--outputFile", outputFileName,
+                 "<FULL PATH ROOT FILENAME> Default: qtnm.root");
+  app.add_option("-t, --nthreads", nthreads, "<number of threads to use> Default: 4");
+
+  CLI11_PARSE(app, argc, argv);
+
+  // Get the pointer to the User Interface manager
+  //
+  G4UImanager *UImanager = G4UImanager::GetUIpointer();
+
+  // Don't accept interactive mode (no macroName).
+  if(macroName.empty())
+  {
+    G4cout << "No interactive mode running of example: provide a macro!" << G4endl;
+    return 1;
+  }
+
+  // set the random seed + offset 1234; avoiding zero seed -> runtime error
+  CLHEP::HepRandom::setTheSeed(1234+seed);
 
   //Construct a serial run manager
   auto* runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);
@@ -59,27 +95,18 @@ int main(int argc,char** argv) {
   runManager->SetUserInitialization(det = new DetectorConstruction);
   runManager->SetUserInitialization(new PhysicsList);
   runManager->SetUserAction(prim = new PrimaryGeneratorAction(det));
-      
+
   // set user action classes
   runManager->SetUserAction(new RunAction(det,prim));
 
-  //get the pointer to the User Interface manager 
-  G4UImanager* UImanager = G4UImanager::GetUIpointer();
+    // Batch mode only - no visualisation
+  G4String command = "/control/execute ";
+  UImanager->ApplyCommand(command + macroName);
 
-  if (ui)  {
-    //interactive mode
-    ui->SessionStart();
-    delete ui;
-  } else {
-    //batch mode  
-    G4String command = "/control/execute ";
-    G4String fileName = argv[1];
-    UImanager->ApplyCommand(command+fileName);
-  }
-
-  //job termination 
+  //job termination
   //
   delete runManager;
+  return 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
