@@ -37,11 +37,12 @@
 #include "G4RunManager.hh"
 #endif
 
+#include "G4GenericPhysicsList.hh"
 #include "G4RunManagerFactory.hh"
 #include "G4UImanager.hh"
+#include "G4VModularPhysicsList.hh"
 
 #include "DetectorConstruction.hh"
-#include "PhysicsList.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
 
@@ -60,11 +61,11 @@ int main(int argc,char** argv) {
   std::string outputFileName("qtnm.root");
   std::string macroName;
   std::string gdmlFileName("test.gdml");
-  std::string physListName("QTNMPhysicsList");
+  std::string physListName("ElasticScatteringList");
 
   app.add_option("-m,--macro", macroName, "<Geant4 macro filename> Default: None");
   app.add_option("-g,--gdml", gdmlFileName, "<Geant4 GDML filename> Default: test.gdml");
-  app.add_option("-p,--physlist", physListName, "<Geant4 physics list macro> Default: QTNMPhysicsList");
+  app.add_option("-p,--physlist", physListName, "<Geant4 physics list macro> Default: ElasticScatteringList");
   app.add_option("-s,--seed", seed, "<Geant4 random number seed + offset 1234> Default: 1234");
   app.add_option("-o,--outputFile", outputFileName,
                  "<FULL PATH ROOT FILENAME> Default: qtnm.root");
@@ -93,7 +94,18 @@ int main(int argc,char** argv) {
   DetectorConstruction* det;
   PrimaryGeneratorAction* prim;
   runManager->SetUserInitialization(det = new DetectorConstruction);
-  runManager->SetUserInitialization(new PhysicsList);
+
+  // -- set user physics list
+  // Physics list factory
+  G4VModularPhysicsList *physList = nullptr;
+
+  // from vector of physics constructor names
+  std::vector<G4String> *myConstructors = new std::vector<G4String>;
+  myConstructors->push_back(physListName.data());
+  physList = new G4GenericPhysicsList(myConstructors);
+  // finish physics list
+  runManager->SetUserInitialization(physList);
+
   runManager->SetUserAction(prim = new PrimaryGeneratorAction(det));
 
   // set user action classes
