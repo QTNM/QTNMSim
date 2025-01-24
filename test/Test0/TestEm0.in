@@ -12,5 +12,5 @@
 #
 /run/initialize
 #
-/testem/det/setMat Water
+/testem/det/setMat HydrogenGas
 /run/beamOn 
