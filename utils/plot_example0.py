@@ -11,7 +11,7 @@ def plot_signal():
     AntennaIDArr = np.array(t.AntennaID)
     VoltageArr = np.array(t.VoltageVec)
     for i in set(AntennaIDArr):
-        plt.plot(TimeArr[AntennaIDArr == i], VoltageArr[AntennaIDArr == i], label='Antenna %d' % i)
+        plt.plot(TimeArr[AntennaIDArr == i], VoltageArr[AntennaIDArr == i], label=f"Antenna {i}")
     plt.legend()
     plt.xlabel('Time (ns)')
     plt.ylabel('Voltage')
