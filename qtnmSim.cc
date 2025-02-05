@@ -38,11 +38,11 @@ int main(int argc, char** argv)
   int         seed     = 1234;
   std::string outputFileName("qtnm.root");
   std::string macroName;
-  std::string gdmlFileName("test.gdml");
+  std::string gdmlFileName("example.gdml");
   std::string physListName("QTNMPhysicsList");
 
   app.add_option("-m,--macro", macroName, "<Geant4 macro filename> Default: None");
-  app.add_option("-g,--gdml", gdmlFileName, "<Geant4 GDML filename> Default: test.gdml");
+  app.add_option("-g,--gdml", gdmlFileName, "<Geant4 GDML filename> Default: example.gdml");
   app.add_option("-p,--physlist", physListName, "<Geant4 physics list macro> Default: QTNMPhysicsList");
   app.add_option("-s,--seed", seed, "<Geant4 random number seed + offset 1234> Default: 1234");
   app.add_option("-o,--outputFile", outputFileName,
