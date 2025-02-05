@@ -242,37 +242,39 @@ void RunAction::BeginOfRunAction(const G4Run*)
   dedx1[nproc] = dedxtot;
   dedx2[nproc] = dedxtot/density;
 
-  //print stopping power
-  G4cout << "\n \n  unrestricted dE/dx       : ";
-  for (size_t j=0; j<=nproc;  ++j) {
-    G4cout << "\t" << std::setw(9) << G4BestUnit(dedx1[j],"Energy/Length");
+  if (dedxtot > 0.0) {
+    //print stopping power
+    G4cout << "\n \n  unrestricted dE/dx       : ";
+    for (size_t j=0; j<=nproc;  ++j) {
+      G4cout << "\t" << std::setw(9) << G4BestUnit(dedx1[j],"Energy/Length");
+    }
+
+    G4cout << "\n      (MeV/g/cm2)          : ";
+    for (size_t j=0; j<=nproc;  ++j) {
+      G4cout << "\t" << std::setw(9)
+	     << G4BestUnit(dedx2[j],"Energy*Surface/Mass");
+    }
+
+    //get range from restricted dedx
+    G4double range1 = emCal.GetRangeFromRestricteDEDX(energy,particle,material);
+    G4double range2 = range1*density;
+
+    //print range
+    G4cout << "\n \n  range from restrict dE/dx: "
+	   << "\t" << std::setw(9) << G4BestUnit(range1,"Length")
+	   << " (" << std::setw(9) << G4BestUnit(range2,"Mass/Surface") << ")";
+
+    //get transport mean free path (for multiple scattering)
+    G4double MSmfp1 = emCal.GetMeanFreePath(energy,particle,"msc",material);
+    G4double MSmfp2 = MSmfp1*density;
+
+    //print transport mean free path
+    G4cout << "\n \n  transport mean free path : "
+	   << "\t" << std::setw(9) << G4BestUnit(MSmfp1,"Length")
+	   << " (" << std::setw(9) << G4BestUnit(MSmfp2,"Mass/Surface") << ")";
+
+    if (particle == G4Electron::Electron()) CriticalEnergy();
   }
-
-  G4cout << "\n      (MeV/g/cm2)          : ";
-  for (size_t j=0; j<=nproc;  ++j) {
-    G4cout << "\t" << std::setw(9)
-           << G4BestUnit(dedx2[j],"Energy*Surface/Mass");
-  }
-
-  //get range from restricted dedx
-  G4double range1 = emCal.GetRangeFromRestricteDEDX(energy,particle,material);
-  G4double range2 = range1*density;
-
-  //print range
-  G4cout << "\n \n  range from restrict dE/dx: "
-         << "\t" << std::setw(9) << G4BestUnit(range1,"Length")
-         << " (" << std::setw(9) << G4BestUnit(range2,"Mass/Surface") << ")";
-
-  //get transport mean free path (for multiple scattering)
-  G4double MSmfp1 = emCal.GetMeanFreePath(energy,particle,"msc",material);
-  G4double MSmfp2 = MSmfp1*density;
-
-  //print transport mean free path
-  G4cout << "\n \n  transport mean free path : "
-         << "\t" << std::setw(9) << G4BestUnit(MSmfp1,"Length")
-         << " (" << std::setw(9) << G4BestUnit(MSmfp2,"Mass/Surface") << ")";
-
-  if (particle == G4Electron::Electron()) CriticalEnergy();
 
   G4cout << "\n-------------------------------------------------------------\n";
   G4cout << G4endl;
