@@ -49,6 +49,10 @@ jobs:
           ./qtnmSim -m ../example_input/example0.mac -g ../example_input/example.gdml
           python3 ../utils/plot_example0.py
 
+          # Run Test0
+          cd test/Test0
+          ./TestEm0 -m TestEm0.in
+
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
