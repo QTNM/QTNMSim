@@ -35,6 +35,7 @@
 #include "PrimaryGeneratorAction.hh"
 
 #include "G4Run.hh"
+#include "G4AnalysisManager.hh"
 #include "G4ProcessManager.hh"
 #include "G4LossTableManager.hh"
 #include "G4UnitsTable.hh"
@@ -50,7 +51,24 @@
 
 RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* kin)
 :fDetector(det), fPrimary(kin)
-{ }
+{
+// Create analysis manager
+  auto analysisManager = G4AnalysisManager::Instance();
+  analysisManager->SetDefaultFileType("root");
+
+  // Create directories
+  analysisManager->SetVerboseLevel(1);
+  analysisManager->SetNtupleMerging(true);
+
+  // Creating ntuple with vector entries
+  //
+  analysisManager->CreateNtuple("CrossSection", "Energy-Series");
+  analysisManager->CreateNtupleDColumn("Energy");
+  analysisManager->CreateNtupleDColumn("CrossSection");
+  analysisManager->FinishNtuple();
+}
+
+RunAction::~RunAction() { delete G4AnalysisManager::Instance(); }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RunAction::BeginOfRunAction(const G4Run*)
@@ -280,6 +298,14 @@ void RunAction::BeginOfRunAction(const G4Run*)
   G4double de = 2.0 * energy / n_energy;
 
   if (material->GetNumberOfElements() == 1) {
+
+    // Get analysis manager
+    auto analysisManager = G4AnalysisManager::Instance();
+
+    // Open an output file
+    //
+    analysisManager->OpenFile("CrossSection.root");
+
     G4cout << "\n \n Cross section values : " << G4endl;
     G4double Z = material->GetZ();
     G4double A = material->GetA();
@@ -290,8 +316,16 @@ void RunAction::BeginOfRunAction(const G4Run*)
 	  (de*i,particle,emName[j],Z,A,enerCut[j]);
 	G4cout << G4BestUnit(de*i,"Energy") << "\t" << std::setw(29)
 	       << G4BestUnit(Sig,"Surface") << G4endl;
+	analysisManager->FillNtupleDColumn(0, de*i);
+	analysisManager->FillNtupleDColumn(1, Sig);
+	analysisManager->AddNtupleRow();
       }
     }
+
+    // save ntuple
+    //
+    analysisManager->Write();
+    analysisManager->CloseFile();
   }
 
   G4cout << "\n-------------------------------------------------------------\n";

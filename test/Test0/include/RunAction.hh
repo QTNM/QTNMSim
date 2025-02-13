@@ -48,7 +48,7 @@ class RunAction : public G4UserRunAction
 {
   public:
     RunAction(DetectorConstruction*, PrimaryGeneratorAction*);
-   ~RunAction() override = default;
+    ~RunAction();
 
   public:
     void BeginOfRunAction(const G4Run*) override;
