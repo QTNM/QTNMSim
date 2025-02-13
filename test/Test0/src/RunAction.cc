@@ -321,11 +321,6 @@ void RunAction::BeginOfRunAction(const G4Run*)
 	analysisManager->AddNtupleRow();
       }
     }
-
-    // save ntuple
-    //
-    analysisManager->Write();
-    analysisManager->CloseFile();
   }
 
   G4cout << "\n-------------------------------------------------------------\n";
@@ -338,7 +333,12 @@ void RunAction::BeginOfRunAction(const G4Run*)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RunAction::EndOfRunAction(const G4Run* )
-{ }
+{
+  auto analysisManager = G4AnalysisManager::Instance();
+
+  analysisManager->Write();
+  analysisManager->CloseFile();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
