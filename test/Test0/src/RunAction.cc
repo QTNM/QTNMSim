@@ -68,7 +68,7 @@ RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* kin)
   analysisManager->FinishNtuple();
 }
 
-RunAction::~RunAction() { delete G4AnalysisManager::Instance(); }
+RunAction::~RunAction() { }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RunAction::BeginOfRunAction(const G4Run*)
