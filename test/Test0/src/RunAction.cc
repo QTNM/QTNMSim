@@ -276,6 +276,24 @@ void RunAction::BeginOfRunAction(const G4Run*)
     if (particle == G4Electron::Electron()) CriticalEnergy();
   }
 
+  const G4int n_energy = 100;
+  G4double de = 2.0 * energy / n_energy;
+
+  if (material->GetNumberOfElements() == 1) {
+    G4cout << "\n \n Cross section values : " << G4endl;
+    G4double Z = material->GetZ();
+    G4double A = material->GetA();
+
+    for (size_t j=0; j<emName.size(); ++j) {
+      for (int i = 0; i <= n_energy; i++) {
+	Sig = emCal.ComputeCrossSectionPerAtom
+	  (de*i,particle,emName[j],Z,A,enerCut[j]);
+	G4cout << G4BestUnit(de*i,"Energy") << "\t" << std::setw(29)
+	       << G4BestUnit(Sig,"Surface") << G4endl;
+      }
+    }
+  }
+
   G4cout << "\n-------------------------------------------------------------\n";
   G4cout << G4endl;
 
