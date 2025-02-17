@@ -37,6 +37,7 @@ target_link_libraries(TestEm0 ${Geant4_LIBRARIES} )
 #
 set(TestEm0_SCRIPTS
     TestEm0.in
+    test0.py
   )
 
 foreach(_script ${TestEm0_SCRIPTS})

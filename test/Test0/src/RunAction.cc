@@ -316,8 +316,8 @@ void RunAction::BeginOfRunAction(const G4Run*)
 	  (de*i,particle,emName[j],Z,A,enerCut[j]);
 	G4cout << G4BestUnit(de*i,"Energy") << "\t" << std::setw(29)
 	       << G4BestUnit(Sig,"Surface") << G4endl;
-	analysisManager->FillNtupleDColumn(0, de*i);
-	analysisManager->FillNtupleDColumn(1, Sig);
+	analysisManager->FillNtupleDColumn(0, de*i / G4Analysis::GetUnitValue("keV"));
+	analysisManager->FillNtupleDColumn(1, Sig / G4Analysis::GetUnitValue("meter2"));
 	analysisManager->AddNtupleRow();
       }
     }
