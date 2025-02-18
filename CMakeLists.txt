@@ -56,6 +56,7 @@ target_link_libraries(qtnmSim
   PRIVATE ${Geant4_LIBRARIES}
   PUBLIC qtnmSimlib)
 
+add_subdirectory(${PROJECT_SOURCE_DIR}/test/Test0)
 # Test
 #if(BUILD_TESTING)
 #  add_subdirectory(test)
