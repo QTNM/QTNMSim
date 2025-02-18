@@ -49,8 +49,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* kin)
-:fDetector(det), fPrimary(kin)
+RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* kin, G4String name)
+  :fDetector(det), fPrimary(kin), fout(std::move(name))
 {
 // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -304,7 +304,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
 
     // Open an output file
     //
-    analysisManager->OpenFile("CrossSection.root");
+    analysisManager->OpenFile(fout);
 
     G4cout << "\n \n Cross section values : " << G4endl;
     G4double Z = material->GetZ();

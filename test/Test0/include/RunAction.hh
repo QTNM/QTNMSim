@@ -47,7 +47,7 @@ class PrimaryGeneratorAction;
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(DetectorConstruction*, PrimaryGeneratorAction*);
+    RunAction(DetectorConstruction*, PrimaryGeneratorAction*, G4String);
     virtual ~RunAction();
 
   public:
@@ -60,6 +60,7 @@ class RunAction : public G4UserRunAction
   private:
     DetectorConstruction*   fDetector = nullptr;
     PrimaryGeneratorAction* fPrimary  = nullptr;
+    G4String         fout;          // output file name
     G4double  fRangeCut[3] = {0., 0., 0.};
     G4double fEnergyCut[3] = {0., 0., 0.};
 };

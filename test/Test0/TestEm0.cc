@@ -58,7 +58,7 @@ int main(int argc,char** argv) {
   CLI::App    app{ "QTNM simulation app" };
   int         nthreads = 4;
   int         seed     = 1234;
-  std::string outputFileName("qtnm.root");
+  std::string outputFileName("ElasticScattering.root");
   std::string macroName;
   std::string physListName("ElasticScatteringList");
 
@@ -66,7 +66,7 @@ int main(int argc,char** argv) {
   app.add_option("-p,--physlist", physListName, "<Geant4 physics list macro> Default: ElasticScatteringList");
   app.add_option("-s,--seed", seed, "<Geant4 random number seed + offset 1234> Default: 1234");
   app.add_option("-o,--outputFile", outputFileName,
-                 "<FULL PATH ROOT FILENAME> Default: qtnm.root");
+                 "<FULL PATH ROOT FILENAME> Default: ElasticScattering.root");
   app.add_option("-t, --nthreads", nthreads, "<number of threads to use> Default: 4");
 
   CLI11_PARSE(app, argc, argv);
@@ -107,7 +107,7 @@ int main(int argc,char** argv) {
   runManager->SetUserAction(prim = new PrimaryGeneratorAction(det));
 
   // set user action classes
-  runManager->SetUserAction(new RunAction(det,prim));
+  runManager->SetUserAction(new RunAction(det,prim,outputFileName));
 
     // Batch mode only - no visualisation
   G4String command = "/control/execute ";
