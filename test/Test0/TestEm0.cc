@@ -58,7 +58,7 @@ int main(int argc,char** argv) {
   CLI::App    app{ "QTNM simulation app" };
   int         nthreads = 4;
   int         seed     = 1234;
-  std::string outputFileName("ElasticScattering.root");
+  std::string outputFileName("CrossSection.root");
   std::string macroName;
   std::string physListName("ElasticScatteringList");
 
@@ -66,7 +66,7 @@ int main(int argc,char** argv) {
   app.add_option("-p,--physlist", physListName, "<Geant4 physics list macro> Default: ElasticScatteringList");
   app.add_option("-s,--seed", seed, "<Geant4 random number seed + offset 1234> Default: 1234");
   app.add_option("-o,--outputFile", outputFileName,
-                 "<FULL PATH ROOT FILENAME> Default: ElasticScattering.root");
+                 "<FULL PATH ROOT FILENAME> Default: CrossSection.root");
   app.add_option("-t, --nthreads", nthreads, "<number of threads to use> Default: 4");
 
   CLI11_PARSE(app, argc, argv);
