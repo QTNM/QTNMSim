@@ -151,18 +151,19 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
     G4int n_ele;
     if (l == 0) {
       // 2 Electrons
-      n_ele = 2;
+      n_ele = std::min(2, z_int - n_ele_int);
       // Always increment n_ele_int in this case
       n_ele_int += 2;
     } else {
       // Number of electrons with distint j
-      n_ele = 2*l + 1;
+      n_ele = std::min(2*l + 1, z_int - n_ele_int);
       // Only add electrons if subshell above has different n,l
       // i.e. we have processed j=|l+1/2| and j=|l-1/2|
       if (table_n[i+1] != n || table_l[i+1] != l) {
 	n_ele_int += 4*l + 2;
       }
     }
+
     n_ele_int = std::min(z_int, n_ele_int);
 
     // Effective charge
