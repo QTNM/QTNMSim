@@ -136,7 +136,7 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
   // Get binding energies for material
   std::vector<G4double> bind_vals = get_ionisation_energies(z_int);
 
-  // Number of electrons interior to shell
+  // Number of electrons interior and up to current shell
   G4int n_ele_int = 0;
   G4double sigma = 0;
   for (G4int i = 0; i < bind_vals.size(); ++i) {
@@ -146,10 +146,6 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
     const G4int n = table_n[i];
     // Quantum number l
     const G4int l = table_l[i];
-
-    // Effective charge
-    // Z - # electrons internal to this orbit
-    const G4int z_eff = z_int - n_ele_int;
 
     // Number of electrons in this orbit
     G4int n_ele;
@@ -167,8 +163,11 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
 	n_ele_int += 4*l + 2;
       }
     }
-    // Not strictly necessary, we shouldn't need if > Z
     n_ele_int = std::min(z_int, n_ele_int);
+
+    // Effective charge
+    // Z - # electrons up to and including this orbit
+    const G4int z_eff = z_int - n_ele_int;
 
     G4double U = T_ev / bind;
 
