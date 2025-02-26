@@ -38,6 +38,7 @@ target_link_libraries(TestEm0 ${Geant4_LIBRARIES} qtnmSimlib)
 set(TestEm0_SCRIPTS
     TestEm0.in
     test0.py
+    shah1987.txt
   )
 
 foreach(_script ${TestEm0_SCRIPTS})
