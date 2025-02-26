@@ -49,11 +49,15 @@ jobs:
           ./qtnmSim -m ../example_input/example0.mac -g ../example_input/example.gdml
           python3 ../utils/plot_example0.py
 
-          # Run Test0
+          # Run Test0, elastic cross section
           cd test/Test0
-          ./TestEm0 -m TestEm0.in
-          python3 test0.py
+          ./TestEm0 -m TestEm0.in -o ElasticCrossSection.root
+          python3 test0.py --input ElasticCrossSection.root
 
+          # Run Test0, inelastic cross section
+          ./TestEm0 -m TestEm0.in -o InelasticCrossSection.root -p InelasticScatteringList
+          python3 test0.py --input InelasticCrossSection.root --output InelasticCrossSection.png --yscale linear --reference_results=shah1987.txt
+      
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
