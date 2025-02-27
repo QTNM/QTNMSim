@@ -51,12 +51,12 @@ jobs:
 
           # Run Test0, elastic cross section
           cd test/Test0
-          ./TestEm0 -m TestEm0.in -o ElasticCrossSection.root
-          python3 test0.py --input ElasticCrossSection.root
+          ./TestEm0 -m TestEm0.in -o HydrogenElasticCrossSection.root
+          python3 test0.py --input HydrogenElasticCrossSection.root --output HydrogenElasticCrossSection.png
 
           # Run Test0, inelastic cross section
-          ./TestEm0 -m TestEm0.in -o InelasticCrossSection.root -p InelasticScatteringList
-          python3 test0.py --input InelasticCrossSection.root --output InelasticCrossSection.png --yscale linear --reference_results=shah1987.txt
+          ./TestEm0 -m TestEm0.in -o HydrogenInelasticCrossSection.root -p InelasticScatteringList
+          python3 test0.py --input HydrogenInelasticCrossSection.root --output HydrogenInelasticCrossSection.png --yscale linear --reference_results=shah1987.txt
       
       - name: Upload results
         uses: actions/upload-artifact@v4
