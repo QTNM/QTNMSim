@@ -25,7 +25,7 @@ The test also provides a python script for reading and visualising results. Opti
 $ python3 test0.py --help
 ```
 
-Results may be compared to a set of reference or experimental values. An example file is provided with the test, `shah1987.txt`, which contains a set of experimental results for the impact ionisation of Hydrogen (DOI 10.1088/0022-3700/20/14/022). If a set of reference results are provided to the python routine they will be plotted alongside the obtained results from the ROOT file. If no reference results are provided (the default) a single value for elastic scattering obtained from the NIST database (https://srdata.nist.gov/srd64/Elastic) at 18.6KeV will be plotted for reference.
+Results may be compared to a set of reference or experimental values. An example file is provided with the test, `shah1987.txt`, which contains a set of experimental results for the impact ionisation of Hydrogen (https://doi.org/10.1088/0022-3700/20/14/022). If a set of reference results are provided to the python routine they will be plotted alongside the obtained results from the ROOT file. If no reference results are provided (the default) a single value for elastic scattering obtained from the NIST database (https://srdata.nist.gov/srd64/Elastic) at 18.6KeV will be plotted for reference.
 
 Further reference data sets may be added. The format is a CSV file, with two header lines. The first header line is used for the plot legend. After the header lines the file contains pairs of energy and cross section values in units of eV and m^2:
 
