@@ -39,6 +39,7 @@ set(TestEm0_SCRIPTS
     TestEm0.in
     test0.py
     shah1987.txt
+    README.md
   )
 
 foreach(_script ${TestEm0_SCRIPTS})
