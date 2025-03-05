@@ -23,6 +23,9 @@ if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
+# Project ROOT directory for reading data
+add_compile_definitions("SOURCE_ROOT=${CMAKE_SOURCE_DIR}")
+
 # Build
 add_library(qtnmSimlib
   src/QTDetectorConstruction.cc
@@ -44,7 +47,8 @@ add_library(qtnmSimlib
   src/QTEventAction.cc
   src/QTGasSD.cc
   src/QTPrimaryGeneratorAction.cc
-  src/QTTrajectory.cc)
+  src/QTTrajectory.cc
+  src/QTNMeImpactIonisation.cc)
 target_include_directories(qtnmSimlib PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
 target_link_libraries(qtnmSimlib PRIVATE ${Geant4_LIBRARIES})
 

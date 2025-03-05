@@ -28,7 +28,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 # Add the executables, and link it to the Geant4 libraries
 #
 add_executable(TestEm0 TestEm0.cc ${sources} ${headers})
-target_link_libraries(TestEm0 ${Geant4_LIBRARIES} )
+target_link_libraries(TestEm0 ${Geant4_LIBRARIES} qtnmSimlib)
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
@@ -38,6 +38,8 @@ target_link_libraries(TestEm0 ${Geant4_LIBRARIES} )
 set(TestEm0_SCRIPTS
     TestEm0.in
     test0.py
+    shah1987.txt
+    README.md
   )
 
 foreach(_script ${TestEm0_SCRIPTS})

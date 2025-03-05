@@ -6,6 +6,9 @@
 # apply limit to transport before run init
 /QT/transport/maxtime 1.0 ns
 
+# apply minimum energy before run init
+/QT/transport/minenergy 10 eV
+
 # store trajectories in Signal ntuple
 /tracking/storeTrajectory 1
 

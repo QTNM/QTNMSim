@@ -19,6 +19,7 @@
 
 // e+-
 #include "G4eDPWACoulombScatteringModel.hh"
+#include "QTNMeImpactIonisation.hh"
 #include "G4CoulombScattering.hh"
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
@@ -156,11 +157,8 @@ void QTNMPhysicsList::ConstructProcess()
   G4CoulombScattering* ss = new G4CoulombScattering();
   ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
 
-  // ionisation
-  // G4eIonisation* eioni = new G4eIonisation();
-  // G4VEmModel* theIoniLiv = new G4LivermoreIonisationModel();
-  // theIoniLiv->SetHighEnergyLimit(0.1*CLHEP::MeV); 
-  // eioni->AddEmModel(0, theIoniLiv, new G4UniversalFluctuation() );
+  // Impact Ionisation
+  ss->AddEmModel(0, new QTNMeImpactIonisation());
 
   // bremsstrahlung
   G4eBremsstrahlung* brem = new G4eBremsstrahlung();
@@ -172,8 +170,7 @@ void QTNMPhysicsList::ConstructProcess()
   brem->SetEmModel(br2);
   br1->SetHighEnergyLimit(CLHEP::GeV);
 
-  // register processes
-  // ph->RegisterProcess(eioni, particle);
+  // // register processes
   ph->RegisterProcess(brem, particle);
   ph->RegisterProcess(ee, particle);
   ph->RegisterProcess(ss, particle);
@@ -181,15 +178,9 @@ void QTNMPhysicsList::ConstructProcess()
   // e+
   particle = G4Positron::Positron();
 
-  // single scattering  
+  // single scattering
   ss = new G4CoulombScattering();
   ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
-
-  // ionisation
-  // eioni = new G4eIonisation();
-  // G4VEmModel* pen = new G4PenelopeIonisationModel();
-  // pen->SetHighEnergyLimit(0.1*CLHEP::MeV);
-  // eioni->AddEmModel(0, pen, new G4UniversalFluctuation());
 
   // bremsstrahlung
   brem = new G4eBremsstrahlung();
@@ -201,8 +192,7 @@ void QTNMPhysicsList::ConstructProcess()
   brem->SetEmModel(br2);
   br1->SetHighEnergyLimit(CLHEP::GeV);
 
-  // register processes
-  // ph->RegisterProcess(eioni, particle);
+  // // register processes
   ph->RegisterProcess(brem, particle);
   ph->RegisterProcess(ee, particle);
   ph->RegisterProcess(new G4eplusAnnihilation(), particle);
