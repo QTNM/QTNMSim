@@ -116,6 +116,7 @@ void QTNMeImpactIonisation::InitialiseLocal(const G4ParticleDefinition*,
 {
   SetElementSelectors(masterModel->GetElementSelectors());
   SetTheDCS(static_cast<QTNMeImpactIonisation*>(masterModel)->GetTheDCS());
+  SetBindingEnergies(static_cast<QTNMeImpactIonisation*>(masterModel)->GetBindingEnergies());
 }
 
 
