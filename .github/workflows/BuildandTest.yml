@@ -57,7 +57,11 @@ jobs:
           # Run Test0, inelastic cross section
           ./TestEm0 -m TestEm0.in -o HydrogenInelasticCrossSection.root -p InelasticScatteringList
           python3 test0.py --input HydrogenInelasticCrossSection.root --output HydrogenInelasticCrossSection.png --yscale linear --reference_results=shah1987.txt
-      
+
+          # Run Test0, combined cross section
+          ./TestEm0 -m TestEm0.in -o HydrogenFullCrossSection.root -p MultipleScatteringList
+          python3 test0.py --input HydrogenFullCrossSection.root --output HydrogenFullCrossSection.png --yscale linear
+
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
