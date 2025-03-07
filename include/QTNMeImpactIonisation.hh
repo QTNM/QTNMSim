@@ -103,6 +103,8 @@ public:
 
   G4eDPWAElasticDCS* GetTheDCS() { return fTheDCS; }
 
+  std::map<int, std::vector<G4double>> GetBindingEnergies() { return binding_energies; }
+  void SetBindingEnergies(std::map<int, std::vector<G4double>> be) { binding_energies = be; }
 
 private:
 

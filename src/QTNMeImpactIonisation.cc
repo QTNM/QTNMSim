@@ -116,6 +116,7 @@ void QTNMeImpactIonisation::InitialiseLocal(const G4ParticleDefinition*,
 {
   SetElementSelectors(masterModel->GetElementSelectors());
   SetTheDCS(static_cast<QTNMeImpactIonisation*>(masterModel)->GetTheDCS());
+  SetBindingEnergies(static_cast<QTNMeImpactIonisation*>(masterModel)->GetBindingEnergies());
 }
 
 
@@ -313,6 +314,7 @@ QTNMeImpactIonisation::logspace(const G4double a, const G4double b, const G4int 
 void
 QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
 {
+  if (binding_energies.count(Z) > 0) return;
   auto fname = project_root + "/src/tables/binding_energy/be_" + std::to_string(Z);
   std::ifstream input;
   input.open(fname);
