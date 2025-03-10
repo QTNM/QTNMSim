@@ -60,7 +60,7 @@ jobs:
 
           # Run Test0, combined cross section
           ./TestEm0 -m TestEm0.in -o HydrogenFullCrossSection.root -p MultipleScatteringList
-          python3 test0.py --input HydrogenFullCrossSection.root --output HydrogenFullCrossSection.png --yscale linear
+          python3 test0.py --input HydrogenFullCrossSection.root --output HydrogenFullCrossSection.png
 
       - name: Upload results
         uses: actions/upload-artifact@v4
