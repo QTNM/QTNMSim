@@ -46,7 +46,6 @@
 #include <iterator>
 #include <algorithm>
 
-#include "G4eDPWAElasticDCS.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4DataVector.hh"
@@ -67,7 +66,6 @@
 
 QTNMeImpactIonisation::QTNMeImpactIonisation()
 : G4VEmModel("eDPWACoulombScattering"),
-  fTheDCS(nullptr),
   fParticleChange(nullptr)
 {
   SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV   is used if (E< 10  eV)
@@ -77,9 +75,6 @@ QTNMeImpactIonisation::QTNMeImpactIonisation()
 
 QTNMeImpactIonisation::~QTNMeImpactIonisation()
 {
-  if (IsMaster()) {
-    delete fTheDCS;
-  }
 }
 
 
@@ -88,9 +83,6 @@ void QTNMeImpactIonisation::Initialise(const G4ParticleDefinition* pdef,
 {
   fParticleChange = GetParticleChangeForGamma();
   if(IsMaster()) {
-    // clean the G4eDPWAElasticDCS object if any
-    delete fTheDCS;
-    fTheDCS = new G4eDPWAElasticDCS(pdef==G4Electron::Electron(), false);
     // init only for the elements that are used in the geometry
     G4ProductionCutsTable* theCpTable = G4ProductionCutsTable::GetProductionCutsTable();
     G4int numOfCouples = (G4int)theCpTable->GetTableSize();
@@ -100,7 +92,6 @@ void QTNMeImpactIonisation::Initialise(const G4ParticleDefinition* pdef,
       std::size_t numOfElem = mat->GetNumberOfElements();
       for (std::size_t ie = 0; ie < numOfElem; ++ie) {
 	G4int Z = (*elV)[ie]->GetZasInt();
-        fTheDCS->InitialiseForZ(Z);
 	// Load the ionisation energies
 	load_ionisation_energies(Z);
       }
@@ -115,7 +106,6 @@ void QTNMeImpactIonisation::InitialiseLocal(const G4ParticleDefinition*,
                                                     G4VEmModel* masterModel)
 {
   SetElementSelectors(masterModel->GetElementSelectors());
-  SetTheDCS(static_cast<QTNMeImpactIonisation*>(masterModel)->GetTheDCS());
   SetBindingEnergies(static_cast<QTNMeImpactIonisation*>(masterModel)->GetBindingEnergies());
 }
 
