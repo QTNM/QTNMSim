@@ -62,7 +62,6 @@
 #include "globals.hh"
 #include <map>
 
-class G4eDPWAElasticDCS;
 class G4ParticleChangeForGamma;
 class G4ParticleDefinition;
 class G4DataVector;
@@ -99,10 +98,6 @@ public:
   G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*,
                             G4double) override { return 10.0*CLHEP::eV; }
 
-  void     SetTheDCS(G4eDPWAElasticDCS* theDCS) { fTheDCS = theDCS; }
-
-  G4eDPWAElasticDCS* GetTheDCS() { return fTheDCS; }
-
   std::map<int, std::vector<G4double>> GetBindingEnergies() { return binding_energies; }
   void SetBindingEnergies(std::map<int, std::vector<G4double>> be) { binding_energies = be; }
 
@@ -112,8 +107,6 @@ private:
   std::vector<G4double>     get_ionisation_energies(G4int Z) { return binding_energies[Z]; };
   G4double                  mbell_gr(G4double U, G4double J);
   G4double                  mbell_f_ion(G4int z_eff, G4double U, G4int Z, G4double m_lambda);
-  // the object that provides cross sections and polar angle of scattering
-  G4eDPWAElasticDCS*         fTheDCS;
   // particle change
   G4ParticleChangeForGamma*  fParticleChange;
   // Energy space for secondary CDF

@@ -2,6 +2,7 @@
 
 #include "G4SystemOfUnits.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4EmMultiModel.hh"
 #include "G4LossTableManager.hh"
 #include "G4EmParameters.hh"
 #include "G4EmBuilder.hh"
@@ -56,7 +57,7 @@ G4_DECLARE_PHYSCONSTR_FACTORY(QTNMPhysicsList);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-QTNMPhysicsList::QTNMPhysicsList(G4int ver, 
+QTNMPhysicsList::QTNMPhysicsList(G4int ver,
                                  const G4String&)
   : G4VPhysicsConstructor("QTNMPhysics"), verbose(ver)
 {
@@ -152,13 +153,17 @@ void QTNMPhysicsList::ConstructProcess()
 
   // e-
   particle = G4Electron::Electron();
- 
-  // single scattering
-  G4CoulombScattering* ss = new G4CoulombScattering();
-  ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
 
+  // Coulomb Scattering
+  G4CoulombScattering* ss = new G4CoulombScattering();
+  G4EmMultiModel* mm = new G4EmMultiModel("CoulombSSModels");
+  // Elastic Scattering
+  G4eDPWACoulombScatteringModel* es = new G4eDPWACoulombScatteringModel(false, false, 0.0);
+  es->SetPolarAngleLimit(0.0); // No mixed model
+  mm->AddModel(es);
   // Impact Ionisation
-  ss->AddEmModel(0, new QTNMeImpactIonisation());
+  mm->AddModel(new QTNMeImpactIonisation());
+  ss->AddEmModel(0, mm);
 
   // bremsstrahlung
   G4eBremsstrahlung* brem = new G4eBremsstrahlung();
@@ -210,4 +215,3 @@ void QTNMPhysicsList::ConstructProcess()
   G4EmBuilder::ConstructCharged(hmsc, pnuc);
 
 }
-
