@@ -65,7 +65,7 @@
 #include "G4AnalysisManager.hh"
 
 QTNMeImpactIonisation::QTNMeImpactIonisation()
-: G4VEmModel("eDPWACoulombScattering"),
+: G4VEmModel("eImpactIonisation"),
   fParticleChange(nullptr)
 {
   SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV   is used if (E< 10  eV)
