@@ -31,11 +31,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
-#ifdef G4MULTITHREADED
-#include "G4MTRunManager.hh"
-#else
 #include "G4RunManager.hh"
-#endif
 
 #include "G4GenericPhysicsList.hh"
 #include "G4RunManagerFactory.hh"
@@ -46,8 +42,6 @@
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
 
-//#include "G4UIExecutive.hh"
-
 #include "CLI11.hpp"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
@@ -55,8 +49,7 @@
 int main(int argc,char** argv) {
 
   // command line interface
-  CLI::App    app{ "QTNM simulation app" };
-  int         nthreads = 4;
+  CLI::App    app{ "Cross Section Test App" };
   int         seed     = 1234;
   std::string outputFileName("CrossSection.root");
   std::string macroName;
@@ -67,7 +60,6 @@ int main(int argc,char** argv) {
   app.add_option("-s,--seed", seed, "<Geant4 random number seed + offset 1234> Default: 1234");
   app.add_option("-o,--outputFile", outputFileName,
                  "<FULL PATH ROOT FILENAME> Default: CrossSection.root");
-  app.add_option("-t, --nthreads", nthreads, "<number of threads to use> Default: 4");
 
   CLI11_PARSE(app, argc, argv);
 
@@ -109,7 +101,7 @@ int main(int argc,char** argv) {
   // set user action classes
   runManager->SetUserAction(new RunAction(det,prim,outputFileName));
 
-    // Batch mode only - no visualisation
+  // Batch mode only - no visualisation
   G4String command = "/control/execute ";
   UImanager->ApplyCommand(command + macroName);
 
