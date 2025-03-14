@@ -85,6 +85,14 @@ void DetectorConstruction::DefineMaterials()
   G4Material *TMat = new G4Material("TritiumGas", 1e-8 * g / cm3, 1);
   TMat->AddElement(T, 1);
 
+  G4Element *He = new G4Element("Helium", "He", 2., 4.003 * g / mole);
+  G4Material *HeMat = new G4Material("HeliumGas", 1e-8 * g / cm3, 1);
+  HeMat->AddElement(He, 1);
+
+  G4Element *Ar = new G4Element("Argon", "Ar", 18., 39.948 * g / mole);
+  G4Material *ArMat = new G4Material("ArgonGas", 1e-8 * g / cm3, 1);
+  ArMat->AddElement(Ar, 1);
+
   // Add others as appropriate
 }
 
