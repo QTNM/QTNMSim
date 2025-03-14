@@ -58,7 +58,6 @@ RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* kin, G4S
 
   // Create directories
   analysisManager->SetVerboseLevel(1);
-  analysisManager->SetNtupleMerging(true);
 
   // Creating ntuple with vector entries
   //
