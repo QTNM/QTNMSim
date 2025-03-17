@@ -66,4 +66,5 @@ target_link_libraries(qtnmSim
 # Build Tests if requested
 if (BUILD_TESTS)
    add_subdirectory(${PROJECT_SOURCE_DIR}/test/Test0)
+   add_subdirectory(${PROJECT_SOURCE_DIR}/test/Test1)
 endif()

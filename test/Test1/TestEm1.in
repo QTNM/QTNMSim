@@ -1,0 +1,14 @@
+#
+# Macro file for "TestEm1.cc"
+#
+/control/verbose 0
+/run/verbose 1
+#
+#
+/process/eLoss/verbose 0
+/process/em/printParameters 
+#
+/run/initialize
+#
+/testem/det/setMat HydrogenGas
+/run/beamOn 10
