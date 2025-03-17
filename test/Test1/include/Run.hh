@@ -35,7 +35,7 @@
 
 #include "G4Run.hh"
 #include "globals.hh"
-#include <map>
+#include <vector>
 
 class DetectorConstruction;
 class G4ParticleDefinition;
@@ -44,7 +44,7 @@ class G4ParticleDefinition;
 
 class Run : public G4Run {
 public:
-  Run(DetectorConstruction *);
+  Run(DetectorConstruction *, G4String);
   ~Run() override = default;
 
 public:
@@ -56,8 +56,8 @@ private:
   DetectorConstruction *fDetector = nullptr;
   G4ParticleDefinition *fParticle = nullptr;
   G4double fEkin = 0.;
-
-  std::map<G4String, G4int> fProcCounter;
+  std::vector<G4double> secondaryEnergy;
+  G4String         fout;          // output file name
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
