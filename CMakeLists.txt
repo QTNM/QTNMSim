@@ -61,6 +61,7 @@ target_link_libraries(qtnmSim
   PUBLIC qtnmSimlib)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/test/Test0)
+add_subdirectory(${PROJECT_SOURCE_DIR}/test/Test1)
 # Test
 #if(BUILD_TESTING)
 #  add_subdirectory(test)
