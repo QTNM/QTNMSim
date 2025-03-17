@@ -44,13 +44,14 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 RunAction::RunAction(DetectorConstruction *det,
-                         PrimaryGeneratorAction *kin)
-    : fDetector(det), fPrimary(kin) {}
+		     PrimaryGeneratorAction *kin,
+		     G4String name)
+  : fDetector(det), fPrimary(kin), fout(std::move(name)) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4Run *RunAction::GenerateRun() {
-  fRun = new Run(fDetector);
+  fRun = new Run(fDetector, fout);
   return fRun;
 }
 

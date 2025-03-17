@@ -18,8 +18,8 @@ public:
   virtual void Build() const override;
 
 private:
-  G4String foutname;
   DetectorConstruction *fDetector = nullptr;
+  G4String foutname;
 };
 
 #endif

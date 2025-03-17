@@ -1,5 +1,4 @@
 #include "ActionInitialization.hh"
-#include "QTOutputManager.hh"
 #include "DetectorConstruction.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
@@ -13,18 +12,15 @@ ActionInitialization::ActionInitialization(G4String name,
 ActionInitialization::~ActionInitialization() = default;
 
 void ActionInitialization::BuildForMaster() const {
-  auto output = new QTOutputManager(foutname);
-  SetUserAction(new RunAction(fDetector, 0));
+  SetUserAction(new RunAction(fDetector, 0, foutname));
 }
 
 void ActionInitialization::Build() const {
   PrimaryGeneratorAction *prim = new PrimaryGeneratorAction(fDetector);
   SetUserAction(prim);
 
-  RunAction *run = new RunAction(fDetector, prim);
+  RunAction *run = new RunAction(fDetector, prim, foutname);
   SetUserAction(run);
 
   SetUserAction(new SteppingAction());
-
-  auto output = new QTOutputManager(foutname);
 }

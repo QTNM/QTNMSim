@@ -35,6 +35,7 @@
 #include "PrimaryGeneratorAction.hh"
 
 #include "G4RunManager.hh"
+#include "G4AnalysisManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 
@@ -42,7 +43,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-Run::Run(DetectorConstruction *det) : fDetector(det) {}
+Run::Run(DetectorConstruction *det, G4String name)
+  : fDetector(det), fout(std::move(name)) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -62,6 +64,7 @@ void Run::RecordSecondaryData(const G4Step* aStep) {
   G4double esec = (-aStep->GetTotalEnergyDeposit() - aStep->GetDeltaEnergy()) / CLHEP::eV;
 
   if (esec > 0.0) {
+    secondaryEnergy.push_back(esec);
     G4cout << "Secondary energy = " << esec << G4endl;
   } else {
     G4double ke = endPoint->GetKineticEnergy() / CLHEP::eV;
@@ -73,7 +76,28 @@ void Run::RecordSecondaryData(const G4Step* aStep) {
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void Run::EndOfRun() {
-  // Store output here
+  // Store energy values in file.
+  auto analysisManager = G4AnalysisManager::Instance();
+  analysisManager->SetDefaultFileType("root");
+
+  // Create directories
+  analysisManager->SetVerboseLevel(1);
+
+  // Creating ntuple with vector entries
+  //
+  analysisManager->CreateNtuple("SecondarySamples", "SecondarySamples");
+  analysisManager->CreateNtupleDColumn("Energy");
+  analysisManager->FinishNtuple();
+
+  analysisManager->OpenFile(fout);
+
+  for (size_t j=0; j<secondaryEnergy.size(); ++j) {
+    analysisManager->FillNtupleDColumn(0, secondaryEnergy[j] / CLHEP::eV);
+    analysisManager->AddNtupleRow();
+  }
+
+  analysisManager->Write();
+  analysisManager->CloseFile();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

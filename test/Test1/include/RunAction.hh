@@ -46,7 +46,7 @@ class Run;
 
 class RunAction : public G4UserRunAction {
 public:
-  RunAction(DetectorConstruction *, PrimaryGeneratorAction *);
+  RunAction(DetectorConstruction *, PrimaryGeneratorAction *, G4String);
   ~RunAction() override = default;
 
 public:
@@ -58,6 +58,7 @@ private:
   DetectorConstruction *fDetector = nullptr;
   PrimaryGeneratorAction *fPrimary = nullptr;
   Run *fRun = nullptr;
+  G4String fout;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
