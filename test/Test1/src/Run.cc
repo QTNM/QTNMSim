@@ -92,7 +92,7 @@ void Run::EndOfRun() {
   analysisManager->OpenFile(fout);
 
   for (size_t j=0; j<secondaryEnergy.size(); ++j) {
-    analysisManager->FillNtupleDColumn(0, secondaryEnergy[j] / CLHEP::eV);
+    analysisManager->FillNtupleDColumn(0, secondaryEnergy[j]);
     analysisManager->AddNtupleRow();
   }
 
