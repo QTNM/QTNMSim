@@ -61,7 +61,7 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
 	aStep->GetTrack()->GetMaterial()->GetName()=="matT")) return;
 
   // stop trajectory below threshold vertex kinetic energy
-  if (GetInitialEnergy() <= 1.5 / keV) return;
+  if (GetInitialEnergy()/keV <= 1.5) return;
 
   // take care of units [time] [distance]
   // observed steps with equal time values -> prevent; time must be larger than previous
