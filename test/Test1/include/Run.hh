@@ -39,6 +39,7 @@
 
 class DetectorConstruction;
 class G4ParticleDefinition;
+class G4Step;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
