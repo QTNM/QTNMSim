@@ -60,6 +60,9 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   if (!(aStep->GetTrack()->GetMaterial()->GetName()=="G4_Galactic" ||
 	aStep->GetTrack()->GetMaterial()->GetName()=="matT")) return;
 
+  // stop trajectory below threshold vertex kinetic energy
+  if (GetInitialEnergy() <= 1.5 / keV) return;
+
   // take care of units [time] [distance]
   // observed steps with equal time values -> prevent; time must be larger than previous
   // appear to be boundary steps
