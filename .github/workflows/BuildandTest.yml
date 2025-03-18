@@ -62,6 +62,11 @@ jobs:
           ./TestEm0 -m TestEm0.in -o HydrogenFullCrossSection.root -p MultipleScatteringList
           python3 test0.py --input HydrogenFullCrossSection.root --output HydrogenFullCrossSection.png
 
+          # Run Test1
+          cd ../Test1
+          ./TestEm1 -m TestEm1.in
+          python3 test1.py
+
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
@@ -69,4 +74,5 @@ jobs:
           path: |
             build/*.png
             build/test/*/*.png
-            build/test/*/*.root
+            # Only upload Test0 root files
+            build/test/Test0/*.root
