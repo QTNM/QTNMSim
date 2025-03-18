@@ -34,6 +34,7 @@
 #include "DetectorConstruction.hh"
 #include "PrimaryGeneratorAction.hh"
 
+#include "G4Step.hh"
 #include "G4RunManager.hh"
 #include "G4AnalysisManager.hh"
 #include "G4SystemOfUnits.hh"
