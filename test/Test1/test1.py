@@ -50,7 +50,8 @@ def summary(fname_in, fname_out, xscale, yscale):
     tree = input_file.Get("SecondarySamples")
 
     energy = []
-    for i in range(tree.GetEntries()):
+    nsamples = tree.GetEntries()
+    for i in range(nsamples):
         tree.GetEntry(i)
         energy.append(tree.Energy)
     energy = np.array(energy)
@@ -76,7 +77,8 @@ def summary(fname_in, fname_out, xscale, yscale):
     ax2.set_ylabel('CDF', color='red', fontsize=16)
     ax2.tick_params(axis='y', labelsize=16, labelcolor='red')
 
-    plt.title('Secondary Electron Energy', fontsize=18)
+    plt.suptitle('Secondary Electron Energy', fontsize=18)
+    plt.title(f'({nsamples} samples)', fontsize=14)
     plt.tight_layout()
     plt.savefig(fname_out)
 
