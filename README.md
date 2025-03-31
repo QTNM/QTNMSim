@@ -26,6 +26,27 @@ cd build; cmake ..; make
 
 and run in the build directory.
 
+## Geometry
+
+QTNMSim specifies geometry via a GDML file, passed as a command line argument. New geometry files can be generated using the [pyg4ometry package](https://www.pp.rhul.ac.uk/bdsim/pyg4ometry/index.html#). This can be installed using pip:
+
+```
+pip install pyg4ometry
+```
+
+or HomeBrew:
+
+```
+brew install vtk cgal antlr4-cpp-runtime pybind11 cython opencascade mpfr
+```
+
+or built from source. New geometry files can then be generated:
+
+```
+cd geometry/
+python testscript.py
+```
+
 ## Test Results
 
 The code is automatically tested upon new pushes. Plots from recent tests can be downloaded from:
