@@ -11,6 +11,9 @@ set(CMAKE_BUILD_TYPE Release)
 # CTest if we need it
 # include(CTest)
 
+# Control building of tests
+option(BUILD_TESTS "Build test applications" OFF)
+
 # Dependencies
 find_package(Geant4 11.2 REQUIRED gdml)
 
@@ -60,8 +63,7 @@ target_link_libraries(qtnmSim
   PRIVATE ${Geant4_LIBRARIES}
   PUBLIC qtnmSimlib)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/test/Test0)
-# Test
-#if(BUILD_TESTING)
-#  add_subdirectory(test)
-#endif()
+# Build Tests if requested
+if (BUILD_TESTS)
+   add_subdirectory(${PROJECT_SOURCE_DIR}/test/Test0)
+endif()
