@@ -197,15 +197,6 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
 
   const G4double T_ev = ekin / CLHEP::eV;
 
-  G4double bind = get_ionisation_energies(izet)[0];
-
-  if(T_ev < bind) return;
-
-  // Maximum energy of secondary particle
-  const G4double emax = 0.5 * (T_ev / bind - 1.0) * bind;
-  // G4cout << emax << G4endl;
-  secondary_energy = logspace(std::log10(1e-6*T_ev), std::log10(emax), nESpace);
-
   // Incident energy dependent terms
   const G4double mc2_ev = 511e3;
   const G4double t_prime = T_ev / mc2_ev;
@@ -215,33 +206,46 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
   const G4double alpha = CLHEP::fine_structure_const;
   const G4double aB = 5.29e-11;
 
-  // Number of shells
-  const G4int N = 1;
-
   std::vector<G4double> cdf;
   cdf.reserve(nESpace);
 
+  std::vector<G4double> bind_vals = get_ionisation_energies(izet);
+
+  // Maximum energy of secondary particle
+  const G4double emax = 0.5 * (T_ev - *(std::min_element(bind_vals.begin(), bind_vals.end())));
+
+  secondary_energy = logspace(std::log10(1e-6*T_ev), std::log10(emax), nESpace);
+
+  const G4int nShells = bind_vals.size();
+
   for (int i = 0; i < nESpace; i++) {
-    //RBEB terms
-    G4double b_prime = bind / mc2_ev;
-    G4double t = T_ev / bind;
-    G4double w = secondary_energy[i] / bind;
-    G4double beta_b2 = 1 - 1./ pow(1 + b_prime, 2);
-    G4double beta2 = beta_t2 + 2*beta_b2;
+    G4double cdf_sum = 0.0;
+    for (G4int j = 0; j <nShells; ++j) {
+      G4double bind = bind_vals[j];
+      if(T_ev < bind) continue;
 
-    // Pre-factor terms which depend on B or N
-    G4double pre_fac = 0.5 * (1 + beta2 / beta_t2);
-    G4double fac = 2 * CLHEP::pi * pow(aB,2) * pow(alpha,4) * N / (beta2 * b_prime);
+      //RBEB terms
+      G4double b_prime = bind / mc2_ev;
+      G4double t = T_ev / bind;
+      G4double w = secondary_energy[i] / bind;
+      G4double beta_b2 = 1 - 1./ pow(1 + b_prime, 2);
+      G4double beta2 = beta_t2 + 2*beta_b2;
 
-    // Calculate CDF contribution from this shell for this W
-    G4double A1 = 0.5 * (pow(t - w,-2) - pow(w + 1,-2) - pow(t,-2) + 1);
-    G4double A2 = std::log(beta_t2 / (1 - beta_t2)) - beta_t2 - std::log(2*b_prime);
-    G4double A3 = 1/(t - w) - 1/(w + 1) - 1/t + 1;
-    G4double A4 = pow(b_prime,2) / pow(1 + 0.5*t_prime,2) * w;
-    G4double A5 = std::log((w + 1)/(t - w)) - std::log(1/t);
-    G4double A6 = (1 + 2*t_prime) / pow(1 + 0.5*t_prime, 2) / (t+1);
+      // Pre-factor terms which depend on B or N
+      G4double pre_fac = 0.5 * (1 + beta2 / beta_t2);
+      G4double fac = 2 * CLHEP::pi * pow(aB,2) * pow(alpha,4) * nShells / (beta2 * b_prime);
 
-    cdf.push_back(pre_fac * fac * (A1*A2 + A3 + A4 - A5*A6));
+      // Calculate CDF contribution from this shell for this W
+      G4double A1 = 0.5 * (pow(t - w,-2) - pow(w + 1,-2) - pow(t,-2) + 1);
+      G4double A2 = std::log(beta_t2 / (1 - beta_t2)) - beta_t2 - std::log(2*b_prime);
+      G4double A3 = 1/(t - w) - 1/(w + 1) - 1/t + 1;
+      G4double A4 = pow(b_prime,2) / pow(1 + 0.5*t_prime,2) * w;
+      G4double A5 = std::log((w + 1)/(t - w)) - std::log(1/t);
+      G4double A6 = (1 + 2*t_prime) / pow(1 + 0.5*t_prime, 2) / (t+1);
+
+      cdf_sum += pre_fac * fac * (A1*A2 + A3 + A4 - A5*A6);
+    }
+    cdf.push_back(cdf_sum);
   }
 
   // Normalise
@@ -269,8 +273,8 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
   auto newp = new G4DynamicParticle (G4Electron::Electron(),dir,enew * CLHEP::eV);
   fvect->push_back(newp);
 
-  fParticleChange->SetProposedKineticEnergy((T_ev - enew - bind) * CLHEP::eV);
-  fParticleChange->ProposeLocalEnergyDeposit(bind * CLHEP::eV);
+  fParticleChange->SetProposedKineticEnergy((T_ev - enew - bind_vals[0]) * CLHEP::eV);
+  fParticleChange->ProposeLocalEnergyDeposit(bind_vals[0] * CLHEP::eV);
 }
 
 G4double
