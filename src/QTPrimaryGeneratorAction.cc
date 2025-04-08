@@ -35,6 +35,7 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 , fNumass(1.0e-4)
 , fSterilemass(0.0)
 , fSterilemixing(0.0)
+, fLowerBoundTritium(1.5) // Lower bound for Tritium decay energy
 {
   generator.seed(rd()); // using random seed
 
@@ -104,12 +105,11 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     // distribution parameter
     int nw = 10000; // nw - number of bins
-    double lbound = 1.5; // lower energy bound [keV]
     double ubound = TBeta::endAt(fNumass, 1); // max energy
 
     // create distribution
-    pld_type ed(nw, lbound, ubound, betaGenerator(fOrder, fNumass,
-						  fSterilemass, fSterilemixing));
+    pld_type ed(nw, fLowerBoundTritium, ubound, betaGenerator(fOrder, fNumass,
+							      fSterilemass, fSterilemixing));
 
     // random vertex location in atom cloud [mm]
     G4Tubs* atomTubs = dynamic_cast<G4Tubs*>(sourceLV->GetSolid()); // assume a cylinder

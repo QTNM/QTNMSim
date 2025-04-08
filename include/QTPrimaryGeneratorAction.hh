@@ -49,6 +49,7 @@ private:
   G4double            fNumass;
   G4double            fSterilemass;
   G4double            fSterilemixing;
+  G4double            fLowerBoundTritium;
 
   std::ranlux24       generator;
   std::random_device  rd; // for random seeds
@@ -58,9 +59,9 @@ private:
 #include "TBetaGenerator.hh"
 
 // build generation functor
-// operator calls eactly one 
+// operator calls eactly one
 // distribution function.
-// Make different functor for 
+// Make different functor for
 // alternative distribution.
 class betaGenerator {
 private:
