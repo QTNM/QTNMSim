@@ -42,6 +42,7 @@
 #/QT/generator/numass 1.0e-4
 #/QT/generator/mN 0.0
 #/QT/generator/eta 0.0
+#/QT/generator/eMin 1.5
 # example gps settings for tests
 #/gps/verbose 0
 #/gps/ene/mono 18.575 keV

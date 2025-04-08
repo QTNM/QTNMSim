@@ -199,10 +199,16 @@ void QTPrimaryGeneratorAction::DefineCommands()
 
   // neutrino mass command
   auto& mixCmd = fMessenger->DeclareProperty("eta", fSterilemixing,
-                                               "Sterile neutrino mixing (0.0-1.0).");
+					     "Sterile neutrino mixing (0.0-1.0).");
   mixCmd.SetParameterName("x", true);
   mixCmd.SetRange("x>=0.");
   mixCmd.SetDefaultValue("0.0");
 
+  // Beta decay energy cutoff
+  auto& lboundCmd = fMessenger->DeclareProperty("eMin", fLowerBoundTritium,
+						"Minimum energy cut-off for Tritium decay [keV].");
+  lboundCmd.SetParameterName("lbound", true);
+  lboundCmd.SetRange("lbound>=0.");
+  lboundCmd.SetDefaultValue("1.5");
 
 }
