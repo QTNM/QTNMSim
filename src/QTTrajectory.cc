@@ -48,6 +48,7 @@ QTTrajectory::QTTrajectory(const G4Track* aTrack, std::vector<G4double>& ang)
 
 QTTrajectory::~QTTrajectory()
 {
+  fST.clear();
   fKE.clear();
   fOm.clear();
   fVT.clear();
@@ -88,6 +89,7 @@ void QTTrajectory::AppendStep(const G4Step* aStep)
   G4ThreeVector Bfield = G4ThreeVector( B[0], B[1], B[2] ) / tesla; // [Tesla] explicitly
   fOm.push_back(pEqn->CalcOmegaGivenB(Bfield, beta).mag());
   fKE.push_back(aStep->GetPostStepPoint()->GetKineticEnergy());
+  fST.push_back(gltime); // [ns] by default
 
   for (unsigned int i=0;i<fAngles.size();++i) {
     fAntennaID.push_back((G4int)i);            // which antenna
@@ -99,8 +101,7 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
 {
   // parameter which as index to antenna array with angles
   // make use of data members, position, velocity, acceleration
-  // return pair of time (already known in gltime), voltage
-  // return std::make_pair(gltime, voltage);
+  // return pair of time, voltage
   
   // retrieve required info from outside, propose EqnOfMotion object.
   // need frequency and acceleration
@@ -162,8 +163,10 @@ std::pair<double,double> QTTrajectory::convertToVT(unsigned int which)
 
   // assume half wave dipole eff length as wvlg/pi
   G4double voltage = wvlg/pi * (relFarEField+relNearEField).dot(antennaPolarisation);
-  
-  return std::make_pair(gltime, voltage);
+
+  // time transform, source local to antenna local
+  G4double antenna_time = gltime + dist/c_m_per_ns;
+  return std::make_pair(antenna_time, voltage);
 }
 
 void QTTrajectory::ShowTrajectory(std::ostream& os) const

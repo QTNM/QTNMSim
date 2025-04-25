@@ -46,6 +46,7 @@ public:
   std::vector<G4int>&    getAntennaID() {return fAntennaID;};
   std::vector<G4double>& getOm() {return fOm;};
   std::vector<G4double>& getKE() {return fKE;};
+  std::vector<G4double>& getST() {return fST;};
 
   inline G4int GetTrackID() const override
     { return fTrackID; }
@@ -76,6 +77,7 @@ private:
   std::vector<G4int>     fAntennaID; // antenna ID parallel to VTcontainer entries
   std::vector<G4double>  fOm;        // Omega parallel to VTcontainer entries
   std::vector<G4double>  fKE;        // Kinetic energy parallel to VTcontainer entries
+  std::vector<G4double>  fST;        // source time parallel to VTcontainer entries
   VTcontainer            fVT;        // container, Cyclotron radiation pairs, time, voltage
 
   G4FieldManager*        pfieldManager; // singleton for info
@@ -91,8 +93,9 @@ private:
   G4ThreeVector               initialPos;
 
   // explicit SI units here transparent
-  static constexpr G4double c_SI    = c_light/(m/s);
-  static constexpr G4double eps0_SI = epsilon0 / farad * m;
+  static constexpr G4double c_SI       = c_light/(m/s);
+  static constexpr G4double c_m_per_ns = c_SI * 1.0e-9; // for time conversion
+  static constexpr G4double eps0_SI    = epsilon0 / farad * m;
 
 };
 

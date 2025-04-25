@@ -157,6 +157,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
       QTTrajectory* trj = dynamic_cast<QTTrajectory*>(entry);
       G4int counter = 0;
       for (auto val : trj->getOm()) fOutput->FillOmVec(val);
+      for (auto val : trj->getST()) fOutput->FillSourceTime(val);
       for (auto val : trj->getKE()) fOutput->FillKEVec(val / G4Analysis::GetUnitValue("keV"));
       for (auto values : trj->getVT()) {  // std::pair<double,double>
 	fOutput->FillAntennaVec((trj->getAntennaID()).at(counter)); // same size as
@@ -164,7 +165,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
 	fOutput->FillVoltageVec(values.second);
 	counter++;
       }
-        
+
       // fill the ntuple, n antenna data for each trajectory
       fOutput->FillNtupleI(1, 0, eventID); // repeat all rows
       fOutput->FillNtupleI(1, 1, trj->GetTrackID()); // trajectory specific
