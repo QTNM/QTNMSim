@@ -10,7 +10,7 @@
 #include "G4UserLimits.hh"
 
 
-G4Allocator<NATrajectory>*& myTrajectoryAllocator()
+G4Allocator<NATrajectory>*& myTrajectoryAllocator2()
 {
   G4ThreadLocalStatic G4Allocator<NATrajectory>* _instance = nullptr;
   return _instance;

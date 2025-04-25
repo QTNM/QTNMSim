@@ -106,20 +106,20 @@ private:
 
 };
 
-extern G4TRACKING_DLL G4Allocator<NATrajectory>*& myTrajectoryAllocator();
+extern G4TRACKING_DLL G4Allocator<NATrajectory>*& myTrajectoryAllocator2();
 
 inline void* NATrajectory::operator new(size_t)
 {
-  if(myTrajectoryAllocator() == nullptr)
+  if(myTrajectoryAllocator2() == nullptr)
   {
-    myTrajectoryAllocator() = new G4Allocator<NATrajectory>;
+    myTrajectoryAllocator2() = new G4Allocator<NATrajectory>;
   }
-  return (void*) myTrajectoryAllocator()->MallocSingle();
+  return (void*) myTrajectoryAllocator2()->MallocSingle();
 }
 
 inline void NATrajectory::operator delete(void* aTrajectory)
 {
-  myTrajectoryAllocator()->FreeSingle((NATrajectory*) aTrajectory);
+  myTrajectoryAllocator2()->FreeSingle((NATrajectory*) aTrajectory);
 }
 
 #endif
