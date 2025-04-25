@@ -14,7 +14,7 @@ class QTOutputManager;
 class QTEventAction : public G4UserEventAction
 {
 public:
-  QTEventAction(G4int, QTOutputManager*);
+  QTEventAction(QTOutputManager*);
   virtual ~QTEventAction() override;
 
   virtual void BeginOfEventAction(const G4Event* event) override;
@@ -30,7 +30,6 @@ private:
   QTOutputManager*      fOutput  = nullptr;
   G4int                 fGID     = -1;
   G4int                 fVID     = -1;
-  G4int                 nAntenna = -1;
 
 };
 

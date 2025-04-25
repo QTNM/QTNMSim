@@ -66,7 +66,7 @@ void NAEventAction::EndOfEventAction(const G4Event* event)
   // Get entries from hits collections
   //
   auto VacHC     = GetGasHitsCollection(fVID, event);
-  G4cout << "EVENT>>> " << event->GetEventID() << ", number of vacuum stopped hits: " << VacHC->entries() << G4endl;
+  //  G4cout << "EVENT>>> " << event->GetEventID() << ", number of vacuum stopped hits: " << VacHC->entries() << G4endl;
 
   // dummy hit storage
   std::vector<double> tedep, ttime, tkine1, tkine2, px, py, posx, posy, posz;
@@ -74,7 +74,7 @@ void NAEventAction::EndOfEventAction(const G4Event* event)
 
   // fill Hits output from SD
   G4int GnofHits = GasHC->entries();
-  G4cout << "EVENT>>> " << event->GetEventID() << ", number of hits: " << GnofHits << G4endl;
+  //  G4cout << "EVENT>>> " << event->GetEventID() << ", number of hits: " << GnofHits << G4endl;
 
   // Gas detector
   for ( G4int i=0; i<GnofHits; i++ ) 

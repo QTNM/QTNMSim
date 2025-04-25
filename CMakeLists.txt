@@ -42,15 +42,20 @@ add_library(qtnmSimlib
   src/QTComsolField.cc
   src/gzip_streambuf.cc
   src/QTRunAction.cc
+  src/NARunAction.cc
   src/QTEquationOfMotion.cc
   src/QTGasHit.cc
   src/QTOutputManager.cc
+  src/NAOutputManager.cc
   src/QTTrackingAction.cc
+  src/NATrackingAction.cc
   src/QTActionInitialization.cc
   src/QTEventAction.cc
+  src/NAEventAction.cc
   src/QTGasSD.cc
   src/QTPrimaryGeneratorAction.cc
   src/QTTrajectory.cc
+  src/NATrajectory.cc
   src/QTNMeImpactIonisation.cc)
 target_include_directories(qtnmSimlib PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
 target_link_libraries(qtnmSimlib PRIVATE ${Geant4_LIBRARIES})
