@@ -1,13 +1,13 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "QTOutputManager.hh"
+#include "NAOutputManager.hh"
 
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-QTOutputManager::QTOutputManager(G4String fname)
+NAOutputManager::NAOutputManager(G4String fname)
 {
   fout = fname;
 
@@ -18,10 +18,10 @@ QTOutputManager::QTOutputManager(G4String fname)
 
 // leave deleting to run manager, follows AnaEx01
 
-QTOutputManager::~QTOutputManager() = default;
+NAOutputManager::~NAOutputManager() = default;
 
 
-void QTOutputManager::Book()
+void NAOutputManager::Book()
 {
   // Create or get analysis manager
   analysisManager = G4AnalysisManager::Instance();
@@ -65,12 +65,18 @@ void QTOutputManager::Book()
     
     // Creating ntuple 1 with vector entries
     //
-    G4String aidname  = "AntennaID";
-    G4String tvecname = "TimeVec";
-    G4String vvecname = "VoltageVec";
     G4String ovecname = "OmVec";
     G4String kvecname = "KEVec";
-    G4String stname   = "SourceTime";
+    G4String tvecname = "SourceTime";
+    G4String xpname = "PosxVec";
+    G4String ypname = "PosyVec";
+    G4String zpname = "PoszVec";
+    G4String bxname = "BetaxVec";
+    G4String byname = "BetayVec";
+    G4String bzname = "BetazVec";
+    G4String axname = "AccxVec";
+    G4String ayname = "AccyVec";
+    G4String azname = "AcczVec";
     analysisManager->CreateNtuple("Signal", "Time-series");
     analysisManager->CreateNtupleIColumn("EventID");
     analysisManager->CreateNtupleIColumn("TrackID");
@@ -81,12 +87,18 @@ void QTOutputManager::Book()
     analysisManager->CreateNtupleDColumn("KinEnergy"); // kinetic energy
     // These need passing a reference to the vector
     // filled by AddNtupleRow() assumed
-    analysisManager->CreateNtupleIColumn(aidname, GetAntennaID());
-    analysisManager->CreateNtupleDColumn(tvecname, GetTimeVec());
-    analysisManager->CreateNtupleDColumn(vvecname, GetVoltageVec());
     analysisManager->CreateNtupleDColumn(ovecname, GetOmVec());
     analysisManager->CreateNtupleDColumn(kvecname, GetKEVec());
-    analysisManager->CreateNtupleDColumn(stname, GetSourceTime());
+    analysisManager->CreateNtupleDColumn(tvecname, GetTimeVec());
+    analysisManager->CreateNtupleDColumn(xpname, GetXVec());
+    analysisManager->CreateNtupleDColumn(ypname, GetYVec());
+    analysisManager->CreateNtupleDColumn(zpname, GetZVec());
+    analysisManager->CreateNtupleDColumn(bxname, GetBetaXVec());
+    analysisManager->CreateNtupleDColumn(byname, GetBetaYVec());
+    analysisManager->CreateNtupleDColumn(bzname, GetBetaZVec());
+    analysisManager->CreateNtupleDColumn(axname, GetAccXVec());
+    analysisManager->CreateNtupleDColumn(ayname, GetAccYVec());
+    analysisManager->CreateNtupleDColumn(azname, GetAccZVec());
     analysisManager->FinishNtuple();
 
     fFactoryOn = true;
@@ -94,7 +106,7 @@ void QTOutputManager::Book()
 
 }
 
-void QTOutputManager::Save()
+void NAOutputManager::Save()
 {
   // Create or get analysis manager
   analysisManager = G4AnalysisManager::Instance();
@@ -107,7 +119,7 @@ void QTOutputManager::Save()
   
 }
 
-void QTOutputManager::FillNtupleI(G4int which, G4int col, G4int val)
+void NAOutputManager::FillNtupleI(G4int which, G4int col, G4int val)
 {
   // Create or get analysis manager
   analysisManager = G4AnalysisManager::Instance();
@@ -116,7 +128,7 @@ void QTOutputManager::FillNtupleI(G4int which, G4int col, G4int val)
 }
 
 
-void QTOutputManager::FillNtupleD(G4int which, G4int col, G4double val)
+void NAOutputManager::FillNtupleD(G4int which, G4int col, G4double val)
 {
   // Create or get analysis manager
   analysisManager = G4AnalysisManager::Instance();
@@ -125,7 +137,7 @@ void QTOutputManager::FillNtupleD(G4int which, G4int col, G4double val)
 }
 
 
-void QTOutputManager::AddNtupleRow(G4int which)
+void NAOutputManager::AddNtupleRow(G4int which)
 {
   // Create or get analysis manager
   analysisManager = G4AnalysisManager::Instance();
@@ -133,10 +145,15 @@ void QTOutputManager::AddNtupleRow(G4int which)
   analysisManager->AddNtupleRow(which);
 
   // clear internal vector storage after writing to disk with this method.
-  avec.clear();
   tvec.clear();
-  vvec.clear();
   ovec.clear();
-  kvec.clear();
-  stvec.clear();
+  xvec.clear();
+  yvec.clear();
+  zvec.clear();
+  bxvec.clear();
+  byvec.clear();
+  bzvec.clear();
+  axvec.clear();
+  ayvec.clear();
+  azvec.clear();
 }

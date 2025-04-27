@@ -26,6 +26,7 @@ public:
   inline void FillVoltageVec(G4double val) { vvec.push_back(val); }
   inline void FillOmVec(G4double val)      { ovec.push_back(val); }
   inline void FillKEVec(G4double val)      { kvec.push_back(val); }
+  inline void FillSourceTime(G4double val) { stvec.push_back(val); }
   void AddNtupleRow(G4int which); // close an ntuple row
 
   G4String GetFileName() {return fout;}
@@ -37,6 +38,7 @@ private:
   std::vector<G4double>& GetVoltageVec()   { return vvec; }
   std::vector<G4double>& GetOmVec()        { return ovec; }
   std::vector<G4double>& GetKEVec()        { return kvec; }
+  std::vector<G4double>& GetSourceTime()   { return stvec; }
 
   G4bool    fFactoryOn = false;
   G4String  fout;
@@ -44,7 +46,8 @@ private:
   std::vector<G4double> tvec;    // time vector
   std::vector<G4double> vvec;    // voltage vector
   std::vector<G4double> ovec;    // Omega vector
-  std::vector<G4double> kvec;    // Kinteic energy vector
+  std::vector<G4double> kvec;    // Kinetic energy vector
+  std::vector<G4double> stvec;   // source time vector
 
   G4AnalysisManager* analysisManager = nullptr;
 };

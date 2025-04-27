@@ -46,7 +46,7 @@ jobs:
           source /geant4-install/bin/geant4.sh
           source /cern_root/bin/thisroot.sh
           cd build
-          ./qtnmSim -m ../example_input/example0.mac -g ../example_input/example.gdml
+          ./qtnmSim -m ../example_input/example0.mac -g ../example_input/example.gdml -a 1
           python3 ../utils/plot_example0.py
 
           # Run Test0, elastic cross section

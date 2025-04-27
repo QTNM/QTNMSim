@@ -1,6 +1,6 @@
-#include "QTEventAction.hh"
-#include "QTOutputManager.hh"
-#include "QTTrajectory.hh"
+#include "NAEventAction.hh"
+#include "NAOutputManager.hh"
+#include "NATrajectory.hh"
 #include "QTGasSD.hh"
 
 #include <vector>
@@ -14,19 +14,19 @@
 #include "G4AnalysisManager.hh"
 
 
-QTEventAction::QTEventAction(QTOutputManager* out)
+NAEventAction::NAEventAction(NAOutputManager* out)
   : G4UserEventAction()
   , fOutput(out)
 {
 }
 
 
-QTEventAction::~QTEventAction() = default;
+NAEventAction::~NAEventAction() = default;
 
 
 
 QTGasHitsCollection* 
-QTEventAction::GetGasHitsCollection(G4int hcID,
+NAEventAction::GetGasHitsCollection(G4int hcID,
                                     const G4Event* event) const
 {
   auto hitsCollection 
@@ -36,7 +36,7 @@ QTEventAction::GetGasHitsCollection(G4int hcID,
   if ( ! hitsCollection ) {
     G4ExceptionDescription msg;
     msg << "Cannot access hitsCollection ID " << hcID; 
-    G4Exception("QTEventAction::GetGasHitsCollection()",
+    G4Exception("NAEventAction::GetGasHitsCollection()",
       "MyCode0001", FatalException, msg);
   }         
 
@@ -44,12 +44,12 @@ QTEventAction::GetGasHitsCollection(G4int hcID,
 }    
 
 
-void QTEventAction::BeginOfEventAction(const G4Event*
+void NAEventAction::BeginOfEventAction(const G4Event*
                                          /*event*/)
 { 
 }
 
-void QTEventAction::EndOfEventAction(const G4Event* event)
+void NAEventAction::EndOfEventAction(const G4Event* event)
 {
   // Get GAS hits collections IDs
   if(fGID < 0) 
@@ -66,7 +66,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   // Get entries from hits collections
   //
   auto VacHC     = GetGasHitsCollection(fVID, event);
-  //  G4cout << "EVENT>>> number of vacuum stopped hits: " << VacHC->entries() << G4endl;
+  //  G4cout << "EVENT>>> " << event->GetEventID() << ", number of vacuum stopped hits: " << VacHC->entries() << G4endl;
 
   // dummy hit storage
   std::vector<double> tedep, ttime, tkine1, tkine2, px, py, posx, posy, posz;
@@ -74,7 +74,7 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
 
   // fill Hits output from SD
   G4int GnofHits = GasHC->entries();
-  //  G4cout << "EVENT>>> number of hits: " << GnofHits << G4endl;
+  //  G4cout << "EVENT>>> " << event->GetEventID() << ", number of hits: " << GnofHits << G4endl;
 
   // Gas detector
   for ( G4int i=0; i<GnofHits; i++ ) 
@@ -154,18 +154,24 @@ void QTEventAction::EndOfEventAction(const G4Event* event)
   
   if(n_trajectories > 0) {
     for(auto* entry : *(trajectoryContainer->GetVector())) {  // vector<G4VTrajectory*>*
-      QTTrajectory* trj = dynamic_cast<QTTrajectory*>(entry);
+      NATrajectory* trj = dynamic_cast<NATrajectory*>(entry);
       G4int counter = 0;
-      for (auto val : trj->getOm()) fOutput->FillOmVec(val);
-      for (auto val : trj->getST()) fOutput->FillSourceTime(val);
-      for (auto val : trj->getKE()) fOutput->FillKEVec(val / G4Analysis::GetUnitValue("keV"));
-      for (auto values : trj->getVT()) {  // std::pair<double,double>
-	fOutput->FillAntennaVec((trj->getAntennaID()).at(counter)); // same size as
-	fOutput->FillTimeVec(values.first);             // VT container
-	fOutput->FillVoltageVec(values.second);
+      for (auto value : trj->getOm()) {
+ 	fOutput->FillOmVec(value);
+ 	fOutput->FillKEVec(trj->getKE().at(counter) / G4Analysis::GetUnitValue("keV"));
+	fOutput->FillTimeVec((trj->getTime()).at(counter));
+	fOutput->FillXVec((trj->getXpos()).at(counter) / G4Analysis::GetUnitValue("m"));
+	fOutput->FillYVec((trj->getYpos()).at(counter) / G4Analysis::GetUnitValue("m"));
+	fOutput->FillZVec((trj->getZpos()).at(counter) / G4Analysis::GetUnitValue("m"));
+	fOutput->FillBetaXVec((trj->getBetaX()).at(counter));
+	fOutput->FillBetaYVec((trj->getBetaY()).at(counter));
+	fOutput->FillBetaZVec((trj->getBetaZ()).at(counter));
+	fOutput->FillAccXVec((trj->getAccX()).at(counter));
+	fOutput->FillAccYVec((trj->getAccY()).at(counter));
+	fOutput->FillAccZVec((trj->getAccZ()).at(counter));
 	counter++;
       }
-
+        
       // fill the ntuple, n antenna data for each trajectory
       fOutput->FillNtupleI(1, 0, eventID); // repeat all rows
       fOutput->FillNtupleI(1, 1, trj->GetTrackID()); // trajectory specific

@@ -1,5 +1,5 @@
-#ifndef QTEventAction_h
-#define QTEventAction_h 1
+#ifndef NAEventAction_h
+#define NAEventAction_h 1
 
 #include "QTGasHit.hh"
 
@@ -8,14 +8,14 @@
 
 /// Event action class
 ///
-class QTOutputManager;
+class NAOutputManager;
 
 
-class QTEventAction : public G4UserEventAction
+class NAEventAction : public G4UserEventAction
 {
 public:
-  QTEventAction(QTOutputManager*);
-  virtual ~QTEventAction() override;
+  NAEventAction(NAOutputManager*);
+  virtual ~NAEventAction() override;
 
   virtual void BeginOfEventAction(const G4Event* event) override;
   virtual void EndOfEventAction(const G4Event* event) override;
@@ -27,7 +27,7 @@ private:
 
   // data members
   // hit data
-  QTOutputManager*      fOutput  = nullptr;
+  NAOutputManager*      fOutput  = nullptr;
   G4int                 fGID     = -1;
   G4int                 fVID     = -1;
 
