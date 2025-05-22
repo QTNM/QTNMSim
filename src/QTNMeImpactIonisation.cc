@@ -264,17 +264,34 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
   G4int i2 = std::distance(cdf.begin(), lower);
   G4double enew = fac1 * secondary_energy[i2-1] + fac2 * secondary_energy[i2];
 
-  // Original direction of particle
-  G4ThreeVector dir = dp->GetMomentumDirection();
-  // set new direction
-  // fParticleChange->ProposeMomentumDirection(theNewDirection);
-  // G4cout << T_ev << ", " << enew << G4endl;
-  // New electron
-  auto newp = new G4DynamicParticle (G4Electron::Electron(),dir,enew * CLHEP::eV);
-  fvect->push_back(newp);
+  // Original direction of particle in lab frame
+  G4ThreeVector dir_lab = dp->GetMomentumDirection();
 
+  // Deflection of primary particle
+  G4double cost = 1.0; // No deflection
+  G4double sint = std::sqrt((1.0-cost)*(1.0+cost));
+  G4double phi  = CLHEP::twopi*rndmEngine->flat();
+  G4ThreeVector theNewDirection(sint*std::cos(phi), sint*std::sin(phi), cost);
+
+  // get original direction in lab frame and rotate new direction to lab frame
+  theNewDirection.rotateUz(dir_lab);
+
+  // Set new direction
+  fParticleChange->ProposeMomentumDirection(theNewDirection);
+  // Reduce kinetic energy
   fParticleChange->SetProposedKineticEnergy((T_ev - enew - bind_vals[0]) * CLHEP::eV);
   fParticleChange->ProposeLocalEnergyDeposit(bind_vals[0] * CLHEP::eV);
+
+
+  // Add secondary particle
+  cost = 1.0; // No deflection
+  sint = std::sqrt((1.0-cost)*(1.0+cost));
+  phi  = CLHEP::twopi*rndmEngine->flat();
+  theNewDirection.set(sint*std::cos(phi), sint*std::sin(phi), cost);
+  theNewDirection.rotateUz(dir_lab);
+  auto newp = new G4DynamicParticle (G4Electron::Electron(), theNewDirection, enew * CLHEP::eV);
+  fvect->push_back(newp);
+
 }
 
 G4double
