@@ -70,6 +70,7 @@ QTNMeImpactIonisation::QTNMeImpactIonisation()
 {
   SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV   is used if (E< 10  eV)
   SetHighEnergyLimit(100.0*CLHEP::MeV); // ekin = 100 MeV is used if (E>100 MeV)
+  secondary_energy.reserve(nESpace);
 }
 
 
@@ -206,14 +207,12 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
   const G4double alpha = CLHEP::fine_structure_const;
   const G4double aB = 5.29e-11;
 
-  std::vector<G4double> cdf;
-  cdf.reserve(nESpace);
+  std::vector<G4double> cdf(nESpace);
 
   std::vector<G4double> bind_vals = get_ionisation_energies(izet);
 
   // Maximum energy of secondary particle
   const G4double emax = 0.5 * (T_ev - *(std::min_element(bind_vals.begin(), bind_vals.end())));
-
   secondary_energy = logspace(std::log10(1e-6*T_ev), std::log10(emax), nESpace);
 
   const G4int nShells = bind_vals.size();
