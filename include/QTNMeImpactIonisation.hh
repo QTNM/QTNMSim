@@ -61,6 +61,7 @@
 #include "G4VEmModel.hh"
 #include "globals.hh"
 #include <map>
+#include <random>
 
 class G4ParticleChangeForGamma;
 class G4ParticleDefinition;
@@ -107,6 +108,8 @@ private:
   std::vector<G4double>     get_ionisation_energies(G4int Z) { return binding_energies[Z]; };
   G4double                  mbell_gr(G4double U, G4double J);
   G4double                  mbell_f_ion(G4int z_eff, G4double U, G4int Z, G4double m_lambda);
+  G4double                  fbe(G4double w, G4double t, G4double theta);
+  G4double                  fb(G4double w, G4double t, G4double theta);
   // particle change
   G4ParticleChangeForGamma*  fParticleChange;
   // Energy space for secondary CDF
@@ -114,6 +117,9 @@ private:
   // Theis could be made variable
   static const G4int nESpace = 200;
   std::vector<G4double> logspace(const G4double a, const G4double b, const G4int n);
+  // Angular sampling
+  std::vector<G4double> angle = std::vector<G4double>(181);
+  std::vector<G4double> angle_pdf = std::vector<G4double>(181);
   // Ionisation energies
   std::map<int, std::vector<G4double>> binding_energies;
   // Parameters for MBELL model
@@ -133,6 +139,9 @@ private:
   std::string project_root = XSTRING(SOURCE_ROOT);
   // Maximum Z allowable
   const G4int z_max = 18;
+
+  std::ranlux24       generator;
+  std::random_device  rd; // for random seeds
 };
 
 #endif

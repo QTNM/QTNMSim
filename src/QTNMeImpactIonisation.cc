@@ -71,6 +71,10 @@ QTNMeImpactIonisation::QTNMeImpactIonisation()
   SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV   is used if (E< 10  eV)
   SetHighEnergyLimit(100.0*CLHEP::MeV); // ekin = 100 MeV is used if (E>100 MeV)
   secondary_energy.reserve(nESpace);
+  // Angular sampling points for secondary scatter
+  const G4double a = CLHEP::pi / 180.0;
+  std::generate(angle.begin(), angle.end(), [n = 0, &a]() mutable { return n++ * a; });
+  generator.seed(rd()); // using random seed
 }
 
 
@@ -217,7 +221,7 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
 
   const G4int nShells = bind_vals.size();
 
-  for (int i = 0; i < nESpace; i++) {
+  for (G4int i = 0; i < nESpace; i++) {
     G4double cdf_sum = 0.0;
     for (G4int j = 0; j <nShells; ++j) {
       G4double bind = bind_vals[j];
@@ -266,8 +270,20 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
   // Original direction of particle in lab frame
   G4ThreeVector dir_lab = dp->GetMomentumDirection();
 
+  // Primary energy post collision
+  G4double prim_new = T_ev - enew - bind_vals[0];
+  G4double w = prim_new / bind_vals[0];
+  G4double t = T_ev / bind_vals[0];
+  for (G4int i = 1; i < angle.size(); i++) {
+    angle_pdf[i] = fbe(w, t, angle[i]) + fb(w, t, angle[i]);
+  }
+
+  std::piecewise_constant_distribution<> dist(angle.begin(),
+					      angle.end(),
+					      angle_pdf.begin());
+
   // Deflection of primary particle
-  G4double cost = 1.0; // No deflection
+  G4double cost = std::cos(dist(generator));
   G4double sint = std::sqrt((1.0-cost)*(1.0+cost));
   G4double phi  = CLHEP::twopi*rndmEngine->flat();
   G4ThreeVector theNewDirection(sint*std::cos(phi), sint*std::sin(phi), cost);
@@ -278,12 +294,21 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
   // Set new direction
   fParticleChange->ProposeMomentumDirection(theNewDirection);
   // Reduce kinetic energy
-  fParticleChange->SetProposedKineticEnergy((T_ev - enew - bind_vals[0]) * CLHEP::eV);
+  fParticleChange->SetProposedKineticEnergy(prim_new * CLHEP::eV);
   fParticleChange->ProposeLocalEnergyDeposit(bind_vals[0] * CLHEP::eV);
 
-
   // Add secondary particle
-  cost = 1.0; // No deflection
+
+  w = enew / bind_vals[0];
+  for (G4int i = 1; i < angle.size(); i++) {
+    angle_pdf[i] = fbe(w, t, angle[i]) + fb(w, t, angle[i]);
+  }
+
+  std::piecewise_constant_distribution<> dist2(angle.begin(),
+					       angle.end(),
+					       angle_pdf.begin());
+
+  cost = std::cos(dist2(generator));
   sint = std::sqrt((1.0-cost)*(1.0+cost));
   phi  = CLHEP::twopi*rndmEngine->flat();
   theNewDirection.set(sint*std::cos(phi), sint*std::sin(phi), cost);
@@ -291,6 +316,23 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
   auto newp = new G4DynamicParticle (G4Electron::Electron(), theNewDirection, enew * CLHEP::eV);
   fvect->push_back(newp);
 
+}
+
+G4double
+QTNMeImpactIonisation::fbe(G4double w, G4double t, G4double theta)
+{
+  G4double G2 = std::sqrt((w+1)/t);
+  G4double G3 = 0.6 * std::sqrt((1 - pow(G2,2)) / w);
+  return 1.0 / pow(1.0 + (std::cos(theta) - G2) / G3, 2);
+}
+
+G4double
+QTNMeImpactIonisation::fb(G4double w, G4double t, G4double theta)
+{
+  G4double G5 = 1.0 / 3.0;
+  G4double gamma = 10.0;
+  G4double G4 = gamma * pow(1 - w/t,3) / t / (w + 1);
+  return G4 / pow(1.0 + (std::cos(theta) + 1) / G5, 2);
 }
 
 G4double
