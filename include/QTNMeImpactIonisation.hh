@@ -118,8 +118,9 @@ private:
   static const G4int nESpace = 200;
   std::vector<G4double> logspace(const G4double a, const G4double b, const G4int n);
   // Angular sampling
-  std::vector<G4double> angle = std::vector<G4double>(181);
-  std::vector<G4double> angle_pdf = std::vector<G4double>(181);
+  static const G4int nAngles = 181;
+  std::vector<G4double> angle = std::vector<G4double>(nAngles);
+  std::vector<G4double> angle_pdf = std::vector<G4double>(nAngles);
   // Ionisation energies
   std::map<int, std::vector<G4double>> binding_energies;
   // Parameters for MBELL model

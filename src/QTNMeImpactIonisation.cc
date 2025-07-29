@@ -274,7 +274,7 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
   G4double prim_new = T_ev - enew - bind_vals[0];
   G4double w = prim_new / bind_vals[0];
   G4double t = T_ev / bind_vals[0];
-  for (G4int i = 1; i < angle.size(); i++) {
+  for (G4int i = 1; i < nAngles; i++) {
     angle_pdf[i] = fbe(w, t, angle[i]) + fb(w, t, angle[i]);
   }
 
