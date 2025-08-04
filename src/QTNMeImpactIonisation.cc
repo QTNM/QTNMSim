@@ -115,6 +115,9 @@ void QTNMeImpactIonisation::InitialiseLocal(const G4ParticleDefinition*,
 }
 
 
+// For Z <= 18, use the modified Bell cross-sections
+// https://doi.org/10.1103/PhysRevA.73.052703
+// https://doi.org/10.1088/0031-8949/74/3/014
 G4double
 QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
                                                           G4double ekin,
@@ -189,6 +192,12 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
 }
 
 
+// Sampling of secondary particle energies based on the method of
+// https://doi.org/10.1103/PhysRevA.62.052710
+// as described in
+// https://doi.org/10.1063/5.0126336
+// Angular sampling of secondary particles uses the method from
+// https://doi.org/10.1103/PhysRevA.44.1644
 void
 QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
                                                  const G4MaterialCutsCouple* cp,
