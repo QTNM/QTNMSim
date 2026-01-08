@@ -109,7 +109,7 @@ void MultipleScatteringList::ConstructProcess() {
   G4CoulombScattering* ss = new G4CoulombScattering();
   G4EmMultiModel* mm = new G4EmMultiModel("CoulombSSModels");
   // Elastic Scattering
-  G4eDPWACoulombScatteringModel* es = new G4eDPWACoulombScatteringModel(false, false, 0.0);
+  G4eDPWACoulombScatteringModel* es = new G4eDPWACoulombScatteringModel(false, false);
   es->SetPolarAngleLimit(0.0); // No mixed model
   mm->AddModel(es);
   // Impact Ionisation

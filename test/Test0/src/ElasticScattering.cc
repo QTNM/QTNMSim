@@ -105,7 +105,7 @@ void ElasticScatteringList::ConstructProcess() {
 
   // single scattering
   G4CoulombScattering *ss = new G4CoulombScattering();
-  ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false, 0.0));
+  ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false));
 
   ph->RegisterProcess(ss, particle);
 }
