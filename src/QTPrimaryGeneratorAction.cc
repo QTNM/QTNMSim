@@ -37,7 +37,7 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 , fSterilemass(0.0)
 , fSterilemixing(0.0)
 , fLowerBoundTritium(1.5) // Lower bound for Tritium decay energy
-, fQminusThis(0.0)  // no energy lower bound [keV] from Q-value
+, fQminusThis(0.2)  // no energy lower bound [keV] from Q-value
 , fAngleLow(0.0)  // pitch angle [deg] lower bound, default unused
 , fAngleHigh(89.0)  // pitch angle [deg] high bound, default unused
 {
@@ -174,6 +174,12 @@ void QTPrimaryGeneratorAction::DefineCommands()
   typeCmd.SetParameterName("ttt", true);
   typeCmd.SetDefaultValue("false");
 
+  // tritium type command
+  auto& tritCmd = fMessenger->DeclareProperty("BespokeTritium", fBespokeTritium,
+					      "Boolean true=use TBetaDecay with specs on energy and pitch angle.");
+  tritCmd.SetParameterName("tttt", true);
+  tritCmd.SetDefaultValue("false");
+
   // energy command
   auto& energyCmd = fMessenger->DeclareProperty("gunEnergy", fMean,
                                                "Mean Gun energy [keV].");
@@ -228,5 +234,26 @@ void QTPrimaryGeneratorAction::DefineCommands()
   lboundCmd.SetParameterName("lbound", true);
   lboundCmd.SetRange("lbound>=0.");
   lboundCmd.SetDefaultValue("1.5");
+
+  // Beta decay energy lower bound distance from Q-value
+  auto& lqmtCmd = fMessenger->DeclareProperty("eQminusThis", fQminusThis,
+						"Low energy distance from Q-value for Tritium decay [keV].");
+  lqmtCmd.SetParameterName("lqmt", true);
+  lqmtCmd.SetRange("lqmt>=0.");
+  lqmtCmd.SetDefaultValue("0.2");
+
+  // Beta decay pitch angle lower bound
+  auto& angleLowCmd = fMessenger->DeclareProperty("mintheta", fAngleLow,
+						"Lower bound pitch angle for Tritium decay [deg].");
+  angleLowCmd.SetParameterName("alow", true);
+  angleLowCmd.SetRange("alow>=0.");
+  angleLowCmd.SetDefaultValue("0.0");
+
+  // Beta decay pitch angle lower bound
+  auto& angleHighCmd = fMessenger->DeclareProperty("maxtheta", fAngleHigh,
+						"Higher bound pitch angle for Tritium decay [deg].");
+  angleHighCmd.SetParameterName("ahigh", true);
+  angleHighCmd.SetRange("ahigh>=0.");
+  angleHighCmd.SetDefaultValue("90.0");
 
 }
