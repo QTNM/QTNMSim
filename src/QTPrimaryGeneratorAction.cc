@@ -29,6 +29,7 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 , fStdev(5.e-4) // for E-gun
 , fSpot(0.5)    // for E-gun
 , fTritium(false) // switch to Trtium beta decay generator
+, fBespokeTritium(false) // no Tritium source specs
 , fEGun(false) // calibration: true=electron gun
 , fTestElectron(false)  // 90 degree electron for testing, override other guns
 , fOrder(true)   // neutrino hierarchie: true=normal
@@ -36,6 +37,9 @@ QTPrimaryGeneratorAction::QTPrimaryGeneratorAction()
 , fSterilemass(0.0)
 , fSterilemixing(0.0)
 , fLowerBoundTritium(1.5) // Lower bound for Tritium decay energy
+, fQminusThis(0.0)  // no energy lower bound [keV] from Q-value
+, fAngleLow(0.0)  // pitch angle [deg] lower bound, default unused
+, fAngleHigh(89.0)  // pitch angle [deg] high bound, default unused
 {
   generator.seed(rd()); // using random seed
 
@@ -105,9 +109,13 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     // distribution parameter
     int nw = 10000; // nw - number of bins
-    double ubound = TBeta::endAt(fNumass, 1); // max energy
+    double ubound = TBeta::endAt(fNumass, 1); // max energy, new Q-value minus nu mass
 
     // create distribution
+    if (fBespokeTritium) {
+      nw = 1000; // smaller energy interval, fewer bins
+      fLowerBoundTritium = ubound - fQminusThis;  // keep to [keV]
+    }
     pld_type ed(nw, fLowerBoundTritium, ubound, betaGenerator(fOrder, fNumass,
 							      fSterilemass, fSterilemixing));
 
@@ -119,7 +127,17 @@ void QTPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4double rad             = G4UniformRand() * atomRadius;
     G4double zpos            = -atomZHalfLength + 2.0*atomZHalfLength*G4UniformRand();
     fParticleGun->SetParticlePosition(G4ThreeVector(rad*std::cos(phi)*mm, rad*std::sin(phi)*mm, zpos*mm));
-    fParticleGun->SetParticleMomentumDirection(G4RandomDirection()); // 4 pi solid angle
+    if (fBespokeTritium) { // direction within pitch angle interval
+      if (fAngleHigh>90.0) fAngleHigh = 90.0; // don't permit > 90 deg pitch
+      G4double radians  = CLHEP::RandFlat::shoot(fAngleLow, fAngleHigh) * CLHEP::pi / 180.0; // exclusive upper limit
+      G4double zz  = std::cos(radians); // cos theta
+      G4double rho = std::sqrt(1-zz*zz); // sin theta
+      G4double azi = CLHEP::twopi * G4UniformRand();
+      G4ThreeVector dir(rho*std::cos(azi), rho*std::sin(azi), zz);
+      fParticleGun->SetParticleMomentumDirection(dir); // random angle in interval
+    }
+    else
+      fParticleGun->SetParticleMomentumDirection(G4RandomDirection()); // 4 pi solid angle
 
     // Beta decay random energy [keV]
     G4double en = ed(generator); // this is with std random
