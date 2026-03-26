@@ -257,7 +257,7 @@ QTNMeImpactIonisation::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
 
       cdf_sum += pre_fac * fac * (A1*A2 + A3 + A4 - A5*A6);
     }
-    cdf.push_back(cdf_sum);
+    cdf[i] = cdf_sum;
   }
 
   // Normalise
