@@ -40,6 +40,7 @@ private:
   G4bool              fTestElectron;
   G4bool              fEGun;
   G4bool              fTritium;
+  G4bool              fBespokeTritium;
   // electron gun parameter
   G4double            fMean;
   G4double            fStdev;
@@ -50,7 +51,10 @@ private:
   G4double            fSterilemass;
   G4double            fSterilemixing;
   G4double            fLowerBoundTritium;
-
+  G4double            fQminusThis;
+  G4double            fAngleLow;
+  G4double            fAngleHigh;
+  
   std::ranlux24       generator;
   std::random_device  rd; // for random seeds
 };
