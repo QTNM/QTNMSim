@@ -163,6 +163,10 @@ void QTNMPhysicsList::ConstructProcess()
   mm->AddModel(es);
   // Impact Ionisation
   mm->AddModel(new QTNMeImpactIonisation());
+  // add common limits to multimodel
+  mm->SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV   is used if (E< 10  eV)
+  mm->SetHighEnergyLimit(100.0*CLHEP::MeV); // ekin = 100 MeV is used if (E>100 MeV)
+
   ss->AddEmModel(0, mm);
 
   // bremsstrahlung
