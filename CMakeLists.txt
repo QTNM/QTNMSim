@@ -19,15 +19,15 @@ find_package(Geant4 11.2 REQUIRED gdml)
 
 # Look for Boost
 #TODO This should be a required package if using clang
-find_package(Boost)
+#find_package(Boost)
 
-if(Boost_FOUND)
-  add_compile_definitions(HAVE_BOOST)
-  include_directories(${Boost_INCLUDE_DIRS})
-endif()
+#if(Boost_FOUND)
+#  add_compile_definitions(HAVE_BOOST)
+#  include_directories(${Boost_INCLUDE_DIRS})
+#endif()
 
 # Project ROOT directory for reading data
-add_compile_definitions("SOURCE_ROOT=${CMAKE_SOURCE_DIR}")
+#add_compile_definitions("SOURCE_ROOT=${CMAKE_SOURCE_DIR}")
 
 # Build
 add_library(qtnmSimlib
@@ -56,6 +56,7 @@ add_library(qtnmSimlib
   src/QTPrimaryGeneratorAction.cc
   src/QTTrajectory.cc
   src/NATrajectory.cc
+  src/QTMultiModel.cc
   src/QTNMeImpactIonisation.cc)
 target_include_directories(qtnmSimlib PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
 target_link_libraries(qtnmSimlib PRIVATE ${Geant4_LIBRARIES})
