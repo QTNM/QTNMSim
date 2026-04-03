@@ -2,7 +2,8 @@
 
 #include "G4SystemOfUnits.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4EmMultiModel.hh"
+//#include "G4EmMultiModel.hh"
+#include "QTMultiModel.hh"
 #include "G4LossTableManager.hh"
 #include "G4EmParameters.hh"
 #include "G4EmBuilder.hh"
@@ -156,7 +157,7 @@ void QTNMPhysicsList::ConstructProcess()
 
   // Coulomb Scattering
   G4CoulombScattering* ss = new G4CoulombScattering();
-  G4EmMultiModel* mm = new G4EmMultiModel("CoulombSSModels");
+  QTMultiModel* mm = new QTMultiModel("CoulombSSModels");
   // Elastic Scattering
   G4eDPWACoulombScatteringModel* es = new G4eDPWACoulombScatteringModel(false, false);
   es->SetPolarAngleLimit(0.0); // No mixed model
@@ -164,10 +165,11 @@ void QTNMPhysicsList::ConstructProcess()
   // Impact Ionisation
   mm->AddModel(new QTNMeImpactIonisation());
   // add common limits to multimodel
-  mm->SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV   is used if (E< 10  eV)
-  mm->SetHighEnergyLimit(100.0*CLHEP::MeV); // ekin = 100 MeV is used if (E>100 MeV)
+  //  mm->SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV   is used if (E< 10  eV)
+  //  mm->SetHighEnergyLimit(100.0*CLHEP::MeV); // ekin = 100 MeV is used if (E>100 MeV)
 
   ss->AddEmModel(0, mm);
+  //  ss->AddEmModel(0, es);
 
   // bremsstrahlung
   G4eBremsstrahlung* brem = new G4eBremsstrahlung();
