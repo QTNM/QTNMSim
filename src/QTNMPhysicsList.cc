@@ -3,7 +3,6 @@
 #include "G4SystemOfUnits.hh"
 #include "G4ParticleDefinition.hh"
 //#include "G4EmMultiModel.hh"
-#include "QTMultiModel.hh"
 #include "G4LossTableManager.hh"
 #include "G4EmParameters.hh"
 #include "G4EmBuilder.hh"
@@ -20,8 +19,9 @@
 #include "G4LivermorePhotoElectricModel.hh"
 
 // e+-
+#include "QTMultiModel.hh"
 #include "G4eDPWACoulombScatteringModel.hh"
-#include "QTNMeImpactIonisation.hh"
+//#include "QTNMeImpactIonisation.hh"
 #include "G4CoulombScattering.hh"
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
@@ -159,11 +159,11 @@ void QTNMPhysicsList::ConstructProcess()
   G4CoulombScattering* ss = new G4CoulombScattering();
   QTMultiModel* mm = new QTMultiModel("CoulombSSModels");
   // Elastic Scattering
-  G4eDPWACoulombScatteringModel* es = new G4eDPWACoulombScatteringModel(false, false);
-  es->SetPolarAngleLimit(0.0); // No mixed model
-  mm->AddModel(es);
+  //  G4eDPWACoulombScatteringModel* es = new G4eDPWACoulombScatteringModel(false, false);
+  //  es->SetPolarAngleLimit(0.0); // No mixed model
+  //  mm->AddModel(es);
   // Impact Ionisation
-  mm->AddModel(new QTNMeImpactIonisation());
+  //  mm->AddModel(new QTNMeImpactIonisation());
   // add common limits to multimodel
   //  mm->SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV   is used if (E< 10  eV)
   //  mm->SetHighEnergyLimit(100.0*CLHEP::MeV); // ekin = 100 MeV is used if (E>100 MeV)
