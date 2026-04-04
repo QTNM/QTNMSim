@@ -157,10 +157,10 @@ void QTNMPhysicsList::ConstructProcess()
 
   // Coulomb Scattering
   G4CoulombScattering* ss = new G4CoulombScattering();
-  QTMultiModel* mm = new QTMultiModel("CoulombSSModels");
+  //  QTMultiModel* mm = new QTMultiModel("CoulombSSModels");
   // Elastic Scattering
-  //  G4eDPWACoulombScatteringModel* es = new G4eDPWACoulombScatteringModel(false, false);
-  //  es->SetPolarAngleLimit(0.0); // No mixed model
+  G4eDPWACoulombScatteringModel* es = new G4eDPWACoulombScatteringModel(false, false);
+  es->SetPolarAngleLimit(0.0); // No mixed model
   //  mm->AddModel(es);
   // Impact Ionisation
   //  mm->AddModel(new QTNMeImpactIonisation());
@@ -168,8 +168,8 @@ void QTNMPhysicsList::ConstructProcess()
   //  mm->SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV   is used if (E< 10  eV)
   //  mm->SetHighEnergyLimit(100.0*CLHEP::MeV); // ekin = 100 MeV is used if (E>100 MeV)
 
-  ss->AddEmModel(0, mm);
-  //  ss->AddEmModel(0, es);
+  //  ss->AddEmModel(0, mm);
+  ss->AddEmModel(0, es);
 
   // bremsstrahlung
   G4eBremsstrahlung* brem = new G4eBremsstrahlung();
