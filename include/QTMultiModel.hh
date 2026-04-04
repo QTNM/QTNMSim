@@ -54,6 +54,9 @@
 #include "G4ParticleDefinition.hh"
 #include "G4MaterialCutsCouple.hh"
 #include "G4Material.hh"
+#include "G4eDPWACoulombScatteringModel.hh"
+#include "QTNMeImpactIonisation.hh"
+#include "G4Material.hh"
 #include <vector>
 
 class G4DynamicParticle;
@@ -66,11 +69,11 @@ public:
 
   ~QTMultiModel() override;
 
-  void AddModel(G4VEmModel*);
+  //  void AddModel(G4VEmModel*);
 
   void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel*) override;
+  //  void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel*) override;
 
   // main method to compute cross section per atom
   G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
@@ -89,16 +92,21 @@ public:
   G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*,
                             G4double) override { return 10.0*CLHEP::eV; }
 
+  G4eDPWACoulombScatteringModel* GetElasticPtr() {return es;}
+  QTNMeImpactIonisation* GetInelasticPtr() {return inel;}
+  
   //  hide assignment operator
   QTMultiModel & operator=(const  QTMultiModel &right) = delete;
   QTMultiModel(const  QTMultiModel&) = delete;
 
 private: 
 
-  G4int                         nModels = 0;
-  std::vector<G4VEmModel*>      model;
+  //  G4int                         nModels = 0;
+  //  std::vector<G4VEmModel*>      model;
   std::vector<G4double>         cross_section;
-
+  // hold the model objects
+  G4eDPWACoulombScatteringModel* es;
+  QTNMeImpactIonisation* inel;
 };
 
 #endif

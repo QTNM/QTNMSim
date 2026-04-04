@@ -1,13 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(qtnmSim VERSION 0.1.0)
 
-# Compiler/build settings
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-#set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_BUILD_TYPE Release)
-
 # CTest if we need it
 # include(CTest)
 
@@ -16,6 +9,10 @@ option(BUILD_TESTS "Build test applications" OFF)
 
 # Dependencies
 find_package(Geant4 11.2 REQUIRED gdml)
+
+# # Setup Geant4 include directories and compile definitions
+#
+include(${Geant4_USE_FILE})
 
 # Look for Boost
 #TODO This should be a required package if using clang

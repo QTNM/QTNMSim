@@ -53,25 +53,37 @@
 QTMultiModel::QTMultiModel(const G4String& nam)
   : G4VEmModel(nam)
 {
-  model.clear();
+  //  model.clear();
   cross_section.clear();
+  cross_section.resize(2, 0.0);
+
   // add common limits to multimodel
   SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV   is used if (E< 10  eV)
   SetHighEnergyLimit(100.0*CLHEP::MeV); // ekin = 100 MeV is used if (E>100 MeV)
+
+  // fixed models in wrapper
+  es = new G4eDPWACoulombScatteringModel(false, false);
+  es->SetPolarAngleLimit(0.0); // No mixed model
+  inel = new QTNMeImpactIonisation();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-QTMultiModel::~QTMultiModel() = default;
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-void QTMultiModel::AddModel(G4VEmModel* p)
+//QTMultiModel::~QTMultiModel() = default;
+QTMultiModel::~QTMultiModel()
 {
-  cross_section.push_back(0.0);
-  model.push_back(p);
-  ++nModels;
+  delete es;
+  delete inel;
 }
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+// void QTMultiModel::AddModel(G4VEmModel* p)
+// {
+//   cross_section.push_back(0.0);
+//   model.push_back(p);
+//   ++nModels;
+// }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -84,27 +96,32 @@ void QTMultiModel::Initialise(const G4ParticleDefinition* p,
     //  G4int verb = IsMaster() ? param->Verbose() : param->WorkerVerbose();
     G4int verb = param->Verbose();
     if(verb > 0) {
-      G4cout << "### Initialisation of EM MultiModel " << GetName()
-	     << " including following list of " << nModels << " models:" << G4endl;
+      G4cout << "### Initialisation of EM MultiModel " << GetName() << G4endl;
+	//	     << " including following list of " << nModels << " models:" << G4endl;
     }
-    for(G4int i=0; i<nModels; ++i) {
-      G4cout << "    " << (model[i])->GetName();
+    //    for(G4int i=0; i<nModels; ++i) {
+    //      G4cout << "    " << (model[i])->GetName();
+    G4cout << "    " << es->GetName() << "    " << inel->GetName();
       //      (model[i])->SetParticleChange(pParticleChange, GetModelOfFluctuations());
-      (model[i])->Initialise(p, cuts);
-    }
+      //      (model[i])->Initialise(p, cuts);
+    es->Initialise(p, cuts);
+    inel->Initialise(p, cuts);
+    //    }
     if(verb > 0) { G4cout << G4endl; }
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void QTMultiModel::InitialiseLocal(const G4ParticleDefinition* p,
-				   G4VEmModel* masterModel)
-{
-  for(G4int i=0; i<nModels; ++i) {
-    (model[i])->InitialiseLocal(p, model[i]);
-  }
-}
+// void QTMultiModel::InitialiseLocal(const G4ParticleDefinition* p,
+// 				   G4VEmModel* masterModel)
+// {
+//   // for(G4int i=0; i<nModels; ++i) {
+//   //   (model[i])->InitialiseLocal(p, model[i]);
+//   // }
+//   es->InitialiseLocal(p, static_cast<QTMultiModel*>(masterModel)->GetElasticPtr());
+//   inel->InitialiseLocal(p, static_cast<QTMultiModel*>(masterModel)->GetInelasticPtr());
+// }
   
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -116,11 +133,13 @@ G4double QTMultiModel::ComputeCrossSectionPerAtom(const G4ParticleDefinition* p,
 						  G4double maxEnergy)
 {
   G4double cross = 0.0;
-  for(G4int i=0; i<nModels; ++i) {
+  //  for(G4int i=0; i<nModels; ++i) {
     //    (model[i])->SetCurrentCouple(CurrentCouple());
-    cross += (model[i])->ComputeCrossSectionPerAtom(p, kinEnergy, Z, A, 
-						    cutEnergy, maxEnergy);
-  } 
+  cross += es->ComputeCrossSectionPerAtom(p, kinEnergy, Z, A, 
+					  cutEnergy, maxEnergy);
+  cross += inel->ComputeCrossSectionPerAtom(p, kinEnergy, Z, A, 
+					    cutEnergy, maxEnergy);
+    //  } 
   return cross;
 }
 
@@ -133,24 +152,31 @@ void QTMultiModel::SampleSecondaries(std::vector<G4DynamicParticle*>* vdp,
 				     G4double maxEnergy)
 {
   SetCurrentCouple(couple);
-  if(nModels > 0) {
-    G4int i;
-    G4double cross = 0.0;
-    for(i=0; i<nModels; ++i) {
-      cross += (model[i])->CrossSection(couple, dp->GetParticleDefinition(), 
-                                        dp->GetKineticEnergy(), minEnergy, maxEnergy);
-      cross_section[i] = cross;
-    }
+  //  if(nModels > 0) {
+  //    G4int i;
+  G4double cross = 0.0;
+  //  for(i=0; i<nModels; ++i) {
+  cross += es->CrossSection(couple, dp->GetParticleDefinition(), 
+			    dp->GetKineticEnergy(), minEnergy, maxEnergy);
+  cross_section[0] = cross;
+  cross += inel->CrossSection(couple, dp->GetParticleDefinition(), 
+			      dp->GetKineticEnergy(), minEnergy, maxEnergy);
+  cross_section[1] = cross;
+      //    }
 
-    cross *= G4UniformRand();
+  cross *= G4UniformRand();
 
-    for(i=0; i<nModels; ++i) {
-      if(cross <= cross_section[i]) {
-        (model[i])->SampleSecondaries(vdp, couple, dp, minEnergy, maxEnergy);
-        return;
-      }
-    }
-  } 
+  //    for(i=0; i<nModels; ++i) {
+  if(cross <= cross_section[0]) {
+    es->SampleSecondaries(vdp, couple, dp, minEnergy, maxEnergy);
+    return;
+  }
+  else {
+    inel->SampleSecondaries(vdp, couple, dp, minEnergy, maxEnergy);
+    return;
+  }
+      //    }
+      //  } 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
