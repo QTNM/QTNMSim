@@ -53,7 +53,6 @@ add_library(qtnmSimlib
   src/QTPrimaryGeneratorAction.cc
   src/QTTrajectory.cc
   src/NATrajectory.cc
-  src/QTMultiModel.cc
   src/QTNMeImpactIonisation.cc)
 target_include_directories(qtnmSimlib PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
 target_link_libraries(qtnmSimlib PRIVATE ${Geant4_LIBRARIES})
