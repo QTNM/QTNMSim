@@ -8,7 +8,7 @@ project(qtnmSim VERSION 0.1.0)
 option(BUILD_TESTS "Build test applications" OFF)
 
 # Dependencies
-find_package(Geant4 11.2 REQUIRED gdml)
+find_package(Geant4 REQUIRED gdml)
 
 # # Setup Geant4 include directories and compile definitions
 #
@@ -53,6 +53,7 @@ add_library(qtnmSimlib
   src/QTPrimaryGeneratorAction.cc
   src/QTTrajectory.cc
   src/NATrajectory.cc
+  src/QTNMElasticModel.cc
   src/QTNMeImpactIonisation.cc)
 target_include_directories(qtnmSimlib PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/utils)
 target_link_libraries(qtnmSimlib PRIVATE ${Geant4_LIBRARIES})
