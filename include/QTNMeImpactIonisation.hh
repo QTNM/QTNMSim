@@ -99,8 +99,6 @@ public:
   G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*,
                             G4double) override { return 10.0*CLHEP::eV; }
 
-  std::map<int, std::vector<G4double>> GetBindingEnergies() { return binding_energies; }
-  void SetBindingEnergies(std::map<int, std::vector<G4double>> be) { binding_energies = be; }
 
 private:
 
