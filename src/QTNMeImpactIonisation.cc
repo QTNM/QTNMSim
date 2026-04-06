@@ -62,7 +62,6 @@
 #include "Randomize.hh"
 #include "G4ThreeVector.hh"
 
-#include "G4AnalysisManager.hh"
 
 QTNMeImpactIonisation::QTNMeImpactIonisation()
 : G4VEmModel("eImpactIonisation"),
@@ -86,22 +85,24 @@ QTNMeImpactIonisation::~QTNMeImpactIonisation()
 void QTNMeImpactIonisation::Initialise(const G4ParticleDefinition* pdef,
                                                const G4DataVector& prodcuts)
 {
-  fParticleChange = GetParticleChangeForGamma();
-  if(IsMaster()) {
-    // init only for the elements that are used in the geometry
-    G4ProductionCutsTable* theCpTable = G4ProductionCutsTable::GetProductionCutsTable();
-    G4int numOfCouples = (G4int)theCpTable->GetTableSize();
-    for(G4int j=0; j<numOfCouples; ++j) {
-      const G4Material* mat = theCpTable->GetMaterialCutsCouple(j)->GetMaterial();
-      const G4ElementVector* elV = mat->GetElementVector();
-      std::size_t numOfElem = mat->GetNumberOfElements();
-      for (std::size_t ie = 0; ie < numOfElem; ++ie) {
-	G4int Z = (*elV)[ie]->GetZasInt();
-	// Load the ionisation energies
-	load_ionisation_energies(Z);
-      }
+  if(!fParticleChange) {
+    fParticleChange = GetParticleChangeForGamma();
+  }
+  // init only for the elements that are used in the geometry
+  G4ProductionCutsTable* theCpTable = G4ProductionCutsTable::GetProductionCutsTable();
+  G4int numOfCouples = (G4int)theCpTable->GetTableSize();
+  for(G4int j=0; j<numOfCouples; ++j) {
+    const G4Material* mat = theCpTable->GetMaterialCutsCouple(j)->GetMaterial();
+    const G4ElementVector* elV = mat->GetElementVector();
+    std::size_t numOfElem = mat->GetNumberOfElements();
+    for (std::size_t ie = 0; ie < numOfElem; ++ie) {
+      G4int Z = (*elV)[ie]->GetZasInt();
+      // Load the ionisation energies
+      load_ionisation_energies(Z);
     }
-    // will make use of the cross sections so the above needs to be done before
+  }
+  // will make use of the cross sections so the above needs to be done before
+  if(IsMaster()) {
     InitialiseElementSelectors(pdef, prodcuts);
   }
 }
@@ -111,7 +112,6 @@ void QTNMeImpactIonisation::InitialiseLocal(const G4ParticleDefinition*,
                                                     G4VEmModel* masterModel)
 {
   SetElementSelectors(masterModel->GetElementSelectors());
-  SetBindingEnergies(static_cast<QTNMeImpactIonisation*>(masterModel)->GetBindingEnergies());
 }
 
 
