@@ -42,13 +42,10 @@
 // e-/e+ Coulomb scattering model based on numerical Differential Cross Sections
 // (DCS) obtained by Dirac Partial Wave Analysis (DPWA) and supplied by the
 // G4eDPWAElasticDCS class.
-// The model contains the possibility to incorporate the effects of angular
-// deflections of sub-threshold ionisation intercations when it's described by
-// the condensed history model. Note, this must be inactivated (by setting the
-// `isscpcor` input argument of the CTR to false) when ionisation is described
-// with a classical, event by event based simulation model instead of usign the
-// condensed history approach (otherwise, the corresponding angular defelctions
-// will be "double counted").
+//
+// Modified for QTNM project
+// Y. Ramachers
+// University of Warwick, 2026
 //
 // -------------------------------------------------------------------
 
@@ -71,18 +68,6 @@ public:
 
   /**
    * Constructor.
-   *
-   * @param[in] ismixed  Indicates if the model is for mixed or for pure single
-   *                     Coulomb scattering. Different type of tables are pre-
-   *                     pared for sampling polar angle of Coulomb scattering
-   *                     for mixed and for pure single scattering models: cosine
-   *                     of the polar scattering angle can be sampled in a
-   *                     restriced inteval (see fMuMin parameter).
-   * @param[in] isscpcor Indicates if scattering power correction should be used.
-   *                     Note, scattering power correction accounts the effects
-   *                     angular deflections due to sub-threshold ionisations
-   *                     when ionisation is described by using condensed history
-   *                     model (should be active only in this case).
    */
   QTNMElasticModel();
 

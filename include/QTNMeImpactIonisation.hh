@@ -26,29 +26,15 @@
 //
 // -------------------------------------------------------------------
 //
-// GEANT4 Class header file
+// QTNM project
 //
+// File name:     QTNMeImpactIonisation
 //
-// File name:     G4eDPWACoulombScatteringModel
+// Author:        T. Goffrey, University of Warwick
 //
-// Author:        Mihaly Novak
+// Creation date: 2026
 //
-// Creation date: 02.07.2020
-//
-// Modifications:
-//
-// Class Description:
-//
-// e-/e+ Coulomb scattering model based on numerical Differential Cross Sections
-// (DCS) obtained by Dirac Partial Wave Analysis (DPWA) and supplied by the
-// G4eDPWAElasticDCS class.
-// The model contains the possibility to incorporate the effects of angular
-// deflections of sub-threshold ionisation intercations when it's described by
-// the condensed history model. Note, this must be inactivated (by setting the
-// `isscpcor` input argument of the CTR to false) when ionisation is described
-// with a classical, event by event based simulation model instead of usign the
-// condensed history approach (otherwise, the corresponding angular defelctions
-// will be "double counted").
+// e- Coulomb inelastic scattering model
 //
 // -------------------------------------------------------------------
 #define STRING(x) #x
