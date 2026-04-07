@@ -24,7 +24,7 @@ include(${Geant4_USE_FILE})
 #endif()
 
 # Project ROOT directory for reading data
-#add_compile_definitions("SOURCE_ROOT=${CMAKE_SOURCE_DIR}")
+add_compile_definitions("SOURCE_ROOT=${CMAKE_SOURCE_DIR}")
 
 # Build
 add_library(qtnmSimlib
