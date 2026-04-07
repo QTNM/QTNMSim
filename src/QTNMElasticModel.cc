@@ -36,6 +36,8 @@
 // Creation date: 02.07.2020
 //
 // Modifications:
+// simplification for QTNM project
+// Y. Ramachers, University of Warwick, 2026
 //
 // -------------------------------------------------------------------
 

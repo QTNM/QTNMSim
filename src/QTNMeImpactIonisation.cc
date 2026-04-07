@@ -26,16 +26,12 @@
 //
 // -------------------------------------------------------------------
 //
-// GEANT4 Class header file
 //
+// File name:     QTNMeImpactIonisation
 //
-// File name:     G4eDPWACoulombScatteringModel
+// Author:        T. Goffrey, University of Warwick
 //
-// Author:        Mihaly Novak
-//
-// Creation date: 02.07.2020
-//
-// Modifications:
+// Creation date: 2026
 //
 // -------------------------------------------------------------------
 
@@ -393,7 +389,6 @@ QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
                 FatalException,msg.c_str());
     return;
   }
-  //  input.open(fname);
   // Skip Header
   input.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   std::string line;
