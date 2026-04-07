@@ -134,7 +134,6 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
 
   // Get binding energies for material
   std::vector<G4double> bind_vals = get_ionisation_energies(z_int);
-
   // Number of electrons interior and up to current shell
   G4int n_ele_int = 0;
   G4double sigma = 0;
@@ -187,7 +186,7 @@ QTNMeImpactIonisation::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
     sigma += n_ele * f_ion * gr * (mbell_a[n-1][l] * std::log(U) + bsum) / (bind * T_ev); // cm^2
   }
 
-  // G4cout<< T_ev <<  ", " << sigma * f_ion * gr << G4endl;
+  //  G4cout<< " >> inelastic CS: " << T_ev <<  ", " << sigma << G4endl;
   return sigma * CLHEP::cm * CLHEP:: cm;
 }
 
@@ -376,9 +375,25 @@ void
 QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
 {
   if (binding_energies.count(Z) > 0) return;
+  if (Z > z_max) {
+    std::ostringstream msg;
+    msg << "Impact ionisation cross section unavailable for Z  = "
+	<< Z
+	<< ". Cross section will be set to 0.0";
+    G4Exception("QTNMeImpactIonisation::load_ionisation_energies:",
+		"No Cross Section", JustWarning, msg);
+    return;
+  }
   auto fname = project_root + "/src/tables/binding_energy/be_" + std::to_string(Z);
-  std::ifstream input;
-  input.open(fname);
+  std::ifstream input(fname);
+  if (!input.is_open()) {
+    G4String msg  =
+      "    Problem while trying to read " + fname + " file.\n";
+    G4Exception("QTNMeImpactIonisation::ReadFile","em0006",
+                FatalException,msg.c_str());
+    return;
+  }
+  //  input.open(fname);
   // Skip Header
   input.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   std::string line;
@@ -394,13 +409,4 @@ QTNMeImpactIonisation::load_ionisation_energies(G4int Z)
       // but break instead
       break;
     }
-
-  if (Z > z_max) {
-    std::ostringstream msg;
-    msg << "Impact ionisation cross section unavailable for Z  = "
-	<< Z
-	<< ". Cross section will be set to 0.0";
-    G4Exception("QTNMeImpactIonisation::load_ionisation_energies:",
-		"No Cross Section", JustWarning, msg);
-  }
 }
