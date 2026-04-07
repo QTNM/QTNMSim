@@ -16,12 +16,12 @@ include(${Geant4_USE_FILE})
 
 # Look for Boost
 #TODO This should be a required package if using clang
-#find_package(Boost)
+find_package(Boost)
 
-#if(Boost_FOUND)
-#  add_compile_definitions(HAVE_BOOST)
-#  include_directories(${Boost_INCLUDE_DIRS})
-#endif()
+if(Boost_FOUND)
+  add_compile_definitions(HAVE_BOOST)
+  include_directories(${Boost_INCLUDE_DIRS})
+endif()
 
 # Project ROOT directory for reading data
 add_compile_definitions("SOURCE_ROOT=${CMAKE_SOURCE_DIR}")
