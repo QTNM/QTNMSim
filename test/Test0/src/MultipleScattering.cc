@@ -30,6 +30,7 @@
 #include "G4eBremsstrahlung.hh"
 #include "G4eDPWACoulombScatteringModel.hh"
 #include "QTNMElasticModel.hh"
+#include "G4eSingleCoulombScatteringModel.hh"
 #include "G4eIonisation.hh"
 #include "G4ePairProduction.hh"
 
