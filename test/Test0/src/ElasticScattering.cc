@@ -27,6 +27,7 @@
 #include "G4UniversalFluctuation.hh"
 #include "G4eBremsstrahlung.hh"
 #include "G4eDPWACoulombScatteringModel.hh"
+#include "QTNMElasticModel.hh"
 #include "G4eIonisation.hh"
 #include "G4ePairProduction.hh"
 
@@ -105,7 +106,7 @@ void ElasticScatteringList::ConstructProcess() {
 
   // single scattering
   G4CoulombScattering *ss = new G4CoulombScattering();
-  ss->AddEmModel(0, new G4eDPWACoulombScatteringModel(false, false));
+  ss->AddEmModel(new QTNMElasticModel());
 
   ph->RegisterProcess(ss, particle);
 }
