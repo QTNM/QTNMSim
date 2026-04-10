@@ -29,6 +29,7 @@
 #include "G4UniversalFluctuation.hh"
 #include "G4eBremsstrahlung.hh"
 #include "G4eDPWACoulombScatteringModel.hh"
+#include "QTNMElasticModel.hh"
 #include "G4eIonisation.hh"
 #include "G4ePairProduction.hh"
 
@@ -107,13 +108,16 @@ void MultipleScatteringList::ConstructProcess() {
 
   // Coulomb Scattering
   G4CoulombScattering* ss = new G4CoulombScattering();
+  ss->SetEmModel(new G4eSingleCoulombScatteringModel()); // high energy
+
   G4EmMultiModel* mm = new G4EmMultiModel("CoulombSSModels");
   // Elastic Scattering
-  G4eDPWACoulombScatteringModel* es = new G4eDPWACoulombScatteringModel(false, false);
-  es->SetPolarAngleLimit(0.0); // No mixed model
-  mm->AddModel(es);
+  mm->AddModel(new QTNMElasticModel());
   // Impact Ionisation
   mm->AddModel(new QTNMeImpactIonisation());
+  // add common limits to multimodel
+  mm->SetLowEnergyLimit (  0.0*CLHEP::eV);  // ekin = 10 eV is used if (E< 10 eV)
+  mm->SetHighEnergyLimit(100.0*CLHEP::MeV); // high energy model for ekin > 100 MeV
   ss->AddEmModel(0, mm);
 
   ph->RegisterProcess(ss, particle);
