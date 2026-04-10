@@ -106,7 +106,7 @@ void ElasticScatteringList::ConstructProcess() {
 
   // single scattering
   G4CoulombScattering *ss = new G4CoulombScattering();
-  ss->AddEmModel(new QTNMElasticModel());
+  ss->AddEmModel(0, new QTNMElasticModel());
 
   ph->RegisterProcess(ss, particle);
 }
