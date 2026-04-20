@@ -49,6 +49,11 @@ jobs:
           ./qtnmSim -m ../example_input/example0.mac -g ../example_input/example.gdml -a 1
           python3 ../utils/plot_example0.py
 
+          # Run example, but with higher density to trigger collision(s)
+          sed -e 's/D value="5e-12/D value="5e-5/g' ../example_input/example.gdml > high_density.gdml
+          ./qtnmSim -m ../example_input/example0.mac -g high_density.gdml -a 1
+          python3 ../utils/plot_example0.py --output HighDensityTest0.png
+
           # Run Test0, elastic cross section
           cd test/Test0
           ./TestEm0 -m TestEm0.in -o HydrogenElasticCrossSection.root
