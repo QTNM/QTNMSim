@@ -146,6 +146,7 @@ void NAOutputManager::AddNtupleRow(G4int which)
 
   // clear internal vector storage after writing to disk with this method.
   tvec.clear();
+  kvec.clear();
   ovec.clear();
   xvec.clear();
   yvec.clear();
